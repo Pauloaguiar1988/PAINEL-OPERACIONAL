@@ -1,0 +1,30 @@
+# Environment and local secrets
+.env
+.env.local
+.env.*.local
+
+# Legacy secret files (must not be versioned)
+data/credencial_sql_*.txt
+data/credencial_painel_perfis.txt
+data/credencial_lider_campinas_rede.txt
+data/CREDENCIAIS_TESTE_REDE.txt
+data/PASSO_A_PASSO_LIBERACAO_INTRANE_E_TESTE.txt
+data/PASSO_A_PASSO_LIDER_TECNICO_REDE.txt
+data/password-reset-outbox.json
+data/security-backups/
+
+# Runtime artifacts
+data/logs/
+data/monitor.pid
+test-results/
+playwright-report/
+
+#node_modules/
+.env
+.env.*
+data/
+logs/
+*.log
+export/
+backup/
+*.bak.json

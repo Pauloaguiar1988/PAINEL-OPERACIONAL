@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCOI • Gestão Operacional Integrada</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=20260427_4">
+</head>
+<body>
+<div class="sidebar">
+  <div class="brand">
+    <h1>CCOI</h1>
+    <p>Centro de Controle Operacional Integrado com consolidação por área, histórico diário e leitura automática da operação.</p>
+  </div>
+
+  <h2>Painel</h2>
+  <div class="nav active" id="gmMainPainelNav" onclick="show('painel', this)">Painel do Dia</div>
+  <div class="gm-sidebar-modules" id="gmSidebarModules" aria-label="Modulos do painel operacional">
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="painel_dia" id="gmNavModulePainel">Painel do Dia</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module is-active" data-gm-module="operacao" id="gmNavModuleOperacao">Operacao</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="analise_tecnica" id="gmNavModuleAnalise">Analise Tecnica</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="tecnicos" id="gmNavModuleTecnicos">Tecnicos</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="clientes" id="gmNavModuleClientes">Clientes</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="comparativos" id="gmNavModuleComparativos">Comparativos</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="laudo" id="gmNavModuleLaudo">Laudo / Qualidade</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="governanca" id="gmNavModuleGovernanca">Governanca</button>
+  </div>
+
+  <h2>Operação</h2>
+  <div class="nav" onclick="show('operacao', this)">Operação</div>
+  <div class="nav" onclick="show('agenda', this)">Agenda</div>
+
+  <h2>Área Técnica</h2>
+  <div class="nav" onclick="show('tecnico', this)">Líder Técnico</div>
+
+  <h2>Área Administrativa</h2>
+  <div class="nav" onclick="show('administrativo', this)">Administrativo</div>
+
+  <h2>Consolidação</h2>
+  <div class="nav" onclick="show('diagnostico', this)">Diagnóstico Consolidado</div>
+  <div class="nav" onclick="show('resultado', this)">Resultado do Dia</div>
+
+  <h2>Estratégico</h2>
+  <div class="nav" onclick="show('executivo', this)">Executivo</div>
+  <div class="nav" onclick="show('negocio', this)">Negócio</div>
+  <div class="nav" onclick="show('melhorias', this)">Melhorias</div>
+
+  <h2>Histórico</h2>
+  <div class="nav" onclick="show('historico', this)">Registros por Data</div>
+  <div class="nav" onclick="if(window.openPanelSettingsModal){window.openPanelSettingsModal();}">Configuracoes</div>
+</div>
+
+<div class="content">
+
+<div class="card mobile-nav">
+  <div class="mobile-nav-row">
+    <label>Ir para a tela
+      <select id="mobileSectionSelect">
+        <option value="painel">Painel do Dia</option>
+        <option value="operacao">Operação</option>
+        <option value="agenda">Agenda</option>
+        <option value="tecnico">Líder Técnico</option>
+        <option value="administrativo">Administrativo</option>
+        <option value="diagnostico">Diagnóstico Consolidado</option>
+        <option value="resultado">Resultado do Dia</option>
+        <option value="executivo">Executivo</option>
+        <option value="negocio">Negócio</option>
+        <option value="melhorias">Melhorias</option>
+        <option value="historico">Histórico</option>
+      </select>
+    </label>
+    <label class="gm-mobile-module-wrap">Modulo
+      <select id="gmMobileModuleSelect">
+        <option value="painel_dia" id="gmMobileModulePainel">Painel do Dia</option>
+        <option value="operacao" id="gmMobileModuleOperacao">Operacao</option>
+        <option value="analise_tecnica" id="gmMobileModuleAnalise">Analise Tecnica</option>
+        <option value="tecnicos" id="gmMobileModuleTecnicos">Tecnicos</option>
+        <option value="clientes" id="gmMobileModuleClientes">Clientes</option>
+        <option value="comparativos" id="gmMobileModuleComparativos">Comparativos</option>
+        <option value="laudo" id="gmMobileModuleLaudo">Laudo / Qualidade</option>
+        <option value="governanca" id="gmMobileModuleGovernanca">Governanca</option>
+      </select>
+    </label>
+    <div class="mobile-tip">No celular, troque de tela por este seletor.</div>
+  </div>
+</div>
+
+  <div class="header-clean">
+    <h1>Gestão Operacional Integrada</h1>
+  </div>
+
+  <div id="painel" class="section active">
+    <div class="gm-panel-toolbar" id="gmPanelToolbar">
+      <div class="gm-panel-summary">
+        <strong id="gmPanelSummaryTitle">Painel do dia</strong>
+        <span id="gmPanelSummaryHint">Leitura rapida para decisao com recorte por filtros.</span>
+      </div>
+      <div class="gm-panel-actions">
+        <div class="gm-view-mode" id="gmViewMode">
+          <span id="gmViewModeLbl">Modo de visualizacao</span>
+          <button type="button" class="gm-view-btn is-active" data-gm-view="executivo" id="gmViewExecutiveBtn">Executivo</button>
+          <button type="button" class="gm-view-btn" data-gm-view="tecnico" id="gmViewTechnicalBtn">Tecnico</button>
+        </div>
+        <button id="gmOpenFiltersBtn" type="button" class="btn-light gm-filters-open-btn">
+          <i class="fa-solid fa-filter"></i>
+          <span id="gmOpenFiltersBtnText">Filtros</span>
+          <span id="gmFilterActiveCount" class="gm-filter-count">0</span>
+        </button>
+      </div>
+    </div>
+    <div class="gm-filter-chips" id="gmFilterChips" hidden></div>
+
+    <div class="gm-filter-drawer" id="gmFilterDrawer" aria-hidden="true">
+      <button type="button" class="gm-filter-drawer-backdrop" id="gmFilterDrawerBackdrop" aria-label="Fechar filtros"></button>
+      <aside class="gm-filter-panel" role="dialog" aria-modal="true" aria-labelledby="gmFilterTitle">
+        <div class="gm-filter-head">
+          <div class="gm-filter-head-copy">
+            <strong id="gmFilterTitle">Filtros inteligentes</strong>
+            <span id="gmFilterHint">Recorte por contexto sem alterar a base original.</span>
+          </div>
+          <button type="button" class="gm-filter-close-btn" id="gmCloseFiltersBtn" aria-label="Fechar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="gm-filter-grid">
+          <label><span id="gmFilterPeriodLbl">Periodo</span>
+            <select id="gmFilterPeriod">
+              <option value="monthly">Mensal</option>
+              <option value="daily">Diario</option>
+              <option value="quarterly">Trimestral</option>
+              <option value="ytd">Ano/YTD</option>
+              <option value="historical">Historico completo</option>
+            </select>
+          </label>
+          <div class="gm-filter-check-group" data-filter-axis="clients">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterClientLbl">Cliente</span>
+              <strong id="gmFilterClientCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterClientSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="clients" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="clients" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterClientChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group gm-filter-advanced-group" data-filter-axis="cnpj">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterCnpjLbl">CNPJ (avancado)</span>
+              <strong id="gmFilterCnpjCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterCnpjSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="cnpj" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="cnpj" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterCnpjChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="technicians">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterTechnicianLbl">Tecnico</span>
+              <strong id="gmFilterTechnicianCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterTechnicianSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="technicians" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="technicians" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterTechnicianChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="serviceTypes">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterServiceLbl">Tipo de atendimento</span>
+              <strong id="gmFilterServiceCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterServiceSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="serviceTypes" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="serviceTypes" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterServiceChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="warranty">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterWarrantyLbl">Garantia</span>
+              <strong id="gmFilterWarrantyCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterWarrantySearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="warranty" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="warranty" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterWarrantyChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="retorno">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterRetornoLbl">Novo / retorno</span>
+              <strong id="gmFilterRetornoCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterRetornoSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="retorno" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="retorno" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterRetornoChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="equipment">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterEquipmentLbl">Equipamento</span>
+              <strong id="gmFilterEquipmentCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterEquipmentSearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="equipment" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="equipment" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterEquipmentChecks" class="gm-filter-checklist"></div>
+          </div>
+          <div class="gm-filter-check-group" data-filter-axis="criticity">
+            <div class="gm-filter-group-head">
+              <span id="gmFilterCriticityLbl">Criticidade</span>
+              <strong id="gmFilterCriticityCount" class="gm-filter-group-count">0/0</strong>
+            </div>
+            <input id="gmFilterCriticitySearch" type="text" class="gm-filter-search" placeholder="Buscar..." autocomplete="off">
+            <div class="gm-filter-group-actions">
+              <button type="button" class="gm-filter-group-action" data-filter-axis="criticity" data-filter-action="all">Selecionar todos</button>
+              <button type="button" class="gm-filter-group-action" data-filter-axis="criticity" data-filter-action="clear">Limpar</button>
+            </div>
+            <div id="gmFilterCriticityChecks" class="gm-filter-checklist"></div>
+          </div>
+        </div>
+        <div class="gm-filter-actions">
+          <button id="gmApplyFiltersBtn" type="button" class="btn-primary">Aplicar filtros</button>
+          <button id="gmClearFiltersBtn" type="button" class="btn-light">Limpar filtros</button>
+        </div>
+        <div class="gm-filter-foot">
+          <span id="gmFilterStatus">Sem filtros ativos.</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="gm-module-roots" id="gmModuleRoots">
+      <section id="gmModuleResumo" class="gm-module-root is-active" data-gm-module-root="painel_dia" aria-label="Modulo Resumo"></section>
+      <section id="gmModuleOperacao" class="gm-module-root" data-gm-module-root="operacao" aria-label="Modulo Operacao"></section>
+      <section id="gmModuleAnalise" class="gm-module-root" data-gm-module-root="analise_tecnica" aria-label="Modulo Analise Tecnica"></section>
+      <section id="gmModuleTecnicos" class="gm-module-root" data-gm-module-root="tecnicos" aria-label="Modulo Tecnicos"></section>
+      <section id="gmModuleClientes" class="gm-module-root" data-gm-module-root="clientes" aria-label="Modulo Clientes"></section>
+      <section id="gmModuleComparativos" class="gm-module-root" data-gm-module-root="comparativos" aria-label="Modulo Comparativos"></section>
+      <section id="gmModuleLaudo" class="gm-module-root" data-gm-module-root="laudo" aria-label="Modulo Laudo Qualidade"></section>
+      <section id="gmModuleGovernanca" class="gm-module-root" data-gm-module-root="governanca" aria-label="Modulo Governanca"></section>
+    </div>
+
+    <div class="system-upgrade-wrap" id="gmPanelExecutiveWrap" data-gm-modules="painel_dia" data-module-owner="resumo">
+      <div class="system-upgrade-card">
+        <div class="system-upgrade-title" id="gmCockpitTitle">Cockpit Operacional Tagus-Tec Campinas</div>
+        <h2 class="system-upgrade-headline">Controle estrategico em tempo real</h2>
+        <div class="system-upgrade-sub">Leitura automatica do dia com prioridade operacional, tecnica e administrativa para decisao de gestor.</div>
+        <div class="system-upgrade-strip">
+          <div class="system-upgrade-pill">
+            <div class="lbl">Score operacional</div>
+            <div class="val" id="gmScore">0</div>
+            <div class="sub">Indice consolidado 0-100</div>
+          </div>
+          <div class="system-upgrade-pill">
+            <div class="lbl">Nivel atual</div>
+            <div class="val" id="gmLevel">Estavel</div>
+            <div class="sub">Leitura geral da unidade</div>
+          </div>
+          <div class="system-upgrade-pill">
+            <div class="lbl">SLA / Execucao</div>
+            <div class="val"><span id="gmSla">0%</span> / <span id="gmExec">--</span></div>
+            <div class="sub">Ritmo operacional do dia</div>
+          </div>
+          <div class="system-upgrade-pill">
+            <div class="lbl">Data analisada</div>
+            <div class="val" id="gmDate">--</div>
+            <div class="sub">Base ativa da leitura</div>
+          </div>
+        </div>
+      </div>
+      <div class="system-upgrade-side">
+        <div class="system-white-card">
+          <h3 id="gmPriorityCardTitle">Prioridade imediata</h3>
+          <div class="system-list">
+            <div class="system-line"><strong id="gmLblTopAlert">Alerta principal</strong><span id="gmTopAlert">Sem alerta</span></div>
+            <div class="system-line"><strong id="gmLblAction24h">Ação em 24h</strong><span id="gmMainAction">Monitorar rotina</span></div>
+            <div class="system-line"><strong id="gmLblTicketsLate">Tickets e atrasos</strong><span><span id="gmTickets">0</span> / <span id="gmAtrasos">0</span></span></div>
+            <div class="system-line"><strong id="gmLblPendAdm">Pendências administrativas</strong><span id="gmPendAdm">0</span></div>
+            <div class="system-line"><strong id="gmLblMixAtendimento">Mix de atendimento</strong><div id="gmMixAtendimento" class="gm-cockpit-mini-bars">--</div></div>
+            <div class="system-line"><strong id="gmLblMixGarantia">Cobertura de garantia</strong><div id="gmMixCobertura" class="gm-cockpit-mini-bars">--</div></div>
+            <div class="system-line"><strong id="gmLblProdutoTop">Equipamento mais incidente</strong><div id="gmProdutoTop" class="gm-cockpit-mini-eq">--</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-radar" id="gmPanelRadarWrap" data-gm-modules="painel_dia" data-module-owner="resumo">
+      <div class="system-white-card">
+        <div class="system-kicker">Clientes criticos em foco</div>
+        <div class="system-list" id="gmClientList">
+          <div class="system-line"><strong>Sem cliente critico registrado</strong><span>Atualize em Operacao</span></div>
+        </div>
+      </div>
+      <div class="system-white-card">
+        <div class="system-kicker">Plano de acao recomendado</div>
+        <div class="system-list" id="gmActionList">
+          <div class="system-line"><strong>Sem acao sugerida</strong><span>Preencha os dados do dia</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="system-white-card gm-view-tecnico-only" id="gmPanelAuditWrap" data-gm-modules="operacao" data-module-owner="operacao">
+      <div class="system-kicker">Auditoria de O.S. e proximos passos</div>
+      <div class="system-list">
+        <div class="system-line"><strong>O.S. analisadas</strong><span id="gmOsTotal">0</span></div>
+        <div class="system-line"><strong>Registros com alerta</strong><span id="gmOsAlertRecords">0</span></div>
+        <div class="system-line"><strong>Risco de nao faturar</strong><span id="gmOsFaturamento">0</span></div>
+        <div class="system-line"><strong>Codigo pendente</strong><span id="gmOsCodigo">0</span></div>
+        <div class="system-line"><strong>Laudo sem clareza</strong><span id="gmOsLaudo">0</span></div>
+        <div class="system-line"><strong>Risco estimado (R$)</strong><span id="gmOsRiscoEstimado">0,00</span></div>
+        <div class="system-line"><strong>Operacao interna / externa</strong><span id="gmOpsMix">0 / 0</span></div>
+      </div>
+      <div class="system-list gm-audit-list" id="gmOsAuditList">
+        <div class="system-line"><strong>Sem pendencias de O.S.</strong><span>Importe as ordens para analisar faturamento, codigo e laudo.</span></div>
+      </div>
+      <div class="system-line">
+        <strong>Tabela de precos (Looker)</strong>
+        <span><a id="gmLookerLink" href="#" target="_blank" rel="noopener">Abrir referencia</a></span>
+      </div>
+      <div class="system-line">
+        <strong>Portal do cliente (Base44)</strong>
+        <span><a id="gmPortalLink" href="#" target="_blank" rel="noopener">Abrir portal</a></span>
+      </div>
+      <div class="system-line">
+        <strong>BI Operacional (Power BI)</strong>
+        <span><a id="gmPowerBiLink" href="#" target="_blank" rel="noopener">Abrir BI</a></span>
+      </div>
+    </div>
+    <div class="system-white-card gm-taxonomy-card" id="gmTaxonomyCard" data-gm-modules="operacao analise_tecnica tecnicos clientes comparativos laudo governanca" data-module-shell="1">
+      <div class="gm-tax-head">
+        <div class="gm-tax-title-wrap">
+          <div class="system-kicker" id="gmTaxonomyKicker">Leitura analitica por taxonomia</div>
+          <h3 id="gmTaxonomyTitle">Inteligencia operacional e laudo tecnico</h3>
+        </div>
+        <div class="gm-tax-tabs" role="tablist" aria-label="Abas de analise taxonomica">
+          <button id="gmTabBtnInterna" class="gm-tax-tab is-active" type="button" data-gm-tab="interna" role="tab" aria-selected="true" aria-controls="gmTabPanelInterna">Operacao Interna</button>
+          <button id="gmTabBtnExterna" class="gm-tax-tab" type="button" data-gm-tab="externa" role="tab" aria-selected="false" aria-controls="gmTabPanelExterna">Analise Externa / Laudo</button>
+          <button id="gmTabBtnTrimestral" class="gm-tax-tab" type="button" data-gm-tab="trimestral" role="tab" aria-selected="false" aria-controls="gmTabPanelTrimestral">Executivo Trimestral</button>
+        </div>
+      </div>
+      <div class="gm-tax-context">
+        <span id="gmTaxonomyPeriod">Periodo: --</span>
+        <span id="gmTaxonomyScope">Escopo: --</span>
+      </div>
+
+      <section id="gmTabPanelInterna" class="gm-tax-panel is-active" role="tabpanel" aria-labelledby="gmTabBtnInterna" data-gm-modules="analise_tecnica operacao">
+        <article class="gm-tax-priority" id="gmTaxPriorityStrip" data-module-owner="operacao">
+          <div class="gm-tax-priority-block">
+            <span class="lbl" id="gmTaxPriorityLblSeverity">Severidade</span>
+            <strong id="gmTaxPrioritySeverity">--</strong>
+          </div>
+          <div class="gm-tax-priority-block">
+            <span class="lbl" id="gmTaxPriorityLblRisk">Principal risco</span>
+            <strong id="gmTaxPriorityRisk">--</strong>
+          </div>
+          <div class="gm-tax-priority-block">
+            <span class="lbl" id="gmTaxPriorityLblAction">Acao recomendada</span>
+            <strong id="gmTaxPriorityAction">--</strong>
+          </div>
+        </article>
+
+        <div class="gm-tax-summary-grid" data-module-owner="operacao">
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmTaxLblTotalOs">O.S. analisadas</div>
+            <div class="val" id="gmTaxTotalOs">0</div>
+            <div class="sub" id="gmTaxSubTotalOs">Base consolidada da taxonomia</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmTaxLblTopService">Atendimento dominante</div>
+            <div class="val" id="gmTaxTopService">--</div>
+            <div class="sub" id="gmTaxTopServiceRate">0%</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmTaxLblCoverage">Cobertura de classificacao</div>
+            <div class="val" id="gmTaxCoverage">0%</div>
+            <div class="sub" id="gmTaxCoverageSub">Nao identificado: 0%</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmTaxLblQuality">Qualidade</div>
+            <div class="val" id="gmTaxQuality">--</div>
+            <div class="sub" id="gmTaxQualitySub">Confianca media: 0%</div>
+          </article>
+        </div>
+
+        <article class="gm-tax-box gm-view-tecnico-only" data-module-owner="analise">
+          <div class="gm-tax-box-head">
+            <h4 id="gmTaxServiceChartTitle">Distribuicao por tipo de atendimento</h4>
+            <span id="gmTaxServiceChartHint">Top 5</span>
+          </div>
+          <div class="gm-tax-chart" id="gmTaxServiceChart">
+            <div class="gm-tax-chart-empty">Sem base de atendimento para grafico.</div>
+          </div>
+        </article>
+
+        <div class="gm-tax-row gm-view-tecnico-only" data-module-row="1">
+          <article class="gm-tax-box" data-module-owner="analise">
+            <h4 id="gmTaxEqTitle">Ranking por equipamento</h4>
+            <div class="gm-tax-table">
+              <div class="gm-tax-table-head">
+                <span id="gmTaxEqColItem">Equipamento</span>
+                <span id="gmTaxEqColVolume">O.S.</span>
+                <span id="gmTaxEqColCause">Causa dominante</span>
+                <span id="gmTaxEqColOutcome">Desfecho dominante</span>
+              </div>
+              <div class="gm-tax-table-body" id="gmTaxEquipmentTableBody">
+                <div class="gm-tax-table-row"><span>Sem base</span><span>-</span><span>-</span><span>-</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="gm-tax-box" data-module-owner="tecnicos">
+            <h4 id="gmTaxTechTitle">Ranking por tecnico</h4>
+            <div class="gm-tax-table">
+              <div class="gm-tax-table-head">
+                <span id="gmTaxTechColItem">Tecnico</span>
+                <span id="gmTaxTechColVolume">O.S.</span>
+                <span id="gmTaxTechColService">Atendimento</span>
+                <span id="gmTaxTechColOutcome">Desfecho</span>
+              </div>
+              <div class="gm-tax-table-body" id="gmTaxTechnicianTableBody">
+                <div class="gm-tax-table-row"><span>Sem base</span><span>-</span><span>-</span><span>-</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <article class="gm-tax-box gm-view-tecnico-only" data-module-owner="analise">
+          <div class="gm-tax-box-head">
+            <h4 id="gmTaxParetoTitle">Pareto por equipamento</h4>
+            <span id="gmTaxParetoHint">Top 6</span>
+          </div>
+          <div class="gm-tax-chart" id="gmTaxEquipmentParetoChart">
+            <div class="gm-tax-chart-empty">Sem base de equipamento para grafico.</div>
+          </div>
+        </article>
+
+        <article class="gm-tax-box gm-view-tecnico-only" data-module-owner="analise">
+          <h4 id="gmTaxAlertTitle">Alertas taticos da classificacao</h4>
+          <div class="gm-tax-list" id="gmTaxAlertsList">
+            <div class="gm-tax-line"><strong>Sem alertas</strong><span>Aguardando base para leitura de risco taxonomico.</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="gmTabPanelExterna" class="gm-tax-panel" role="tabpanel" aria-labelledby="gmTabBtnExterna" hidden data-gm-modules="tecnicos clientes laudo governanca">
+        <article class="gm-tax-box gm-tax-hero" id="gmTaxNarrativeHero" data-gm-modules="laudo" data-module-owner="laudo">
+          <h4 id="gmTaxNarrativeTitle">Leitura executiva</h4>
+          <p class="gm-tax-summary" id="gmTaxNarrativeSummary">Sem leitura executiva disponivel para esta data.</p>
+        </article>
+
+        <div class="gm-tax-row" data-gm-modules="governanca" data-module-row="1">
+          <article class="gm-tax-box gm-tax-review-priority-box" id="gmTaxReviewPriorityBox" data-gm-modules="governanca" data-module-owner="governanca">
+            <h4 id="gmTaxReviewTitle">Prioridade de revisao humana</h4>
+            <div class="gm-tax-review-priority-grid">
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblPriority">Prioridade</span><strong id="gmTaxReviewPriority">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblReviewer">Revisor recomendado</span><strong id="gmTaxReviewReviewer">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblStatus">Status</span><strong id="gmTaxReviewStatus">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblDueAt">Prazo</span><strong id="gmTaxReviewDueAt">--</strong></div>
+            </div>
+            <p class="gm-tax-summary" id="gmTaxReviewReason">Sem motivo de revisao para esta data.</p>
+            <p class="gm-tax-summary gm-tax-review-impact" id="gmTaxReviewImpact">Impacto: --</p>
+            <div class="gm-tax-list" id="gmTaxReviewChecklistList">
+              <div class="gm-tax-line"><strong>Checklist</strong><span>Sem itens de revisao obrigatoria.</span></div>
+            </div>
+          </article>
+
+          <article class="gm-tax-box" id="gmTaxReviewSummaryBox" data-gm-modules="governanca" data-module-owner="governanca">
+            <h4 id="gmTaxReviewSummaryTitle">Resumo da fila guiada</h4>
+            <div class="gm-tax-quality-grid">
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblTotal">Itens na fila</span><strong id="gmTaxReviewTotal">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblOpen">Em aberto</span><strong id="gmTaxReviewOpen">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblOverdue">Atrasados</span><strong id="gmTaxReviewOverdue">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblByStatus">Por status</span><strong id="gmTaxReviewByStatus">0/0/0/0/0/0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblHighestPriority">Maior prioridade</span><strong id="gmTaxReviewHighestPriority">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmTaxReviewLblNextDueAt">Proximo prazo</span><strong id="gmTaxReviewNextDueAt">--</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="gm-tax-box gm-view-tecnico-only" id="gmTaxReviewQueueBox" data-gm-modules="governanca" data-module-owner="governanca">
+          <h4 id="gmTaxReviewQueueTitle">Fila curta de revisao</h4>
+          <div class="gm-tax-review-list" id="gmTaxReviewQueueList">
+            <div class="gm-tax-review-item">
+              <div class="gm-tax-review-item-head">
+                <strong>Sem itens de revisao</strong>
+                <span class="gm-tax-review-badge">Monitoramento</span>
+              </div>
+              <p>Quando houver risco analitico, os itens aparecem aqui.</p>
+            </div>
+          </div>
+        </article>
+
+        <div class="gm-tax-row" data-gm-modules="laudo" data-module-row="1">
+          <article class="gm-tax-box" data-gm-modules="laudo" data-module-owner="laudo">
+            <h4 id="gmTaxFindingsTitle">Achados principais</h4>
+            <div class="gm-tax-list" id="gmTaxFindingsList">
+              <div class="gm-tax-line"><strong>Sem achados</strong><span>Assim que houver base, os achados aparecem aqui.</span></div>
+            </div>
+          </article>
+          <article class="gm-tax-box" data-gm-modules="laudo" data-module-owner="laudo">
+            <h4 id="gmTaxRecommendationsTitle">Recomendacoes</h4>
+            <div class="gm-tax-list" id="gmTaxRecommendationsList">
+              <div class="gm-tax-line"><strong>Sem recomendacoes</strong><span>Aguardando leitura analitica para sugerir proximos passos.</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="gm-tax-row" data-gm-modules="clientes tecnicos" data-module-row="1">
+          <article class="gm-tax-box" id="gmHistClientsBox" data-gm-modules="clientes" data-module-owner="clientes">
+            <h4 id="gmHistClientsTitle">Clientes / oportunidades</h4>
+            <div class="gm-tax-quality-grid gm-tax-quality-grid-historical">
+              <div class="gm-tax-quality-card"><span id="gmHistClientsLblTotal">Clientes mapeados</span><strong id="gmHistClientsTotal">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistClientsLblOpportunity">Oportunidades</span><strong id="gmHistClientsOpportunity">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistClientsLblAlert">Em alerta</span><strong id="gmHistClientsAlert">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistClientsLblAttention">Em atenção</span><strong id="gmHistClientsAttention">0</strong></div>
+            </div>
+            <div class="gm-tax-list" id="gmHistClientsList">
+              <div class="gm-tax-line"><strong>Sem oportunidades</strong><span>Aguardando leitura histórica de clientes.</span></div>
+            </div>
+          </article>
+          <article class="gm-tax-box" id="gmHistTechniciansBox" data-gm-modules="tecnicos" data-module-owner="tecnicos">
+            <div class="gm-hist-tech-head">
+              <h4 id="gmHistTechniciansTitle">Técnicos / desempenho</h4>
+              <div class="gm-hist-tech-period">
+                <span id="gmHistTechPeriodContext">Período: --</span>
+                <label class="gm-hist-tech-period-select">
+                  <span id="gmHistTechPeriodLbl">Período</span>
+                  <select id="gmHistTechPeriodSelect">
+                    <option value="monthly">Mensal</option>
+                    <option value="quarterly">Trimestral</option>
+                    <option value="ytd">Ano/YTD</option>
+                    <option value="historical">Histórico completo</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="gm-tax-quality-grid gm-tax-quality-grid-historical">
+              <div class="gm-tax-quality-card"><span id="gmHistTechLblTotal">Técnicos avaliados</span><strong id="gmHistTechTotal">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistTechLblScore">Score médio</span><strong id="gmHistTechAvgScore">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistTechLblLowConf">Baixa confiança</span><strong id="gmHistTechLowConf">0</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistTechLblTop">Top desempenho</span><strong id="gmHistTechTop">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistTechLblMissing">Sem técnico identificado</span><strong id="gmHistTechMissing">0</strong></div>
+            </div>
+            <div class="gm-tax-table">
+              <div class="gm-tax-table-head">
+                <span id="gmHistTechColTech">Técnico</span>
+                <span id="gmHistTechColScore">Score</span>
+                <span id="gmHistTechColReturn">% retorno</span>
+                <span id="gmHistTechColAction">Ação recomendada</span>
+              </div>
+              <div class="gm-tax-table-body" id="gmHistTechniciansTableBody">
+                <div class="gm-tax-table-row"><span>Sem base</span><span>-</span><span>-</span><span>-</span></div>
+              </div>
+            </div>
+            <button type="button" class="btn-light gm-hist-tech-toggle" id="gmHistTechniciansToggleBtn" hidden>Ver todos</button>
+          </article>
+        </div>
+
+        <div class="gm-tax-row" data-gm-modules="comparativos laudo" data-module-row="1">
+          <article class="gm-tax-box" id="gmHistComparativesBox" data-gm-modules="comparativos" data-module-owner="comparativos">
+            <h4 id="gmHistComparativesTitle">Comparativos históricos</h4>
+            <div class="gm-tax-list" id="gmHistComparativesList">
+              <div class="gm-tax-line"><strong>Sem comparativos</strong><span>Aguardando base histórica para comparação automática.</span></div>
+            </div>
+          </article>
+          <article class="gm-tax-box" id="gmHistLaudoBox" data-gm-modules="laudo" data-module-owner="laudo">
+            <h4 id="gmHistLaudoTitle">Conformidade do laudo técnico</h4>
+            <div class="gm-tax-quality-grid gm-tax-quality-grid-historical">
+              <div class="gm-tax-quality-card"><span id="gmHistLaudoLblScore">Score de conformidade</span><strong id="gmHistLaudoScore">0%</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistLaudoLblLevel">Nível</span><strong id="gmHistLaudoLevel">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistLaudoLblMissingAction">Sem ação</span><strong id="gmHistLaudoMissingAction">0%</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmHistLaudoLblMissingConclusion">Sem conclusão</span><strong id="gmHistLaudoMissingConclusion">0%</strong></div>
+            </div>
+            <div class="gm-tax-list" id="gmHistLaudoList">
+              <div class="gm-tax-line"><strong>Sem leitura de conformidade</strong><span>Aguardando análise de laudos para este período.</span></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="gm-tax-box gm-tax-quality-box" id="gmTaxQualityBox" data-gm-modules="laudo governanca" data-module-owner="laudo">
+          <h4 id="gmTaxQualityTitle">Qualidade da classificacao</h4>
+          <div class="gm-tax-quality-grid">
+            <div class="gm-tax-quality-card"><span id="gmTaxQLblLevel">Nivel</span><strong id="gmTaxQualityLevel">--</strong></div>
+            <div class="gm-tax-quality-card"><span id="gmTaxQLblConfidence">Confianca media</span><strong id="gmTaxAvgConfidence">0%</strong></div>
+            <div class="gm-tax-quality-card"><span id="gmTaxQLblCoverage">Cobertura</span><strong id="gmTaxCoverageExternal">0%</strong></div>
+            <div class="gm-tax-quality-card"><span id="gmTaxQLblUnknown">Nao identificado / indefinido</span><strong id="gmTaxUnknownUndefined">0% / 0%</strong></div>
+          </div>
+          <div class="gm-tax-chart gm-tax-chart-axis" id="gmTaxAxisQualityChart">
+            <div class="gm-tax-chart-empty">Sem base de qualidade por eixo.</div>
+          </div>
+          <div class="gm-tax-list" id="gmTaxAxisList">
+            <div class="gm-tax-line"><strong>Eixos</strong><span>Sem base para qualidade por eixo.</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="gmTabPanelTrimestral" class="gm-tax-panel" role="tabpanel" aria-labelledby="gmTabBtnTrimestral" hidden data-gm-modules="comparativos" data-module-owner="comparativos">
+        <article class="gm-tax-box gm-quarterly-tools">
+          <div class="gm-quarterly-select-wrap">
+            <span id="gmQuarterlySelectLabel">Trimestre</span>
+            <select id="gmQuarterlySelect">
+              <option value="">--</option>
+            </select>
+          </div>
+          <div class="gm-quarterly-downloads">
+            <a id="gmQuarterlyDownloadPdf" class="btn-light gm-quarterly-download-btn" href="#" target="_blank" rel="noopener">PDF executivo</a>
+            <a id="gmQuarterlyDownloadExcel" class="btn-light gm-quarterly-download-btn" href="#" target="_blank" rel="noopener">Excel gerencial</a>
+            <a id="gmQuarterlyDownloadJson" class="btn-light gm-quarterly-download-btn" href="#" target="_blank" rel="noopener">JSON completo</a>
+          </div>
+        </article>
+
+        <article class="gm-tax-box gm-tax-hero gm-quarterly-hero">
+          <h4 id="gmQuarterlyHeroTitle">Leitura executiva trimestral</h4>
+          <p class="gm-tax-summary" id="gmQuarterlyHeroSummary">Carregando consolidado trimestral...</p>
+          <div class="gm-quarterly-alert-strip">
+            <span class="gm-quarterly-alert-badge" id="gmQuarterlyBadgePartial" hidden>Base parcial: 0/3 meses</span>
+            <span class="gm-quarterly-alert-badge" id="gmQuarterlyBadgeQualityLow" hidden>Qualidade baixa: revisar laudo</span>
+          </div>
+        </article>
+
+        <div class="gm-tax-summary-grid">
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmQuarterlyLblQuarter">Trimestre de referencia</div>
+            <div class="val" id="gmQuarterlyQuarter">--</div>
+            <div class="sub" id="gmQuarterlyReferenceDate">Data ref.: --</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmQuarterlyLblTotalOs">O.S. consolidadas</div>
+            <div class="val" id="gmQuarterlyTotalOs">0</div>
+            <div class="sub" id="gmQuarterlyMonthsWithData">Meses com base: 0/3</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmQuarterlyLblSampleDays">Dias amostrados</div>
+            <div class="val" id="gmQuarterlySampleDays">0</div>
+            <div class="sub" id="gmQuarterlyReworkRate">Retrabalho: 0%</div>
+          </article>
+          <article class="gm-tax-mini">
+            <div class="lbl" id="gmQuarterlyLblOpenQueue">Fila de revisao aberta</div>
+            <div class="val" id="gmQuarterlyOpenQueue">0</div>
+            <div class="sub" id="gmQuarterlyOverdueQueue">Atrasados: 0</div>
+          </article>
+        </div>
+
+        <div class="gm-tax-row">
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyOverviewTitle">Overview do trimestre</h4>
+            <div class="gm-tax-list" id="gmQuarterlyOverviewList">
+              <div class="gm-tax-line"><strong>Sem base trimestral</strong><span>Selecione um trimestre com dados consolidados.</span></div>
+            </div>
+          </article>
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyQualityTitle">Qualidade e cobertura</h4>
+            <div class="gm-tax-quality-grid">
+              <div class="gm-tax-quality-card"><span id="gmQuarterlyQLblLevel">Nivel</span><strong id="gmQuarterlyQualityLevel">--</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmQuarterlyQLblConfidence">Confianca media</span><strong id="gmQuarterlyAvgConfidence">0%</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmQuarterlyQLblCoverage">Cobertura</span><strong id="gmQuarterlyCoverage">0%</strong></div>
+              <div class="gm-tax-quality-card"><span id="gmQuarterlyQLblUnknown">Nao identificado / indefinido</span><strong id="gmQuarterlyUnknownUndefined">0% / 0%</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="gm-tax-row">
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyMixTitle">Mix principal</h4>
+            <div class="gm-tax-list" id="gmQuarterlyMixList">
+              <div class="gm-tax-line"><strong>Sem mix consolidado</strong><span>Aguardando consolidacao trimestral.</span></div>
+            </div>
+          </article>
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyReviewTitle">Fila curta de revisao (trimestre)</h4>
+            <div class="gm-tax-review-list" id="gmQuarterlyReviewList">
+              <div class="gm-tax-review-item is-closed">
+                <div class="gm-tax-review-item-head">
+                  <strong>Sem itens de revisao</strong>
+                  <span class="gm-tax-review-badge none">Monitoramento</span>
+                </div>
+                <p>Os itens trimestrais de governanca aparecem aqui.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="gm-tax-row">
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyEqTitle">Top equipamentos</h4>
+            <div class="gm-tax-table">
+              <div class="gm-tax-table-head">
+                <span id="gmQuarterlyEqColItem">Equipamento</span>
+                <span id="gmQuarterlyEqColVolume">O.S.</span>
+                <span id="gmQuarterlyEqColCause">Causa dominante</span>
+                <span id="gmQuarterlyEqColOutcome">Desfecho dominante</span>
+              </div>
+              <div class="gm-tax-table-body" id="gmQuarterlyEquipmentTableBody">
+                <div class="gm-tax-table-row"><span>Sem base</span><span>-</span><span>-</span><span>-</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="gm-tax-box">
+            <h4 id="gmQuarterlyNarrativeTitle">Narrativa executiva trimestral</h4>
+            <p class="gm-tax-summary" id="gmQuarterlyNarrativeSummary">Sem leitura executiva trimestral para este periodo.</p>
+            <div class="gm-tax-list" id="gmQuarterlyNarrativeList">
+              <div class="gm-tax-line"><strong>Sem achados</strong><span>Quando houver base trimestral, os destaques aparecem aqui.</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+    <div class="panel-highlight">
+      <div class="mini">
+        <div class="mini-label">Tickets pendentes</div>
+        <div class="mini-value" id="miniTicketsPendentes">0</div>
+        <div class="mini-sub">Acompanha tickets ainda sem fechamento</div>
+      </div>
+      <div class="mini">
+        <div class="mini-label">Pedidos em atraso</div>
+        <div class="mini-value" id="miniPedidosAtraso">0</div>
+        <div class="mini-sub">Pedidos vencidos e sem solução final</div>
+      </div>
+      <div class="mini">
+        <div class="mini-label">Técnicos em campo</div>
+        <div class="mini-value" id="miniTecnicosCampo">0</div>
+        <div class="mini-sub">Base instantânea da operação técnica</div>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-card"><div class="value" id="kCriticos">0</div><div class="label">Casos críticos</div><div class="hint">Informado na operação</div></div>
+      <div class="kpi-card"><div class="value" id="kReinc">0</div><div class="label">Reincidências</div><div class="hint">Operação + área técnica</div></div>
+      <div class="kpi-card"><div class="value" id="kSla">0%</div><div class="label">SLA do dia</div><div class="hint">Entrada manual</div></div>
+      <div class="kpi-card"><div class="value" id="kExec">0%</div><div class="label">Execução</div><div class="hint">Checklist do gestor</div></div>
+      <div class="kpi-card"><div class="value" id="kBloqueios">0</div><div class="label">Bloqueios</div><div class="hint">Técnico + administrativo</div></div>
+      <div class="kpi-card"><div class="value" id="kTicketsPendentes">0</div><div class="label">Tickets pendentes</div><div class="hint">Externos ainda abertos</div></div>
+      <div class="kpi-card"><div class="value" id="kTecnicosCampo">0</div><div class="label">Técnicos em campo</div><div class="hint">Capacidade técnica do dia</div></div>
+      <div class="kpi-card"><div class="value" id="kTecnicosParados">0</div><div class="label">Técnicos parados</div><div class="hint">Ponto de atenção</div></div>
+      <div class="kpi-card"><div class="value" id="kPedidosAtraso">0</div><div class="label">Pedidos em atraso</div><div class="hint">Prazo vencido sem resolução</div></div>
+      <div class="kpi-card"><div class="value" id="kPendenciasCliente">0</div><div class="label">Aguardando cliente</div><div class="hint">Técnico + administrativo</div></div>
+      <div class="kpi-card"><div class="value" id="kPendenciasAdm">0</div><div class="label">Pendências administrativas</div><div class="hint">Peças, notas, S.C., CTF e mais</div></div>
+      <div class="kpi-card"><div class="value" id="kRisco">Baixo</div><div class="label">Risco consolidado</div><div class="hint">Calculado pelo sistema</div></div>
+    </div>
+
+    <div class="panel-hero">
+      <div class="hero-card">
+        <h3>Monitor operacional em destaque</h3>
+        <div class="hero-sub">Atualiza conforme o preenchimento da operação, área técnica e administrativo. Ao salvar, passa a compor a média e a tendência do mês.</div>
+        <div class="monitor-grid">
+          <div class="monitor-tile critical"><div class="over">Tickets pendentes</div><div class="num" id="heroTicketsPendentes">0</div><div class="desc">Chamados e tickets externos ainda sem resolução final.</div></div>
+          <div class="monitor-tile critical"><div class="over">Tickets críticos</div><div class="num" id="heroTicketsCriticos">0</div><div class="desc">Itens de maior risco técnico ou com impacto direto ao cliente.</div></div>
+          <div class="monitor-tile"><div class="over">Técnicos em campo</div><div class="num" id="heroTecnicosCampo">0</div><div class="desc">Capacidade técnica ativa no dia.</div></div>
+          <div class="monitor-tile alert"><div class="over">Técnicos parados</div><div class="num" id="heroTecnicosParados">0</div><div class="desc">Capacidade ociosa que precisa de redistribuição.</div></div>
+          <div class="monitor-tile alert"><div class="over">Pedidos em atraso</div><div class="num" id="heroPedidosAtraso">0</div><div class="desc">Pedidos com prazo vencido e sem status final.</div></div>
+          <div class="monitor-tile neutral"><div class="over">Pendências adm.</div><div class="num" id="heroPendenciasAdm">0</div><div class="desc">Peças, notas, S.C., CTFs, e-mails e terceiros.</div></div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h3>Média e tendência do mês</h3>
+        <div class="muted" id="mesRefLabel">Base mensal: --</div>
+        <div class="month-strip">
+          <div class="month-mini info"><div class="label">Dias salvos</div><div class="value" id="mesDiasSalvos">0</div><div class="foot">Dias do mês com histórico salvo e considerado na média.</div></div>
+          <div class="month-mini"><div class="label">Média de críticos</div><div class="value" id="mesMediaCriticos">0,0</div><div class="foot">Casos críticos médios por dia salvo.</div></div>
+          <div class="month-mini good"><div class="label">Média SLA</div><div class="value" id="mesMediaSla">0%</div><div class="foot">Média de SLA dos dias salvos do mês.</div></div>
+          <div class="month-mini info"><div class="label">Média execução</div><div class="value" id="mesMediaExec">0%</div><div class="foot">Percentual médio de execução do gestor no mês.</div></div>
+        </div>
+        <div class="month-strip">
+          <div class="month-mini bad"><div class="label">Média tickets pendentes</div><div class="value" id="mesMediaTickets">0,0</div><div class="foot">Carga média de tickets externos em aberto.</div></div>
+          <div class="month-mini"><div class="label">Média técnicos parados</div><div class="value" id="mesMediaParados">0,0</div><div class="foot">Capacidade técnica ociosa média do mês.</div></div>
+          <div class="month-mini bad"><div class="label">Média pedidos em atraso</div><div class="value" id="mesMediaPedidosAtraso">0,0</div><div class="foot">Itens de peça/pedido vencidos em média.</div></div>
+          <div class="month-mini"><div class="label">Leitura do mês</div><div class="value" id="mesTendencia">Estável</div><div class="foot" id="mesResumo">Sem dados suficientes ainda.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row compare-grid">
+      <div class="card compare-card">
+        <h3>Comparativo diário</h3>
+        <div class="muted">Base de comparação: <span id="cmpDiaDataRef">Sem dia anterior salvo</span></div>
+        <div class="compare-stack">
+          <div class="compare-line"><strong>Casos críticos</strong><span class="compare-pill info" id="cmpDiaCriticos">Sem base</span></div>
+          <div class="compare-line"><strong>Tickets pendentes</strong><span class="compare-pill info" id="cmpDiaTickets">Sem base</span></div>
+          <div class="compare-line"><strong>Pedidos em atraso</strong><span class="compare-pill info" id="cmpDiaAtrasos">Sem base</span></div>
+          <div class="compare-line"><strong>SLA do dia</strong><span class="compare-pill info" id="cmpDiaSla">Sem base</span></div>
+          <div class="compare-line"><strong>Execução</strong><span class="compare-pill info" id="cmpDiaExec">Sem base</span></div>
+        </div>
+        <div class="muted compare-summary" id="cmpDiaResumo">Quando houver um dia anterior salvo, a comparação aparece automaticamente.</div>
+      </div>
+      <div class="card compare-card">
+        <h3>Comparativo com média do mês</h3>
+        <div class="muted">Base mensal: <span id="cmpMesDataRef">Sem histórico mensal</span></div>
+        <div class="compare-stack">
+          <div class="compare-line"><strong>Casos críticos</strong><span class="compare-pill info" id="cmpMesCriticos">Sem base</span></div>
+          <div class="compare-line"><strong>Tickets pendentes</strong><span class="compare-pill info" id="cmpMesTickets">Sem base</span></div>
+          <div class="compare-line"><strong>Pedidos em atraso</strong><span class="compare-pill info" id="cmpMesAtrasos">Sem base</span></div>
+          <div class="compare-line"><strong>SLA do dia</strong><span class="compare-pill info" id="cmpMesSla">Sem base</span></div>
+          <div class="compare-line"><strong>Execução</strong><span class="compare-pill info" id="cmpMesExec">Sem base</span></div>
+        </div>
+        <div class="muted compare-summary" id="cmpMesResumo">A média do mês considera dias com histórico salvo.</div>
+      </div>
+    </div>
+
+    <div id="statusBanner" class="status-banner status-estavel">Status geral consolidado: Estável</div>
+
+    <div class="snapshot-grid">
+      <div class="snapshot-card">
+        <h4>Tickets e acionamentos</h4>
+        <div class="big" id="snapTicketsTotal">0</div>
+        <div class="meta">Pendentes no dia · críticos em <strong id="snapTicketsCriticos">0</strong></div>
+        <div class="snapshot-list" style="margin-top:12px">
+          <div class="snapshot-line"><strong>CTFs críticos</strong><span id="snapCtf">0</span></div>
+          <div class="snapshot-line"><strong>E-mails críticos</strong><span id="snapEmails">0</span></div>
+          <div class="snapshot-line"><strong>Escalonamento</strong><span id="snapEscalonamento">Não</span></div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <h4>Capacidade técnica</h4>
+        <div class="big" id="snapTecnicosCampo">0</div>
+        <div class="meta">Técnicos em campo · parados em <strong id="snapTecnicosParados">0</strong></div>
+        <div class="snapshot-list" style="margin-top:12px">
+          <div class="snapshot-line"><strong>Aguardando peça</strong><span id="snapPeca">0</span></div>
+          <div class="snapshot-line"><strong>Aguardando cliente</strong><span id="snapCliente">0</span></div>
+          <div class="snapshot-line"><strong>Reincidências</strong><span id="snapReinc">0</span></div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <h4>Retaguarda operacional</h4>
+        <div class="big" id="snapPendAdm">0</div>
+        <div class="meta">Pendências administrativas totais do dia</div>
+        <div class="snapshot-list" style="margin-top:12px">
+          <div class="snapshot-line"><strong>Movimentações</strong><span id="snapMov">0</span></div>
+          <div class="snapshot-line"><strong>Notas / S.C.</strong><span id="snapDocs">0 / 0</span></div>
+          <div class="snapshot-line"><strong>Pedidos em atraso</strong><span id="snapAtraso">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <h3>Leitura rápida da operação</h3>
+        <div class="compact-list">
+          <div class="compact-item"><strong>Área mais pressionada:</strong> <span id="painelAreaPressionada">--</span></div>
+          <div class="compact-item"><strong>Principal origem do risco:</strong> <span id="painelOrigemRisco">--</span></div>
+          <div class="compact-item"><strong>Principal bloqueio:</strong> <span id="painelBloqueio">--</span></div>
+          <div class="compact-item"><strong>Impacto predominante:</strong> <span id="painelImpacto">--</span></div>
+          <div class="compact-item"><strong>Ação prioritária:</strong> <span id="painelAcao">--</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Score consolidado</h3>
+        <div class="summary-box">
+          <div class="score" id="scoreConsolidado">0</div>
+          <div class="muted" style="margin-top:8px">Pontuação gerada a partir do status das áreas, risco para cliente, escalonamento, peças, tickets e bloqueios.</div>
+        </div>
+        <hr class="soft">
+        <div class="compact-list">
+          <div class="compact-item"><strong>Cliente mais sensível:</strong> <span id="painelClienteSensivel">--</span></div>
+          <div class="compact-item"><strong>Escalonamento necessário:</strong> <span id="painelEscalonamento">--</span></div>
+          <div class="compact-item"><strong>Dependência do gestor:</strong> <span id="painelDependenciaGestor">--</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <h3>Monitor operacional do dia</h3>
+        <div class="compact-list">
+          <div class="compact-item"><strong>Tickets pendentes:</strong> <span id="painelTicketsResumo">0</span></div>
+          <div class="compact-item"><strong>Pedidos em atraso:</strong> <span id="painelPedidosResumo">0</span></div>
+          <div class="compact-item"><strong>Técnicos em campo / parados:</strong> <span id="painelTecnicosResumo">0 / 0</span></div>
+          <div class="compact-item"><strong>Pedidos aguardando peça:</strong> <span id="painelPecasResumo">0</span></div>
+          <div class="compact-item"><strong>Pendências aguardando cliente:</strong> <span id="painelClienteResumo">0</span></div>
+          <div class="compact-item"><strong>Pendências administrativas totais:</strong> <span id="painelAdmResumo">0</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Dados principais que precisam aparecer</h3>
+        <div class="compact-list">
+          <div class="compact-item"><strong>Tickets críticos:</strong> <span id="painelTicketsCriticos">0</span></div>
+          <div class="compact-item"><strong>CTFs críticos:</strong> <span id="painelCtfCriticos">0</span></div>
+          <div class="compact-item"><strong>E-mails críticos:</strong> <span id="painelEmailsCriticos">0</span></div>
+          <div class="compact-item"><strong>Movimentações pendentes:</strong> <span id="painelMovResumo">0</span></div>
+          <div class="compact-item"><strong>Notas / S.C. pendentes:</strong> <span id="painelDocResumo">0 / 0</span></div>
+          <div class="compact-item"><strong>Cliente mais crítico do dia:</strong> <span id="painelClienteCriticoDetalhe">--</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="operacao" class="section">
+    <div class="card">
+      <h3>Operação • Visão macro do dia</h3>
+      <div class="row4">
+        <div><label>Data da operação<input id="op_data" type="date"></label></div>
+        <div><label>Turno<select id="op_turno"><option value="">Selecionar...</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></label></div>
+        <div><label>Status geral da operação<select id="op_status"><option value="">Selecionar...</option><option>Estável</option><option>Atenção</option><option>Pressionada</option><option>Crítica</option></select></label></div>
+        <div><label>Volume do dia<select id="op_volume"><option value="">Selecionar...</option><option>Normal</option><option>Alto</option><option>Muito alto</option></select></label></div>
+      </div>
+
+      <div class="row4">
+        <div><label>Tipo predominante<select id="op_tipo"><option value="">Selecionar...</option><option>Chamados corretivos</option><option>Instalações</option><option>Preventivas</option><option>Cobranças</option><option>Reincidências</option><option>Pendências internas</option></select></label></div>
+        <div><label>Casos críticos<input id="op_criticos" type="number" min="0" value="0"></label></div>
+        <div><label>Reincidências<input id="op_reinc" type="number" min="0" value="0"></label></div>
+        <div><label>SLA do dia (%)<input id="op_sla" type="number" min="0" max="100" value="0"></label></div>
+      </div>
+
+      <h4>Pressão operacional</h4>
+      <div class="row4">
+        <div><label>Qtd. clientes criticos<input id="op_qtd_clientes_criticos" type="number" min="0" max="5" value="0"></label></div>
+        <div><label>Cliente mais critico<input id="op_cliente_critico" placeholder="Cliente ou unidade"></label></div>
+        <div><label>Unidade / filial impactada<input id="op_unidade"></label></div>
+        <div><label>Motivo principal da criticidade<select id="op_motivo"><option value="">Selecionar...</option><option>Cliente crítico</option><option>Reincidência</option><option>Atraso interno</option><option>Dependência de terceiros</option><option>Falta de recurso / peça</option><option>Agenda pressionada</option></select></label></div>
+      </div>
+
+      <div class="row3">
+        <div><label>Risco de escalonamento?<select id="op_risco_escalonamento"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Risco de desgaste com cliente?<select id="op_risco_cliente"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Risco de atraso?<select id="op_risco_atraso"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+
+      <h4>Direção do dia</h4>
+      <div class="row3">
+        <div><label>Prioridade 1<input id="op_prioridade1"></label></div>
+        <div><label>Prioridade 2<input id="op_prioridade2"></label></div>
+        <div><label>Prioridade 3<input id="op_prioridade3"></label></div>
+      </div>
+
+      <div class="section-block dynamic-hidden" id="opClientesCriticosWrap">
+        <h4>Detalhamento • clientes criticos</h4>
+        <div class="muted" style="margin-bottom:10px">Ao informar a quantidade, o painel abre um acompanhamento por cliente com prioridade, acao feita e prazo. O autosave guarda rascunho, mas o preenchimento completo mantém o dia validado.</div>
+
+        <div class="dynamic-item op-cliente-critico-item dynamic-hidden">
+          <h5>Cliente critico 1</h5>
+          <div class="row4">
+            <div><label>Cliente / unidade<input id="op-cli1_cliente" placeholder="Nome do cliente ou unidade"></label></div>
+            <div><label>Prioridade<select id="op-cli1_prioridade"><option value="">Selecionar...</option><option>Alta</option><option>Critica</option><option>Escalonamento</option></select></label></div>
+            <div><label>Acao feita<input id="op-cli1_acao" placeholder="O que foi feito ou esta em andamento"></label></div>
+            <div><label>Prazo<input id="op-cli1_prazo" type="date"></label></div>
+          </div>
+        </div>
+
+        <div class="dynamic-item op-cliente-critico-item dynamic-hidden">
+          <h5>Cliente critico 2</h5>
+          <div class="row4">
+            <div><label>Cliente / unidade<input id="op-cli2_cliente" placeholder="Nome do cliente ou unidade"></label></div>
+            <div><label>Prioridade<select id="op-cli2_prioridade"><option value="">Selecionar...</option><option>Alta</option><option>Critica</option><option>Escalonamento</option></select></label></div>
+            <div><label>Acao feita<input id="op-cli2_acao" placeholder="O que foi feito ou esta em andamento"></label></div>
+            <div><label>Prazo<input id="op-cli2_prazo" type="date"></label></div>
+          </div>
+        </div>
+
+        <div class="dynamic-item op-cliente-critico-item dynamic-hidden">
+          <h5>Cliente critico 3</h5>
+          <div class="row4">
+            <div><label>Cliente / unidade<input id="op-cli3_cliente" placeholder="Nome do cliente ou unidade"></label></div>
+            <div><label>Prioridade<select id="op-cli3_prioridade"><option value="">Selecionar...</option><option>Alta</option><option>Critica</option><option>Escalonamento</option></select></label></div>
+            <div><label>Acao feita<input id="op-cli3_acao" placeholder="O que foi feito ou esta em andamento"></label></div>
+            <div><label>Prazo<input id="op-cli3_prazo" type="date"></label></div>
+          </div>
+        </div>
+
+        <div class="dynamic-item op-cliente-critico-item dynamic-hidden">
+          <h5>Cliente critico 4</h5>
+          <div class="row4">
+            <div><label>Cliente / unidade<input id="op-cli4_cliente" placeholder="Nome do cliente ou unidade"></label></div>
+            <div><label>Prioridade<select id="op-cli4_prioridade"><option value="">Selecionar...</option><option>Alta</option><option>Critica</option><option>Escalonamento</option></select></label></div>
+            <div><label>Acao feita<input id="op-cli4_acao" placeholder="O que foi feito ou esta em andamento"></label></div>
+            <div><label>Prazo<input id="op-cli4_prazo" type="date"></label></div>
+          </div>
+        </div>
+
+        <div class="dynamic-item op-cliente-critico-item dynamic-hidden">
+          <h5>Cliente critico 5</h5>
+          <div class="row4">
+            <div><label>Cliente / unidade<input id="op-cli5_cliente" placeholder="Nome do cliente ou unidade"></label></div>
+            <div><label>Prioridade<select id="op-cli5_prioridade"><option value="">Selecionar...</option><option>Alta</option><option>Critica</option><option>Escalonamento</option></select></label></div>
+            <div><label>Acao feita<input id="op-cli5_acao" placeholder="O que foi feito ou esta em andamento"></label></div>
+            <div><label>Prazo<input id="op-cli5_prazo" type="date"></label></div>
+          </div>
+        </div>
+      </div>
+
+      <label>Ação de contenção imediata<textarea id="op_contencao"></textarea></label>
+      <label>Observação gerencial<textarea id="op_obs"></textarea></label>
+
+      <h4>Execução do gestor</h4>
+      <div class="row3 small-area">
+        <div><label>Revisou casos críticos?<select id="op_exec1"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Definiu prioridades?<select id="op_exec2"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Cobrou responsáveis?<select id="op_exec3"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Atualizou clientes?<select id="op_exec4"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Registrou pendências?<select id="op_exec5"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Horas dedicadas<input id="op_horas" type="number" min="0" step="0.5"></label></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="agenda" class="section">
+    <div class="card">
+      <div class="topbar" style="align-items:center">
+        <div>
+          <h3 style="margin:0">Agenda mensal operacional</h3>
+          <div class="muted">Visão mensal em quadro com leitura rápida por criticidade, no estilo calendário. Cada card mostra a flag do compromisso para acelerar sua tomada de decisão.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-light" onclick="changeCalendarMonth(-1)">Mês anterior</button>
+          <button class="btn-primary" onclick="goToTodayMonth()">Mês atual</button>
+          <button class="btn-light" onclick="changeCalendarMonth(1)">Próximo mês</button>
+        </div>
+      </div>
+
+      <div class="agenda-toolbar">
+        <div class="agenda-month-title" id="agendaMonthTitle">--</div>
+        <div class="agenda-legend">
+          <span class="legend-item"><span class="legend-dot dot-critico"></span>Crítico</span>
+          <span class="legend-item"><span class="legend-dot dot-atencao"></span>Atenção</span>
+          <span class="legend-item"><span class="legend-dot dot-standby"></span>Stand-by</span>
+          <span class="legend-item"><span class="legend-dot dot-normal"></span>Normal</span>
+        </div>
+      </div>
+
+      <div class="agenda-stats">
+        <div class="agenda-stat"><strong id="agendaStatTotal">0</strong><span>Agendamentos</span></div>
+        <div class="agenda-stat critico"><strong id="agendaStatCritico">0</strong><span>Críticos</span></div>
+        <div class="agenda-stat atencao"><strong id="agendaStatAtencao">0</strong><span>Atenção</span></div>
+        <div class="agenda-stat standby"><strong id="agendaStatStandby">0</strong><span>Stand-by</span></div>
+      </div>
+
+      <div class="agenda-grid-header">
+        <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+      </div>
+      <div id="agendaMonthGrid" class="agenda-grid"></div>
+    </div>
+
+    <div class="card">
+      <h3>Cadastro rápido do dia</h3>
+      <div class="row4">
+        <div><label>Data base da agenda<input id="ag_data_base" type="date"></label></div>
+        <div><label>Cliente / unidade foco<input id="ag_cliente_foco" placeholder="Cliente, unidade ou tema do dia"></label></div>
+        <div><label>Responsável principal<input id="ag_responsavel" placeholder="Responsável pelo acompanhamento"></label></div>
+        <div><label>Observação geral<textarea id="ag_obs" style="min-height:44px" placeholder="Resumo geral da agenda do dia"></textarea></label></div>
+      </div>
+
+      <h4>Blocos de agendamento</h4>
+      <div class="agenda-form-grid">
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 1</div>
+          <label>Título<input id="ag1_titulo" placeholder="Ex.: Visita GPACI / retorno interno"></label>
+          <label>Data<input id="ag1_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag1i" type="time"></label></div>
+            <div><label>Fim<input id="ag1f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag1_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag1_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 2</div>
+          <label>Título<input id="ag2_titulo" placeholder="Ex.: follow-up / alinhamento interno"></label>
+          <label>Data<input id="ag2_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag2i" type="time"></label></div>
+            <div><label>Fim<input id="ag2f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag2_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag2_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 3</div>
+          <label>Título<input id="ag3_titulo" placeholder="Ex.: visita / retorno cliente"></label>
+          <label>Data<input id="ag3_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag3i" type="time"></label></div>
+            <div><label>Fim<input id="ag3f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag3_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag3_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 4</div>
+          <label>Título<input id="ag4_titulo" placeholder="Ex.: agenda emergencial"></label>
+          <label>Data<input id="ag4_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag4i" type="time"></label></div>
+            <div><label>Fim<input id="ag4f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag4_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag4_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 5</div>
+          <label>Título<input id="ag5_titulo" placeholder="Ex.: ação administrativa"></label>
+          <label>Data<input id="ag5_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag5i" type="time"></label></div>
+            <div><label>Fim<input id="ag5f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag5_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag5_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+
+        <div class="agenda-form-card">
+          <div class="agenda-form-title">Agendamento 6</div>
+          <label>Título<input id="ag6_titulo" placeholder="Ex.: reserva / pendência externa"></label>
+          <label>Data<input id="ag6_data" type="date"></label>
+          <div class="row">
+            <div><label>Início<input id="ag6i" type="time"></label></div>
+            <div><label>Fim<input id="ag6f" type="time"></label></div>
+          </div>
+          <label>Flag<select id="ag6_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label>
+          <label>Detalhe<textarea id="ag6_detalhe" placeholder="Cliente, técnico, dependência, observação"></textarea></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+<div id="tecnico" class="section">
+  <div class="card">
+    <h3>Líder Técnico • Gestão detalhada da operação técnica</h3>
+    <div class="helper">Preenchimento guiado com abertura automática de detalhamentos, foco em retorno técnico, rastreabilidade e próxima ação.</div>
+
+    <div class="section-block" style="margin-top:14px">
+      <h4>Status geral da área técnica</h4>
+      <div class="row4">
+        <div><label>Status da área técnica<select id="tec_status"><option value="">Selecionar...</option><option>Estável</option><option>Atenção</option><option>Pressionada</option><option>Crítica</option></select></label></div>
+        <div><label>Impacto técnico geral<select id="tec_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco para cliente?<select id="tec_risco_cliente"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Precisa escalonamento?<select id="tec_escalonamento"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Precisa apoio do gestor?<select id="tec_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Motivo do apoio / escalonamento<textarea id="tec_motivo"></textarea></label></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h4>Capacidade operacional técnica</h4>
+      <div class="row3">
+        <div><label>Técnicos em campo<input id="tec_campo" type="number" min="0" value="0"></label></div>
+        <div><label>Técnicos parados<input id="tec_parados" type="number" min="0" value="0"></label></div>
+        <div><label>Técnicos em apoio remoto<input id="tec_remoto" type="number" min="0" value="0"></label></div>
+      </div>
+      <div class="row3">
+        <div><label>Aguardando peça<input id="tec_aguardando_peca" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Aguardando cliente<input id="tec_aguardando_cliente" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Casos reincidentes<input id="tec_reincidentes" type="number" min="0" max="3" value="0"></label></div>
+      </div>
+    </div>
+
+    <div class="section-block dynamic-hidden" id="tecPecasWrap">
+      <h4>Detalhamento • aguardando peça</h4>
+      
+        <div class="dynamic-item tec-peca-item dynamic-hidden">
+          <h5>Peça pendente 1</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="tec-peca1_pedido"></label></div>
+            <div><label>Cliente<input id="tec-peca1_cliente"></label></div>
+            <div><label>Peça / material<input id="tec-peca1_item"></label></div>
+            <div><label>Responsável / técnico<input id="tec-peca1_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="tec-peca1_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="tec-peca1_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="tec-peca1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="tec-peca1_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="tec-peca1_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="tec-peca1_obs"></textarea></label></div>
+          </div>
+        </div>
+        
+        <div class="dynamic-item tec-peca-item dynamic-hidden">
+          <h5>Peça pendente 2</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="tec-peca2_pedido"></label></div>
+            <div><label>Cliente<input id="tec-peca2_cliente"></label></div>
+            <div><label>Peça / material<input id="tec-peca2_item"></label></div>
+            <div><label>Responsável / técnico<input id="tec-peca2_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="tec-peca2_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="tec-peca2_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="tec-peca2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="tec-peca2_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="tec-peca2_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="tec-peca2_obs"></textarea></label></div>
+          </div>
+        </div>
+        
+        <div class="dynamic-item tec-peca-item dynamic-hidden">
+          <h5>Peça pendente 3</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="tec-peca3_pedido"></label></div>
+            <div><label>Cliente<input id="tec-peca3_cliente"></label></div>
+            <div><label>Peça / material<input id="tec-peca3_item"></label></div>
+            <div><label>Responsável / técnico<input id="tec-peca3_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="tec-peca3_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="tec-peca3_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="tec-peca3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="tec-peca3_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="tec-peca3_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="tec-peca3_obs"></textarea></label></div>
+          </div>
+        </div>
+        
+    </div>
+
+    <div class="section-block dynamic-hidden" id="tecClienteWrap">
+      <h4>Detalhamento • aguardando cliente</h4>
+      
+        <div class="dynamic-item tec-cliente-item dynamic-hidden">
+          <h5>Pendência cliente 1</h5>
+          <div class="row4">
+            <div><label>Cliente<input id="tec-cliente1_cliente"></label></div>
+            <div><label>O.S.<input id="tec-cliente1_os"></label></div>
+            <div><label>Tipo da pendência<select id="tec-cliente1_tipo"><option value="">Selecionar...</option><option>Liberação de acesso</option><option>Validação do cliente</option><option>Retorno técnico</option><option>Infraestrutura</option><option>Agendamento</option><option>Aprovação interna do cliente</option><option>Outro</option></select></label></div>
+            <div><label>Prazo definido<input id="tec-cliente1_prazo" type="date"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da última interação<input id="tec-cliente1_ultimo" type="date"></label></div>
+            <div><label>Responsável pelo follow-up<input id="tec-cliente1_resp"></label></div>
+            <div><label>Risco<select id="tec-cliente1_risco"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-cliente1_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Aguardar retorno</option><option>Reagendar</option><option>Encerrar stand-by</option><option>Escalonar comercial</option></select></label></div>
+          </div>
+          <label>Descrição / observação<textarea id="tec-cliente1_obs"></textarea></label>
+        </div>
+      
+        <div class="dynamic-item tec-cliente-item dynamic-hidden">
+          <h5>Pendência cliente 2</h5>
+          <div class="row4">
+            <div><label>Cliente<input id="tec-cliente2_cliente"></label></div>
+            <div><label>O.S.<input id="tec-cliente2_os"></label></div>
+            <div><label>Tipo da pendência<select id="tec-cliente2_tipo"><option value="">Selecionar...</option><option>Liberação de acesso</option><option>Validação do cliente</option><option>Retorno técnico</option><option>Infraestrutura</option><option>Agendamento</option><option>Aprovação interna do cliente</option><option>Outro</option></select></label></div>
+            <div><label>Prazo definido<input id="tec-cliente2_prazo" type="date"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da última interação<input id="tec-cliente2_ultimo" type="date"></label></div>
+            <div><label>Responsável pelo follow-up<input id="tec-cliente2_resp"></label></div>
+            <div><label>Risco<select id="tec-cliente2_risco"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-cliente2_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Aguardar retorno</option><option>Reagendar</option><option>Encerrar stand-by</option><option>Escalonar comercial</option></select></label></div>
+          </div>
+          <label>Descrição / observação<textarea id="tec-cliente2_obs"></textarea></label>
+        </div>
+      
+        <div class="dynamic-item tec-cliente-item dynamic-hidden">
+          <h5>Pendência cliente 3</h5>
+          <div class="row4">
+            <div><label>Cliente<input id="tec-cliente3_cliente"></label></div>
+            <div><label>O.S.<input id="tec-cliente3_os"></label></div>
+            <div><label>Tipo da pendência<select id="tec-cliente3_tipo"><option value="">Selecionar...</option><option>Liberação de acesso</option><option>Validação do cliente</option><option>Retorno técnico</option><option>Infraestrutura</option><option>Agendamento</option><option>Aprovação interna do cliente</option><option>Outro</option></select></label></div>
+            <div><label>Prazo definido<input id="tec-cliente3_prazo" type="date"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da última interação<input id="tec-cliente3_ultimo" type="date"></label></div>
+            <div><label>Responsável pelo follow-up<input id="tec-cliente3_resp"></label></div>
+            <div><label>Risco<select id="tec-cliente3_risco"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-cliente3_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Aguardar retorno</option><option>Reagendar</option><option>Encerrar stand-by</option><option>Escalonar comercial</option></select></label></div>
+          </div>
+          <label>Descrição / observação<textarea id="tec-cliente3_obs"></textarea></label>
+        </div>
+      
+    </div>
+
+    <div class="section-block dynamic-hidden" id="tecReincWrap">
+      <h4>Detalhamento • casos reincidentes</h4>
+      
+        <div class="dynamic-item tec-reinc-item dynamic-hidden">
+          <h5>Reincidência 1</h5>
+          <div class="row4">
+            <div><label>Número da O.S.<input id="tec-reinc1_os"></label></div>
+            <div><label>Cliente<input id="tec-reinc1_cliente"></label></div>
+            <div><label>Equipamento / ponto<input id="tec-reinc1_equip"></label></div>
+            <div><label>Motivo da reincidência<input id="tec-reinc1_motivo"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Técnico da última visita<input id="tec-reinc1_tecnico"></label></div>
+            <div><label>Data da última visita<input id="tec-reinc1_ultima" type="date"></label></div>
+            <div><label>Mesmo técnico deve retornar?<select id="tec-reinc1_mesmo"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-reinc1_retorno" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Prioridade<select id="tec-reinc1_prioridade"><option value="">Selecionar...</option><option>Média</option><option>Alta</option><option>Crítica</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-reinc1_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Revisão técnica</option><option>Escalonar fabricante</option><option>Aguardar peça</option><option>Aguardar cliente</option></select></label></div>
+            <div><label>Observação do líder<textarea id="tec-reinc1_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+        <div class="dynamic-item tec-reinc-item dynamic-hidden">
+          <h5>Reincidência 2</h5>
+          <div class="row4">
+            <div><label>Número da O.S.<input id="tec-reinc2_os"></label></div>
+            <div><label>Cliente<input id="tec-reinc2_cliente"></label></div>
+            <div><label>Equipamento / ponto<input id="tec-reinc2_equip"></label></div>
+            <div><label>Motivo da reincidência<input id="tec-reinc2_motivo"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Técnico da última visita<input id="tec-reinc2_tecnico"></label></div>
+            <div><label>Data da última visita<input id="tec-reinc2_ultima" type="date"></label></div>
+            <div><label>Mesmo técnico deve retornar?<select id="tec-reinc2_mesmo"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-reinc2_retorno" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Prioridade<select id="tec-reinc2_prioridade"><option value="">Selecionar...</option><option>Média</option><option>Alta</option><option>Crítica</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-reinc2_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Revisão técnica</option><option>Escalonar fabricante</option><option>Aguardar peça</option><option>Aguardar cliente</option></select></label></div>
+            <div><label>Observação do líder<textarea id="tec-reinc2_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+        <div class="dynamic-item tec-reinc-item dynamic-hidden">
+          <h5>Reincidência 3</h5>
+          <div class="row4">
+            <div><label>Número da O.S.<input id="tec-reinc3_os"></label></div>
+            <div><label>Cliente<input id="tec-reinc3_cliente"></label></div>
+            <div><label>Equipamento / ponto<input id="tec-reinc3_equip"></label></div>
+            <div><label>Motivo da reincidência<input id="tec-reinc3_motivo"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Técnico da última visita<input id="tec-reinc3_tecnico"></label></div>
+            <div><label>Data da última visita<input id="tec-reinc3_ultima" type="date"></label></div>
+            <div><label>Mesmo técnico deve retornar?<select id="tec-reinc3_mesmo"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-reinc3_retorno" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Prioridade<select id="tec-reinc3_prioridade"><option value="">Selecionar...</option><option>Média</option><option>Alta</option><option>Crítica</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-reinc3_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Revisão técnica</option><option>Escalonar fabricante</option><option>Aguardar peça</option><option>Aguardar cliente</option></select></label></div>
+            <div><label>Observação do líder<textarea id="tec-reinc3_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+    </div>
+
+    <div class="section-block">
+      <h4>Distribuição dos técnicos</h4>
+      
+        <div class="dynamic-item">
+          <h5>Técnico 1</h5>
+          <div class="row4">
+            <div><label>Nome do técnico<input id="tec-dist1_nome"></label></div>
+            <div><label>Cliente<input id="tec-dist1_cliente"></label></div>
+            <div><label>Cidade / unidade<input id="tec-dist1_unidade"></label></div>
+            <div><label>Tipo de atendimento<select id="tec-dist1_tipo"><option value="">Selecionar...</option><option>Corretivo</option><option>Preventivo</option><option>Instalação</option><option>Apoio</option><option>Retorno</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status atual<select id="tec-dist1_status"><option value="">Selecionar...</option><option>Em atendimento</option><option>Em deslocamento</option><option>Finalizando</option><option>Aguardando peça</option><option>Aguardando cliente</option><option>Parado</option><option>Stand-by</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-dist1_retorno" type="date"></label></div>
+            <div><label>Previsão de conclusão<input id="tec-dist1_conclusao" type="date"></label></div>
+            <div><label>Bloqueio atual<select id="tec-dist1_bloqueio"><option value="">Selecionar...</option><option>Peça</option><option>Cliente</option><option>Sistema</option><option>Acesso</option><option>Agenda</option><option>Terceiro</option><option>Sem bloqueio</option><option>Outro</option></select></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Próxima ação<select id="tec-dist1_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Validar com cliente</option><option>Aguardar peça</option><option>Aguardar cliente</option><option>Escalonar</option><option>Encerrar</option><option>Monitorar</option></select></label></div>
+            <div><label>Flag da ação<select id="tec-dist1_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label></div>
+            <div><label>Observação<textarea id="tec-dist1_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+        <div class="dynamic-item">
+          <h5>Técnico 2</h5>
+          <div class="row4">
+            <div><label>Nome do técnico<input id="tec-dist2_nome"></label></div>
+            <div><label>Cliente<input id="tec-dist2_cliente"></label></div>
+            <div><label>Cidade / unidade<input id="tec-dist2_unidade"></label></div>
+            <div><label>Tipo de atendimento<select id="tec-dist2_tipo"><option value="">Selecionar...</option><option>Corretivo</option><option>Preventivo</option><option>Instalação</option><option>Apoio</option><option>Retorno</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status atual<select id="tec-dist2_status"><option value="">Selecionar...</option><option>Em atendimento</option><option>Em deslocamento</option><option>Finalizando</option><option>Aguardando peça</option><option>Aguardando cliente</option><option>Parado</option><option>Stand-by</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-dist2_retorno" type="date"></label></div>
+            <div><label>Previsão de conclusão<input id="tec-dist2_conclusao" type="date"></label></div>
+            <div><label>Bloqueio atual<select id="tec-dist2_bloqueio"><option value="">Selecionar...</option><option>Peça</option><option>Cliente</option><option>Sistema</option><option>Acesso</option><option>Agenda</option><option>Terceiro</option><option>Sem bloqueio</option><option>Outro</option></select></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Próxima ação<select id="tec-dist2_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Validar com cliente</option><option>Aguardar peça</option><option>Aguardar cliente</option><option>Escalonar</option><option>Encerrar</option><option>Monitorar</option></select></label></div>
+            <div><label>Flag da ação<select id="tec-dist2_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label></div>
+            <div><label>Observação<textarea id="tec-dist2_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+        <div class="dynamic-item">
+          <h5>Técnico 3</h5>
+          <div class="row4">
+            <div><label>Nome do técnico<input id="tec-dist3_nome"></label></div>
+            <div><label>Cliente<input id="tec-dist3_cliente"></label></div>
+            <div><label>Cidade / unidade<input id="tec-dist3_unidade"></label></div>
+            <div><label>Tipo de atendimento<select id="tec-dist3_tipo"><option value="">Selecionar...</option><option>Corretivo</option><option>Preventivo</option><option>Instalação</option><option>Apoio</option><option>Retorno</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status atual<select id="tec-dist3_status"><option value="">Selecionar...</option><option>Em atendimento</option><option>Em deslocamento</option><option>Finalizando</option><option>Aguardando peça</option><option>Aguardando cliente</option><option>Parado</option><option>Stand-by</option></select></label></div>
+            <div><label>Data do retorno técnico<input id="tec-dist3_retorno" type="date"></label></div>
+            <div><label>Previsão de conclusão<input id="tec-dist3_conclusao" type="date"></label></div>
+            <div><label>Bloqueio atual<select id="tec-dist3_bloqueio"><option value="">Selecionar...</option><option>Peça</option><option>Cliente</option><option>Sistema</option><option>Acesso</option><option>Agenda</option><option>Terceiro</option><option>Sem bloqueio</option><option>Outro</option></select></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Próxima ação<select id="tec-dist3_acao"><option value="">Selecionar...</option><option>Retorno em campo</option><option>Apoio remoto</option><option>Validar com cliente</option><option>Aguardar peça</option><option>Aguardar cliente</option><option>Escalonar</option><option>Encerrar</option><option>Monitorar</option></select></label></div>
+            <div><label>Flag da ação<select id="tec-dist3_flag"><option value="">Selecionar...</option><option>Crítico</option><option>Atenção</option><option>Stand-by</option><option>Normal</option></select></label></div>
+            <div><label>Observação<textarea id="tec-dist3_obs"></textarea></label></div>
+          </div>
+        </div>
+      
+    </div>
+
+    <div class="section-block">
+      <h4>Tickets externos</h4>
+      
+        <div class="dynamic-item">
+          <h5>Ticket 1</h5>
+          <div class="row4">
+            <div><label>Número do ticket<input id="tec-ticket1_num"></label></div>
+            <div><label>Cliente<input id="tec-ticket1_cliente"></label></div>
+            <div><label>Sistema / produto<input id="tec-ticket1_produto"></label></div>
+            <div><label>Impacto<select id="tec-ticket1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status do ticket<select id="tec-ticket1_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em análise</option><option>Em tratativa</option><option>Aguardando retorno</option><option>Resolvido</option><option>Sem prazo</option></select></label></div>
+            <div><label>Data da abertura<input id="tec-ticket1_abertura" type="date"></label></div>
+            <div><label>Última atualização<input id="tec-ticket1_ultima" type="date"></label></div>
+            <div><label>Prazo esperado<input id="tec-ticket1_prazo" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Depende de terceiro?<select id="tec-ticket1_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Risco para cliente?<select id="tec-ticket1_risco"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-ticket1_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Aguardar análise</option><option>Validar solução</option><option>Escalonar</option><option>Atualizar cliente</option></select></label></div>
+          </div>
+          <label>Observação<textarea id="tec-ticket1_obs"></textarea></label>
+        </div>
+      
+        <div class="dynamic-item">
+          <h5>Ticket 2</h5>
+          <div class="row4">
+            <div><label>Número do ticket<input id="tec-ticket2_num"></label></div>
+            <div><label>Cliente<input id="tec-ticket2_cliente"></label></div>
+            <div><label>Sistema / produto<input id="tec-ticket2_produto"></label></div>
+            <div><label>Impacto<select id="tec-ticket2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status do ticket<select id="tec-ticket2_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em análise</option><option>Em tratativa</option><option>Aguardando retorno</option><option>Resolvido</option><option>Sem prazo</option></select></label></div>
+            <div><label>Data da abertura<input id="tec-ticket2_abertura" type="date"></label></div>
+            <div><label>Última atualização<input id="tec-ticket2_ultima" type="date"></label></div>
+            <div><label>Prazo esperado<input id="tec-ticket2_prazo" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Depende de terceiro?<select id="tec-ticket2_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Risco para cliente?<select id="tec-ticket2_risco"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-ticket2_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Aguardar análise</option><option>Validar solução</option><option>Escalonar</option><option>Atualizar cliente</option></select></label></div>
+          </div>
+          <label>Observação<textarea id="tec-ticket2_obs"></textarea></label>
+        </div>
+      
+        <div class="dynamic-item">
+          <h5>Ticket 3</h5>
+          <div class="row4">
+            <div><label>Número do ticket<input id="tec-ticket3_num"></label></div>
+            <div><label>Cliente<input id="tec-ticket3_cliente"></label></div>
+            <div><label>Sistema / produto<input id="tec-ticket3_produto"></label></div>
+            <div><label>Impacto<select id="tec-ticket3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Status do ticket<select id="tec-ticket3_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em análise</option><option>Em tratativa</option><option>Aguardando retorno</option><option>Resolvido</option><option>Sem prazo</option></select></label></div>
+            <div><label>Data da abertura<input id="tec-ticket3_abertura" type="date"></label></div>
+            <div><label>Última atualização<input id="tec-ticket3_ultima" type="date"></label></div>
+            <div><label>Prazo esperado<input id="tec-ticket3_prazo" type="date"></label></div>
+          </div>
+          <div class="row3">
+            <div><label>Depende de terceiro?<select id="tec-ticket3_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Risco para cliente?<select id="tec-ticket3_risco"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+            <div><label>Próxima ação<select id="tec-ticket3_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Aguardar análise</option><option>Validar solução</option><option>Escalonar</option><option>Atualizar cliente</option></select></label></div>
+          </div>
+          <label>Observação<textarea id="tec-ticket3_obs"></textarea></label>
+        </div>
+      
+    </div>
+
+    <div class="section-block">
+      <h4>Consolidação semi-automática</h4>
+      <div class="row">
+        <div><label>O que já foi feito<textarea id="tec_feito"></textarea></label></div>
+        <div><label>O que está em andamento<textarea id="tec_andamento"></textarea></label></div>
+      </div>
+      <div class="row">
+        <div><label>O que segue bloqueado<textarea id="tec_travado"></textarea></label></div>
+        <div><label>Quem precisa agir<textarea id="tec_quem_age"></textarea></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação prioritária<textarea id="tec_proximo"></textarea></label></div>
+        <div><label>Resumo técnico do dia<textarea id="tec_resumo"></textarea></label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="administrativo" class="section">
+  <div class="card">
+    <h3>Administrativo • Gestão detalhada da retaguarda</h3>
+    <div class="helper">Mesma lógica da área técnica: quantidade gera detalhamento, sempre com responsável, prazo, impacto e próxima ação.</div>
+
+    <div class="section-block" style="margin-top:14px">
+      <h4>Status geral da área administrativa</h4>
+      <div class="row4">
+        <div><label>Status da área administrativa<select id="adm_status"><option value="">Selecionar...</option><option>Estável</option><option>Atenção</option><option>Pressionada</option><option>Crítica</option></select></label></div>
+        <div><label>Impacto administrativo geral<select id="adm_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco para cliente?<select id="adm_risco_cliente"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Precisa apoio do gestor?<select id="adm_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Existe dependência externa?<select id="adm_dep_terceiros"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Motivo do apoio / dependência<textarea id="adm_motivo"></textarea></label></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h4>Capacidade operacional administrativa</h4>
+      <div class="row4">
+        <div><label>Peças pendentes<input id="adm_qtd_pecas" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Movimentações pendentes<input id="adm_qtd_mov" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Notas pendentes<input id="adm_qtd_notas" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>S.C. pendentes<input id="adm_qtd_sc" type="number" min="0" max="3" value="0"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>E-mails críticos<input id="adm_qtd_emails" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>CTFs críticos<input id="adm_qtd_ctf" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Pendências com cliente<input id="adm_qtd_cliente" type="number" min="0" max="3" value="0"></label></div>
+        <div><label>Pendências com terceiros<input id="adm_qtd_terceiros" type="number" min="0" max="3" value="0"></label></div>
+      </div>
+    </div>
+
+    <div class="section-block dynamic-hidden" id="admPecasWrap"><h4>Peças pendentes</h4>
+        <div class="dynamic-item adm-peca-item dynamic-hidden">
+          <h5>Peça pendente 1</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="adm-peca1_pedido"></label></div>
+            <div><label>Cliente<input id="adm-peca1_cliente"></label></div>
+            <div><label>Peça / material<input id="adm-peca1_item"></label></div>
+            <div><label>Responsável / técnico<input id="adm-peca1_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="adm-peca1_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="adm-peca1_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="adm-peca1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="adm-peca1_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="adm-peca1_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="adm-peca1_obs"></textarea></label></div>
+          </div>
+        </div>
+        
+        <div class="dynamic-item adm-peca-item dynamic-hidden">
+          <h5>Peça pendente 2</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="adm-peca2_pedido"></label></div>
+            <div><label>Cliente<input id="adm-peca2_cliente"></label></div>
+            <div><label>Peça / material<input id="adm-peca2_item"></label></div>
+            <div><label>Responsável / técnico<input id="adm-peca2_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="adm-peca2_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="adm-peca2_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="adm-peca2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="adm-peca2_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="adm-peca2_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="adm-peca2_obs"></textarea></label></div>
+          </div>
+        </div>
+        
+        <div class="dynamic-item adm-peca-item dynamic-hidden">
+          <h5>Peça pendente 3</h5>
+          <div class="row4">
+            <div><label>Pedido / solicitação<input id="adm-peca3_pedido"></label></div>
+            <div><label>Cliente<input id="adm-peca3_cliente"></label></div>
+            <div><label>Peça / material<input id="adm-peca3_item"></label></div>
+            <div><label>Responsável / técnico<input id="adm-peca3_resp"></label></div>
+          </div>
+          <div class="row4">
+            <div><label>Data da solicitação<input id="adm-peca3_data" type="date"></label></div>
+            <div><label>Prazo prometido<input id="adm-peca3_prazo" type="date"></label></div>
+            <div><label>Impacto<select id="adm-peca3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+            <div><label>Status<select id="adm-peca3_status"><option value="">Selecionar...</option><option>Aguardando separação</option><option>Aguardando envio</option><option>Em transporte</option><option>Recebido</option><option>Sem previsão</option></select></label></div>
+          </div>
+          <div class="row">
+            <div><label>Próxima ação<select id="adm-peca3_acao"><option value="">Selecionar...</option><option>Aguardar</option><option>Cobrar administrativo</option><option>Validar prazo</option><option>Reagendar atendimento</option><option>Escalonar</option></select></label></div>
+            <div><label>Observação<textarea id="adm-peca3_obs"></textarea></label></div>
+          </div>
+        </div>
+        </div>
+    <div class="section-block dynamic-hidden" id="admMovWrap"><h4>Movimentações pendentes</h4>
+      <div class="dynamic-item adm-mov-item dynamic-hidden"><h5>Movimentação 1</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-mov1_num"></label></div>
+        <div><label>Cliente<input id="adm-mov1_cliente"></label></div>
+        <div><label>Tipo<select id="adm-mov1_tipo"><option value="">Selecionar...</option><option>Envio</option><option>Retorno</option><option>Transferência</option><option>Coleta</option><option>Troca</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-mov1_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-mov1_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-mov1_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-mov1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-mov1_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em andamento</option><option>Aguardando validação</option><option>Finalizado</option><option>Sem retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-mov1_acao"><option value="">Selecionar...</option><option>Cobrar andamento</option><option>Validar destino</option><option>Reprogramar</option><option>Escalonar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-mov1_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-mov-item dynamic-hidden"><h5>Movimentação 2</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-mov2_num"></label></div>
+        <div><label>Cliente<input id="adm-mov2_cliente"></label></div>
+        <div><label>Tipo<select id="adm-mov2_tipo"><option value="">Selecionar...</option><option>Envio</option><option>Retorno</option><option>Transferência</option><option>Coleta</option><option>Troca</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-mov2_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-mov2_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-mov2_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-mov2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-mov2_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em andamento</option><option>Aguardando validação</option><option>Finalizado</option><option>Sem retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-mov2_acao"><option value="">Selecionar...</option><option>Cobrar andamento</option><option>Validar destino</option><option>Reprogramar</option><option>Escalonar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-mov2_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-mov-item dynamic-hidden"><h5>Movimentação 3</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-mov3_num"></label></div>
+        <div><label>Cliente<input id="adm-mov3_cliente"></label></div>
+        <div><label>Tipo<select id="adm-mov3_tipo"><option value="">Selecionar...</option><option>Envio</option><option>Retorno</option><option>Transferência</option><option>Coleta</option><option>Troca</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-mov3_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-mov3_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-mov3_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-mov3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-mov3_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em andamento</option><option>Aguardando validação</option><option>Finalizado</option><option>Sem retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-mov3_acao"><option value="">Selecionar...</option><option>Cobrar andamento</option><option>Validar destino</option><option>Reprogramar</option><option>Escalonar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-mov3_obs"></textarea></label></div>
+      </div></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admNotasWrap"><h4>Notas pendentes</h4>
+      <div class="dynamic-item adm-nota-item dynamic-hidden"><h5>Nota 1</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-nota1_num"></label></div>
+        <div><label>Cliente<input id="adm-nota1_cliente"></label></div>
+        <div><label>Tipo<select id="adm-nota1_tipo"><option value="">Selecionar...</option><option>Emissão</option><option>Correção</option><option>Cancelamento</option><option>Reenvio</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-nota1_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da identificação<input id="adm-nota1_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-nota1_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-nota1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-nota1_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em correção</option><option>Aguardando retorno</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-nota1_acao"><option value="">Selecionar...</option><option>Corrigir</option><option>Cobrar retorno</option><option>Validar com cliente</option><option>Escalonar financeiro/fiscal</option></select></label></div>
+        <div><label>Observação<textarea id="adm-nota1_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-nota-item dynamic-hidden"><h5>Nota 2</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-nota2_num"></label></div>
+        <div><label>Cliente<input id="adm-nota2_cliente"></label></div>
+        <div><label>Tipo<select id="adm-nota2_tipo"><option value="">Selecionar...</option><option>Emissão</option><option>Correção</option><option>Cancelamento</option><option>Reenvio</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-nota2_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da identificação<input id="adm-nota2_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-nota2_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-nota2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-nota2_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em correção</option><option>Aguardando retorno</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-nota2_acao"><option value="">Selecionar...</option><option>Corrigir</option><option>Cobrar retorno</option><option>Validar com cliente</option><option>Escalonar financeiro/fiscal</option></select></label></div>
+        <div><label>Observação<textarea id="adm-nota2_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-nota-item dynamic-hidden"><h5>Nota 3</h5>
+      <div class="row4">
+        <div><label>Número / referência<input id="adm-nota3_num"></label></div>
+        <div><label>Cliente<input id="adm-nota3_cliente"></label></div>
+        <div><label>Tipo<select id="adm-nota3_tipo"><option value="">Selecionar...</option><option>Emissão</option><option>Correção</option><option>Cancelamento</option><option>Reenvio</option><option>Outro</option></select></label></div>
+        <div><label>Responsável<input id="adm-nota3_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da identificação<input id="adm-nota3_data" type="date"></label></div>
+        <div><label>Prazo definido<input id="adm-nota3_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-nota3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-nota3_status"><option value="">Selecionar...</option><option>Pendente</option><option>Em correção</option><option>Aguardando retorno</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-nota3_acao"><option value="">Selecionar...</option><option>Corrigir</option><option>Cobrar retorno</option><option>Validar com cliente</option><option>Escalonar financeiro/fiscal</option></select></label></div>
+        <div><label>Observação<textarea id="adm-nota3_obs"></textarea></label></div>
+      </div></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admScWrap"><h4>S.C. pendentes</h4>
+      <div class="dynamic-item adm-sc-item dynamic-hidden"><h5>S.C. 1</h5>
+      <div class="row4">
+        <div><label>Número da S.C.<input id="adm-sc1_num"></label></div>
+        <div><label>Cliente / área<input id="adm-sc1_cliente"></label></div>
+        <div><label>Data de abertura<input id="adm-sc1_data" type="date"></label></div>
+        <div><label>Prazo previsto<input id="adm-sc1_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-sc1_resp"></label></div>
+        <div><label>Impacto<select id="adm-sc1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-sc1_status"><option value="">Selecionar...</option><option>Aberta</option><option>Em aprovação</option><option>Em tratamento</option><option>Aguardando retorno</option><option>Finalizada</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-sc1_acao"><option value="">Selecionar...</option><option>Cobrar aprovação</option><option>Validar dados</option><option>Atualizar solicitante</option><option>Escalonar</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-sc1_obs"></textarea></label></div>
+    
+      <div class="dynamic-item adm-sc-item dynamic-hidden"><h5>S.C. 2</h5>
+      <div class="row4">
+        <div><label>Número da S.C.<input id="adm-sc2_num"></label></div>
+        <div><label>Cliente / área<input id="adm-sc2_cliente"></label></div>
+        <div><label>Data de abertura<input id="adm-sc2_data" type="date"></label></div>
+        <div><label>Prazo previsto<input id="adm-sc2_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-sc2_resp"></label></div>
+        <div><label>Impacto<select id="adm-sc2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-sc2_status"><option value="">Selecionar...</option><option>Aberta</option><option>Em aprovação</option><option>Em tratamento</option><option>Aguardando retorno</option><option>Finalizada</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-sc2_acao"><option value="">Selecionar...</option><option>Cobrar aprovação</option><option>Validar dados</option><option>Atualizar solicitante</option><option>Escalonar</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-sc2_obs"></textarea></label></div>
+    
+      <div class="dynamic-item adm-sc-item dynamic-hidden"><h5>S.C. 3</h5>
+      <div class="row4">
+        <div><label>Número da S.C.<input id="adm-sc3_num"></label></div>
+        <div><label>Cliente / área<input id="adm-sc3_cliente"></label></div>
+        <div><label>Data de abertura<input id="adm-sc3_data" type="date"></label></div>
+        <div><label>Prazo previsto<input id="adm-sc3_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-sc3_resp"></label></div>
+        <div><label>Impacto<select id="adm-sc3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-sc3_status"><option value="">Selecionar...</option><option>Aberta</option><option>Em aprovação</option><option>Em tratamento</option><option>Aguardando retorno</option><option>Finalizada</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-sc3_acao"><option value="">Selecionar...</option><option>Cobrar aprovação</option><option>Validar dados</option><option>Atualizar solicitante</option><option>Escalonar</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-sc3_obs"></textarea></label></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admEmailsWrap"><h4>E-mails críticos</h4>
+      <div class="dynamic-item adm-email-item dynamic-hidden"><h5>E-mail crítico 1</h5>
+      <div class="row4">
+        <div><label>Cliente / remetente<input id="adm-email1_cliente"></label></div>
+        <div><label>Assunto<input id="adm-email1_assunto"></label></div>
+        <div><label>Data / hora<input id="adm-email1_data" type="datetime-local"></label></div>
+        <div><label>Tipo<select id="adm-email1_tipo"><option value="">Selecionar...</option><option>Cobrança</option><option>Reclamação</option><option>Escalonamento</option><option>Alinhamento interno</option><option>Pendência documental</option><option>Outro</option></select></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Impacto<select id="adm-email1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Responsável<input id="adm-email1_resp"></label></div>
+        <div><label>Prazo para retorno<input id="adm-email1_prazo" type="date"></label></div>
+        <div><label>Status<select id="adm-email1_status"><option value="">Selecionar...</option><option>Sem resposta</option><option>Em tratativa</option><option>Respondido</option><option>Aguardando retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-email1_acao"><option value="">Selecionar...</option><option>Responder</option><option>Alinhar internamente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-email1_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-email-item dynamic-hidden"><h5>E-mail crítico 2</h5>
+      <div class="row4">
+        <div><label>Cliente / remetente<input id="adm-email2_cliente"></label></div>
+        <div><label>Assunto<input id="adm-email2_assunto"></label></div>
+        <div><label>Data / hora<input id="adm-email2_data" type="datetime-local"></label></div>
+        <div><label>Tipo<select id="adm-email2_tipo"><option value="">Selecionar...</option><option>Cobrança</option><option>Reclamação</option><option>Escalonamento</option><option>Alinhamento interno</option><option>Pendência documental</option><option>Outro</option></select></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Impacto<select id="adm-email2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Responsável<input id="adm-email2_resp"></label></div>
+        <div><label>Prazo para retorno<input id="adm-email2_prazo" type="date"></label></div>
+        <div><label>Status<select id="adm-email2_status"><option value="">Selecionar...</option><option>Sem resposta</option><option>Em tratativa</option><option>Respondido</option><option>Aguardando retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-email2_acao"><option value="">Selecionar...</option><option>Responder</option><option>Alinhar internamente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-email2_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-email-item dynamic-hidden"><h5>E-mail crítico 3</h5>
+      <div class="row4">
+        <div><label>Cliente / remetente<input id="adm-email3_cliente"></label></div>
+        <div><label>Assunto<input id="adm-email3_assunto"></label></div>
+        <div><label>Data / hora<input id="adm-email3_data" type="datetime-local"></label></div>
+        <div><label>Tipo<select id="adm-email3_tipo"><option value="">Selecionar...</option><option>Cobrança</option><option>Reclamação</option><option>Escalonamento</option><option>Alinhamento interno</option><option>Pendência documental</option><option>Outro</option></select></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Impacto<select id="adm-email3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Responsável<input id="adm-email3_resp"></label></div>
+        <div><label>Prazo para retorno<input id="adm-email3_prazo" type="date"></label></div>
+        <div><label>Status<select id="adm-email3_status"><option value="">Selecionar...</option><option>Sem resposta</option><option>Em tratativa</option><option>Respondido</option><option>Aguardando retorno</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-email3_acao"><option value="">Selecionar...</option><option>Responder</option><option>Alinhar internamente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-email3_obs"></textarea></label></div>
+      </div></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admCtfWrap"><h4>CTFs críticos</h4>
+      <div class="dynamic-item adm-ctf-item dynamic-hidden"><h5>CTF 1</h5>
+      <div class="row4">
+        <div><label>Código do CTF<input id="adm-ctf1_num"></label></div>
+        <div><label>Cliente<input id="adm-ctf1_cliente"></label></div>
+        <div><label>Data da identificação<input id="adm-ctf1_data" type="date"></label></div>
+        <div><label>Prazo<input id="adm-ctf1_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-ctf1_resp"></label></div>
+        <div><label>Impacto<select id="adm-ctf1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-ctf1_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em validação</option><option>Em andamento</option><option>Sem retorno</option><option>Resolvido</option></select></label></div>
+        <div><label>Depende de terceiro?<select id="adm-ctf1_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-ctf1_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Corrigir</option><option>Validar com cliente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-ctf1_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-ctf-item dynamic-hidden"><h5>CTF 2</h5>
+      <div class="row4">
+        <div><label>Código do CTF<input id="adm-ctf2_num"></label></div>
+        <div><label>Cliente<input id="adm-ctf2_cliente"></label></div>
+        <div><label>Data da identificação<input id="adm-ctf2_data" type="date"></label></div>
+        <div><label>Prazo<input id="adm-ctf2_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-ctf2_resp"></label></div>
+        <div><label>Impacto<select id="adm-ctf2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-ctf2_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em validação</option><option>Em andamento</option><option>Sem retorno</option><option>Resolvido</option></select></label></div>
+        <div><label>Depende de terceiro?<select id="adm-ctf2_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-ctf2_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Corrigir</option><option>Validar com cliente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-ctf2_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-ctf-item dynamic-hidden"><h5>CTF 3</h5>
+      <div class="row4">
+        <div><label>Código do CTF<input id="adm-ctf3_num"></label></div>
+        <div><label>Cliente<input id="adm-ctf3_cliente"></label></div>
+        <div><label>Data da identificação<input id="adm-ctf3_data" type="date"></label></div>
+        <div><label>Prazo<input id="adm-ctf3_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável<input id="adm-ctf3_resp"></label></div>
+        <div><label>Impacto<select id="adm-ctf3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-ctf3_status"><option value="">Selecionar...</option><option>Aberto</option><option>Em validação</option><option>Em andamento</option><option>Sem retorno</option><option>Resolvido</option></select></label></div>
+        <div><label>Depende de terceiro?<select id="adm-ctf3_terceiro"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-ctf3_acao"><option value="">Selecionar...</option><option>Cobrar retorno</option><option>Corrigir</option><option>Validar com cliente</option><option>Escalonar</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-ctf3_obs"></textarea></label></div>
+      </div></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admClienteWrap"><h4>Pendências com cliente</h4>
+      <div class="dynamic-item adm-cliente-item dynamic-hidden"><h5>Pendência cliente 1</h5>
+      <div class="row4">
+        <div><label>Cliente<input id="adm-cliente1_cliente"></label></div>
+        <div><label>Tipo<select id="adm-cliente1_tipo"><option value="">Selecionar...</option><option>Aprovação</option><option>Envio de documento</option><option>Validação</option><option>Definição de agenda</option><option>Confirmação de dados</option><option>Outro</option></select></label></div>
+        <div><label>Data da última interação<input id="adm-cliente1_ultimo" type="date"></label></div>
+        <div><label>Prazo combinado<input id="adm-cliente1_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável pelo follow-up<input id="adm-cliente1_resp"></label></div>
+        <div><label>Impacto<select id="adm-cliente1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-cliente1_status"><option value="">Selecionar...</option><option>Aguardando cliente</option><option>Em follow-up</option><option>Reagendado</option><option>Encerrado</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-cliente1_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Reforçar alinhamento</option><option>Reagendar</option><option>Encerrar stand-by</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-cliente1_obs"></textarea></label></div>
+    
+      <div class="dynamic-item adm-cliente-item dynamic-hidden"><h5>Pendência cliente 2</h5>
+      <div class="row4">
+        <div><label>Cliente<input id="adm-cliente2_cliente"></label></div>
+        <div><label>Tipo<select id="adm-cliente2_tipo"><option value="">Selecionar...</option><option>Aprovação</option><option>Envio de documento</option><option>Validação</option><option>Definição de agenda</option><option>Confirmação de dados</option><option>Outro</option></select></label></div>
+        <div><label>Data da última interação<input id="adm-cliente2_ultimo" type="date"></label></div>
+        <div><label>Prazo combinado<input id="adm-cliente2_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável pelo follow-up<input id="adm-cliente2_resp"></label></div>
+        <div><label>Impacto<select id="adm-cliente2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-cliente2_status"><option value="">Selecionar...</option><option>Aguardando cliente</option><option>Em follow-up</option><option>Reagendado</option><option>Encerrado</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-cliente2_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Reforçar alinhamento</option><option>Reagendar</option><option>Encerrar stand-by</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-cliente2_obs"></textarea></label></div>
+    
+      <div class="dynamic-item adm-cliente-item dynamic-hidden"><h5>Pendência cliente 3</h5>
+      <div class="row4">
+        <div><label>Cliente<input id="adm-cliente3_cliente"></label></div>
+        <div><label>Tipo<select id="adm-cliente3_tipo"><option value="">Selecionar...</option><option>Aprovação</option><option>Envio de documento</option><option>Validação</option><option>Definição de agenda</option><option>Confirmação de dados</option><option>Outro</option></select></label></div>
+        <div><label>Data da última interação<input id="adm-cliente3_ultimo" type="date"></label></div>
+        <div><label>Prazo combinado<input id="adm-cliente3_prazo" type="date"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Responsável pelo follow-up<input id="adm-cliente3_resp"></label></div>
+        <div><label>Impacto<select id="adm-cliente3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-cliente3_status"><option value="">Selecionar...</option><option>Aguardando cliente</option><option>Em follow-up</option><option>Reagendado</option><option>Encerrado</option></select></label></div>
+        <div><label>Próxima ação<select id="adm-cliente3_acao"><option value="">Selecionar...</option><option>Cobrar cliente</option><option>Reforçar alinhamento</option><option>Reagendar</option><option>Encerrar stand-by</option></select></label></div>
+      </div>
+      <label>Descrição / observação<textarea id="adm-cliente3_obs"></textarea></label></div>
+    </div>
+    <div class="section-block dynamic-hidden" id="admTerceirosWrap"><h4>Pendências com terceiros</h4>
+      <div class="dynamic-item adm-terceiro-item dynamic-hidden"><h5>Pendência terceiro 1</h5>
+      <div class="row4">
+        <div><label>Terceiro / parceiro<input id="adm-terceiro1_nome"></label></div>
+        <div><label>Cliente relacionado<input id="adm-terceiro1_cliente"></label></div>
+        <div><label>Tipo<select id="adm-terceiro1_tipo"><option value="">Selecionar...</option><option>Fornecedor</option><option>Transportadora</option><option>Fabricante</option><option>Financeiro</option><option>Comercial</option><option>Outro</option></select></label></div>
+        <div><label>Responsável interno<input id="adm-terceiro1_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-terceiro1_data" type="date"></label></div>
+        <div><label>Prazo esperado<input id="adm-terceiro1_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-terceiro1_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-terceiro1_status"><option value="">Selecionar...</option><option>Sem retorno</option><option>Em andamento</option><option>Aguardando posição</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-terceiro1_acao"><option value="">Selecionar...</option><option>Cobrar terceiro</option><option>Escalonar</option><option>Atualizar cliente</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-terceiro1_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-terceiro-item dynamic-hidden"><h5>Pendência terceiro 2</h5>
+      <div class="row4">
+        <div><label>Terceiro / parceiro<input id="adm-terceiro2_nome"></label></div>
+        <div><label>Cliente relacionado<input id="adm-terceiro2_cliente"></label></div>
+        <div><label>Tipo<select id="adm-terceiro2_tipo"><option value="">Selecionar...</option><option>Fornecedor</option><option>Transportadora</option><option>Fabricante</option><option>Financeiro</option><option>Comercial</option><option>Outro</option></select></label></div>
+        <div><label>Responsável interno<input id="adm-terceiro2_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-terceiro2_data" type="date"></label></div>
+        <div><label>Prazo esperado<input id="adm-terceiro2_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-terceiro2_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-terceiro2_status"><option value="">Selecionar...</option><option>Sem retorno</option><option>Em andamento</option><option>Aguardando posição</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-terceiro2_acao"><option value="">Selecionar...</option><option>Cobrar terceiro</option><option>Escalonar</option><option>Atualizar cliente</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-terceiro2_obs"></textarea></label></div>
+      </div></div>
+    
+      <div class="dynamic-item adm-terceiro-item dynamic-hidden"><h5>Pendência terceiro 3</h5>
+      <div class="row4">
+        <div><label>Terceiro / parceiro<input id="adm-terceiro3_nome"></label></div>
+        <div><label>Cliente relacionado<input id="adm-terceiro3_cliente"></label></div>
+        <div><label>Tipo<select id="adm-terceiro3_tipo"><option value="">Selecionar...</option><option>Fornecedor</option><option>Transportadora</option><option>Fabricante</option><option>Financeiro</option><option>Comercial</option><option>Outro</option></select></label></div>
+        <div><label>Responsável interno<input id="adm-terceiro3_resp"></label></div>
+      </div>
+      <div class="row4">
+        <div><label>Data da solicitação<input id="adm-terceiro3_data" type="date"></label></div>
+        <div><label>Prazo esperado<input id="adm-terceiro3_prazo" type="date"></label></div>
+        <div><label>Impacto<select id="adm-terceiro3_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Status<select id="adm-terceiro3_status"><option value="">Selecionar...</option><option>Sem retorno</option><option>Em andamento</option><option>Aguardando posição</option><option>Resolvido</option></select></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação<select id="adm-terceiro3_acao"><option value="">Selecionar...</option><option>Cobrar terceiro</option><option>Escalonar</option><option>Atualizar cliente</option><option>Monitorar</option></select></label></div>
+        <div><label>Observação<textarea id="adm-terceiro3_obs"></textarea></label></div>
+      </div></div>
+    </div>
+
+    <div class="section-block">
+      <h4>Consolidação semi-automática</h4>
+      <div class="row">
+        <div><label>O que já foi resolvido<textarea id="adm_resolvido"></textarea></label></div>
+        <div><label>O que está em andamento<textarea id="adm_andamento"></textarea></label></div>
+      </div>
+      <div class="row">
+        <div><label>O que segue bloqueado<textarea id="adm_travado"></textarea></label></div>
+        <div><label>O que depende do gestor<textarea id="adm_dep_gestor_txt"></textarea></label></div>
+      </div>
+      <div class="row">
+        <div><label>Próxima ação prioritária<textarea id="adm_proximo"></textarea></label></div>
+        <div><label>Resumo administrativo do dia<textarea id="adm_resumo"></textarea></label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="diagnostico" class="section">
+    <div class="card">
+      <h3>Diagnóstico Consolidado</h3>
+      <div class="row">
+        <div>
+          <div id="diagBanner" class="status-banner status-estavel">Status geral: Estável</div>
+          <div class="compact-list">
+            <div class="compact-item"><strong>Área mais pressionada:</strong> <span id="diag_area_mais">--</span></div>
+            <div class="compact-item"><strong>Principal origem do risco:</strong> <span id="diag_origem">--</span></div>
+            <div class="compact-item"><strong>Principal impacto:</strong> <span id="diag_impacto">--</span></div>
+            <div class="compact-item"><strong>Principal bloqueio:</strong> <span id="diag_bloqueio">--</span></div>
+            <div class="compact-item"><strong>Nível de criticidade:</strong> <span id="diag_criticidade">--</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="summary-box">
+            <strong>Leitura automática do dia</strong>
+            <textarea id="diag_leitura" style="margin-top:10px;min-height:180px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <h4>Consolidação por área</h4>
+      <div class="row3">
+        <div><label>Operação<textarea id="diag_operacao"></textarea></label></div>
+        <div><label>Técnico<textarea id="diag_tecnico"></textarea></label></div>
+        <div><label>Administrativo<textarea id="diag_adm"></textarea></label></div>
+      </div>
+
+      <h4>Matriz de risco</h4>
+      <div class="row3">
+        <div><label>Risco de atraso<select id="diag_risco_atraso"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco de retrabalho<select id="diag_risco_retrabalho"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco de desgaste com cliente<select id="diag_risco_cliente"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco de quebra de SLA<select id="diag_risco_sla"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco de escalonamento<select id="diag_risco_escalonamento"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+        <div><label>Risco financeiro / operacional<select id="diag_risco_fin"><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
+      </div>
+
+      <h4>Ação prioritária consolidada</h4>
+      <div class="row4">
+        <div><label>Ação imediata<input id="diag_acao"></label></div>
+        <div><label>Responsável principal<input id="diag_responsavel"></label></div>
+        <div><label>Prazo<input id="diag_prazo"></label></div>
+        <div><label>Área de apoio<input id="diag_apoio"></label></div>
+      </div>
+      <div class="row">
+        <div><label>Necessita escalonamento?<select id="diag_escalonamento"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Diagnóstico validado pelo gestor?<select id="diag_validado"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+      </div>
+      <label>Comentário do gestor<textarea id="diag_comentario"></textarea></label>
+      <label>Decisão tomada<textarea id="diag_decisao"></textarea></label>
+      <label>Direcionamento para o próximo período<textarea id="diag_direcionamento"></textarea></label>
+    </div>
+  </div>
+
+  <div id="resultado" class="section">
+    <div class="card">
+      <h3>Resultado do Dia</h3>
+      <label>Problema / contexto<textarea id="res_prob"></textarea></label>
+      <label>Ação aplicada<textarea id="res_acao"></textarea></label>
+      <label>Resultado obtido<textarea id="res_result"></textarea></label>
+      <label>Aprendizado / ajuste<textarea id="res_aprend"></textarea></label>
+    </div>
+  </div>
+
+  <div id="executivo" class="section">
+    <div class="card">
+      <h3>Visão Executiva</h3>
+      <label>Resumo executivo<textarea id="exe_resumo"></textarea></label>
+      <label>Decisão executiva<textarea id="exe_decisao"></textarea></label>
+      <label>Foco do próximo dia<textarea id="exe_foco"></textarea></label>
+    </div>
+  </div>
+
+  <div id="negocio" class="section">
+    <div class="card">
+      <h3>Impacto no Negócio</h3>
+      <label>Impacto financeiro<textarea id="neg_fin"></textarea></label>
+      <label>Risco estratégico<textarea id="neg_risco"></textarea></label>
+      <label>Plano de evolução<textarea id="neg_plano"></textarea></label>
+    </div>
+  </div>
+
+  <div id="melhorias" class="section">
+    <div class="card">
+      <h3>Melhorias Implementadas</h3>
+      <label>Melhoria aplicada<textarea id="melh_oque"></textarea></label>
+      <label>Impacto gerado<textarea id="melh_impacto"></textarea></label>
+      <label>Próxima melhoria sugerida<textarea id="melh_proxima"></textarea></label>
+    </div>
+  </div>
+
+  <div id="historico" class="section">
+    <div class="row">
+      <div class="card">
+        <h3>Registros salvos</h3>
+        <div class="muted">Cada dia fica salvo na base compartilhada do servidor local.</div>
+        <div class="history-list" id="historyList" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <h3>Controle do histórico</h3>
+        <label>Data em edição<input id="currentDateInput" type="date"></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn-primary" onclick="loadSelectedDate()">Carregar data</button>
+          <button class="btn-light" onclick="duplicateTodayFromLoaded()">Duplicar carregado para hoje</button>
+          <button class="btn-danger" onclick="deleteSelectedDate()">Excluir data</button>
+        </div>
+        <details class="history-more">
+          <summary>Mais opções</summary>
+          <div class="history-more-actions">
+            <button class="btn-light" type="button" onclick="if(window.openPanelSettingsModal){window.openPanelSettingsModal();}else{openRuntimeHub();}">Configurações do painel</button>
+            <button class="btn-light" type="button" onclick="refreshAuditTrail()">Atualizar auditoria</button>
+          </div>
+        </details>
+        <h4 style="margin-top:14px">Trilha de auditoria da data</h4>
+        <div class="history-list" id="historyAuditList" style="margin-top:10px"></div>
+        <div class="note" style="margin-top:12px">Sugestão de uso: cada área preenche sua leitura; ao fim do expediente o gestor revisa o diagnóstico consolidado e salva o dia.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="floatingActions" class="floating-actions">
+  <div class="floating-date-card">
+    <label for="floatingDateInput"><i class="fa-regular fa-calendar-days"></i> Registro do dia</label>
+    <input id="floatingDateInput" type="date">
+  </div>
+  <button class="floating-mini-btn" type="button" onclick="loadSelectedDate()" title="Carregar data"><i class="fa-solid fa-folder-open"></i></button>
+  <button class="floating-mini-btn" type="button" onclick="loadTodayRecord()" title="Voltar para hoje"><i class="fa-solid fa-clock-rotate-left"></i></button>
+  <button class="floating-save-btn" type="button" onclick="saveCurrentDay()"><i class="fa-solid fa-floppy-disk"></i> Salvar página</button>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="runtimeHubModal" class="runtime-modal" aria-hidden="true">
+  <div class="runtime-modal-backdrop" onclick="closeRuntimeHub()"></div>
+  <div class="runtime-modal-panel card" role="dialog" aria-modal="true" aria-labelledby="runtimeHubTitle">
+    <div class="runtime-head">
+      <div>
+        <div class="runtime-kicker">Base compartilhada</div>
+        <h3 id="runtimeHubTitle">Servidor e dados do painel</h3>
+        <div class="runtime-sub" id="runtimeStatusLine">Conectando com o servidor local...</div>
+      </div>
+      <div class="runtime-head-actions">
+        <div class="runtime-chip" id="runtimeModeChip">Inicializando</div>
+        <button class="runtime-close" type="button" onclick="closeRuntimeHub()" aria-label="Fechar consulta da base">Fechar</button>
+      </div>
+    </div>
+    <div class="runtime-grid">
+      <div class="runtime-tile">
+        <span class="runtime-label">Acesso neste computador</span>
+        <a id="runtimeLocalUrl" class="runtime-link" href="http://localhost:5000" target="_blank" rel="noreferrer">http://localhost:5000</a>
+        <small>Use sempre este endereco para evitar diferenca entre Chrome, Edge ou outro navegador.</small>
+      </div>
+      <div class="runtime-tile">
+        <span class="runtime-label">Acesso para outros usuarios</span>
+        <a id="runtimeLanUrl" class="runtime-link" href="http://localhost:5000" target="_blank" rel="noreferrer">Aguardando IP de rede</a>
+        <small id="runtimeLanHint">Quando o servidor local estiver ativo, o link da rede aparece aqui.</small>
+      </div>
+      <div class="runtime-tile">
+        <span class="runtime-label">Arquivo da base</span>
+        <strong id="runtimeDataFile">Carregando...</strong>
+        <small id="runtimeDataMeta">0 registros salvos</small>
+      </div>
+      <div class="runtime-tile">
+        <span class="runtime-label">Empresa / unidade ativa</span>
+        <strong id="runtimeOrgCompany">--</strong>
+        <small id="runtimeOrgUnit">--</small>
+      </div>
+      <div class="runtime-tile">
+        <span class="runtime-label">Qualidade operacional (dia ativo)</span>
+        <strong id="runtimeQualityLevel">OK</strong>
+        <small>Score: <span id="runtimeQualityScore">100</span> • Pendencias: <span id="runtimeQualityIssues">0</span></small>
+        <small id="runtimeQualityNext">Sem pendencias relevantes no momento.</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gmReviewActionModal" class="gm-review-modal" aria-hidden="true">
+  <div class="gm-review-modal-backdrop" data-gm-review-close></div>
+  <div class="gm-review-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gmReviewModalTitle">
+    <div class="gm-review-modal-head">
+      <div class="gm-review-modal-head-text">
+        <span id="gmReviewModalKicker">Revisao humana guiada</span>
+        <h4 id="gmReviewModalTitle">Atualizar item</h4>
+      </div>
+      <button id="gmReviewModalCloseBtn" class="gm-review-modal-close" type="button" data-gm-review-close>Fechar</button>
+    </div>
+    <div class="gm-review-modal-context">
+      <div><span id="gmReviewModalCtxCodeLbl">Codigo</span><strong id="gmReviewModalCtxCode">--</strong></div>
+      <div><span id="gmReviewModalCtxStatusLbl">Status atual</span><strong id="gmReviewModalCtxStatus">--</strong></div>
+      <div><span id="gmReviewModalCtxPriorityLbl">Prioridade</span><strong id="gmReviewModalCtxPriority">--</strong></div>
+      <div><span id="gmReviewModalCtxReviewerLbl">Revisor recomendado</span><strong id="gmReviewModalCtxReviewer">--</strong></div>
+    </div>
+    <div id="gmReviewModalAlert" class="gm-review-modal-alert" hidden></div>
+    <div class="gm-review-modal-body">
+      <label id="gmReviewModalOwnerWrap" hidden>
+        <span id="gmReviewModalOwnerLbl">Dono da revisao</span>
+        <input id="gmReviewModalOwnerInput" type="text" autocomplete="off" maxlength="120">
+      </label>
+      <label id="gmReviewModalDueWrap" hidden>
+        <span id="gmReviewModalDueLbl">Prazo</span>
+        <input id="gmReviewModalDueInput" type="datetime-local">
+      </label>
+      <label id="gmReviewModalCloseModeWrap" hidden>
+        <span id="gmReviewModalCloseModeLbl">Tipo de encerramento</span>
+        <select id="gmReviewModalCloseModeInput">
+          <option value="encerrado_com_acao">Encerrar com acao</option>
+          <option value="encerrado_sem_acao">Encerrar sem acao</option>
+        </select>
+      </label>
+      <label id="gmReviewModalNoteWrap" hidden>
+        <span id="gmReviewModalNoteLbl">Observacao</span>
+        <textarea id="gmReviewModalNoteInput" rows="4" maxlength="1800"></textarea>
+      </label>
+    </div>
+    <div class="gm-review-modal-footer">
+      <button id="gmReviewModalCancelBtn" class="gm-review-modal-btn gm-review-modal-btn-light" type="button" data-gm-review-close>Cancelar</button>
+      <button id="gmReviewModalSubmitBtn" class="gm-review-modal-btn gm-review-modal-btn-primary" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  <script src="app-auth.js?v=20260427_3" defer></script>
+  <script src="app-admin-users.js?v=20260416_4" defer></script>
+  <script src="app.js?v=20260427_3" defer></script>
+  <script src="app-godmode.js?v=20260427_3" defer></script>
+</body>
+</html>

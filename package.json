@@ -1,0 +1,22 @@
+{
+  "name": "painel-gestao-operacional-v8-1",
+  "version": "8.1.0",
+  "private": true,
+  "description": "Painel de gestão operacional com backend local Node + JSON",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test:smoke": "playwright test tests/smoke-critical-tabs.spec.js --config=playwright.config.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mssql": "^12.2.1",
+    "nodemailer": "^8.0.5",
+    "pdf-parse": "^2.4.5",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "playwright": "^1.59.1"
+  }
+}
