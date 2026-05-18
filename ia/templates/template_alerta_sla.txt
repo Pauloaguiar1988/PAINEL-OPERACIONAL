@@ -1,0 +1,17 @@
+ALERTA DE SLA
+
+OS:
+Cliente:
+Prioridade:
+Responsavel:
+Prazo:
+Tempo em aberto:
+Status atual:
+
+Risco identificado:
+
+Impacto esperado:
+
+Acao recomendada:
+
+Escalonamento:

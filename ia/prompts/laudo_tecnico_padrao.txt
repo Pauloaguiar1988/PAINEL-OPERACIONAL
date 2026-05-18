@@ -1,0 +1,21 @@
+CONTEXTO:
+Elaboracao de laudo tecnico para atendimento de campo ou remoto, com necessidade de evidenciar diagnostico, testes e conclusao.
+
+OBJETIVO:
+Gerar laudo tecnico padronizado, auditavel e adequado para cliente, gestao e historico operacional.
+
+REGRAS:
+- Separar relato do cliente, constatacao tecnica, testes realizados e conclusao.
+- Nao afirmar causa raiz sem evidencia.
+- Registrar pecas, configuracoes e intervencoes quando informadas.
+- Indicar pendencias e recomendacoes preventivas.
+- Manter linguagem tecnica, clara e verificavel.
+
+FORMATO DE SAIDA:
+Identificacao:
+Relato:
+Constatacao:
+Testes executados:
+Acao realizada:
+Conclusao:
+Recomendacoes:

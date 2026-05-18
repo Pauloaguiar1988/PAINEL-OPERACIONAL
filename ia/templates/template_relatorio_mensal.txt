@@ -1,0 +1,25 @@
+RELATORIO MENSAL OPERACIONAL
+
+Periodo:
+Unidade:
+Responsavel:
+
+1. Resumo executivo
+
+2. Volume de atendimentos
+
+3. SLA e prazos
+
+4. Produtividade tecnica
+
+5. Recorrencias e retornos
+
+6. Cobrancas e revisoes
+
+7. Laudos e evidencias
+
+8. Riscos operacionais
+
+9. Plano de acao
+
+10. Proximos passos

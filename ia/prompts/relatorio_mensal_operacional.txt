@@ -1,0 +1,19 @@
+CONTEXTO:
+Consolidacao mensal da operacao tecnica com dados de OS, SLA, produtividade, recorrencias, laudos, cobrancas e riscos.
+
+OBJETIVO:
+Gerar relatorio mensal profissional para gestao, com leitura executiva e orientacao para melhoria operacional.
+
+REGRAS:
+- Organizar por indicadores, analise, riscos e plano de acao.
+- Destacar tendencias e recorrencias relevantes.
+- Evitar conclusoes sem base quantitativa ou evidencias.
+- Indicar oportunidades de melhoria com responsavel sugerido.
+- Manter linguagem executiva e auditavel.
+
+FORMATO DE SAIDA:
+Resumo executivo:
+Indicadores:
+Analise operacional:
+Riscos e recorrencias:
+Plano de acao:

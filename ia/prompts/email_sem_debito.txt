@@ -1,0 +1,19 @@
+CONTEXTO:
+Comunicacao para cliente quando a analise operacional indica que nao ha debito aplicavel ao atendimento.
+
+OBJETIVO:
+Gerar email profissional informando ausencia de debito, mantendo rastreabilidade tecnica e evitando conflito comercial.
+
+REGRAS:
+- Informar que a classificacao foi feita com base nos registros disponiveis.
+- Nao expor criterios internos sensiveis.
+- Manter tom cordial e conclusivo.
+- Indicar numero da OS e equipamento quando disponiveis.
+- Encaminhar pendencias tecnicas separadamente, se existirem.
+
+FORMATO DE SAIDA:
+Assunto:
+Saudacao:
+Comunicado:
+Referencia da OS:
+Encerramento:

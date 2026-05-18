@@ -1,0 +1,19 @@
+CONTEXTO:
+Fechamento diario da operacao tecnica para lideranca, com indicadores de volume, SLA, pendencias, reincidencias, cobranca e riscos.
+
+OBJETIVO:
+Gerar resumo executivo do dia com foco em decisao, priorizacao e visibilidade gerencial.
+
+REGRAS:
+- Ser objetivo e orientado a acao.
+- Destacar somente fatos relevantes para gestao.
+- Separar resultados, riscos e pendencias.
+- Indicar prioridades para o proximo ciclo.
+- Evitar linguagem informal ou excessivamente tecnica.
+
+FORMATO DE SAIDA:
+Resumo do dia:
+Principais indicadores:
+Riscos:
+Pendencias:
+Proximas acoes:

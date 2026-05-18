@@ -363,7 +363,56 @@ function buildLaudoStandardsPayload(input) {
   const isEn = locale === 'en-US';
   const osAuditItems = Array.isArray(payload.osAuditItems) ? payload.osAuditItems : [];
   const historicalRows = Array.isArray(payload.historicalRows) ? payload.historicalRows : [];
-  const sampleItems = osAuditItems.length ? osAuditItems : historicalRows;
+  const pdfRecords = (typeof window !== 'undefined' && Array.isArray(window.__FSM_PDF_RECORDS__) && window.__FSM_PDF_RECORDS__.length > 0)
+    ? window.__FSM_PDF_RECORDS__
+    : [];
+  let totalAnalisados = pdfRecords.length;
+  let laudosVazios = 0;
+  let laudosClaros = 0;
+  let qualidadePerc = totalAnalisados ? 100 : 0;
+  const keywordsPadrao = /testad[oa]|teste|validad[oa]|orientad[oa]|causa|motivo|trocad[oa]|substituid[oa]|configurad[oa]|normalizad[oa]/i;
+  if (pdfRecords.length > 0) {
+    window.__FSM_PDF_RECORDS__.forEach(os => {
+      let textoLaudo = (os.solucao || os.laudo || os.observacao || '').trim();
+      if (textoLaudo.length > 10 && keywordsPadrao.test(textoLaudo)) {
+        laudosClaros++;
+      } else {
+        laudosVazios++;
+      }
+    });
+
+    // Atualize o DOM com a porcentagem real de qualidade
+    qualidadePerc = 100 - ((laudosVazios / totalAnalisados) * 100);
+    console.log('QUALIDADE DOS LAUDOS:', qualidadePerc.toFixed(1) + '%');
+    // Injete qualidadePerc na UI correspondente deste módulo.
+    if (typeof document !== 'undefined') {
+      const qualityTargets = [
+        document.getElementById('gmLaudoQualityScore'),
+        document.getElementById('gmTaxQualityLevel'),
+        document.querySelector('[data-laudo-quality]')
+      ].filter(Boolean);
+      qualityTargets.forEach((el) => {
+        el.textContent = `${qualidadePerc.toFixed(1)}%`;
+      });
+      const clearTarget = document.getElementById('gmHistLaudoClearCount') || document.querySelector('[data-laudo-clear]');
+      const incompleteTarget = document.getElementById('gmHistLaudoIncompleteCount') || document.querySelector('[data-laudo-incomplete]');
+      if (clearTarget) clearTarget.textContent = String(laudosClaros);
+      if (incompleteTarget) incompleteTarget.textContent = String(laudosVazios);
+    }
+  }
+  const sampleSource = pdfRecords.length ? pdfRecords : (osAuditItems.length ? osAuditItems : historicalRows);
+  const sampleItems = sampleSource.map((itemLike) => {
+    const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+    return {
+      ...item,
+      os: item.os || item.os_numero || item.numero_os || item.osId,
+      numero_os: item.numero_os || item.os_numero || item.os || item.osId,
+      tipoServico: item.tipoServico || item.tipo_servico || item.tipo_atendimento,
+      laudo: item.laudo || item.solucao || item.observacao || item.acaoFeita || item.acao_feita || '',
+      observacao: item.observacao || item.laudo_tecnico || item.descricao_atendimento || '',
+      codigoPeca: item.codigoPeca || item.codigoPecaPrincipal || item.codigo_peca || item.peca || ''
+    };
+  });
   const officialStandard = buildOfficialLaudoStandard(locale, payload);
   const coverage = evaluateCoverage(sampleItems);
   const compliance = evaluateNarrativeCompliance(sampleItems, officialStandard);
@@ -389,7 +438,7 @@ function buildLaudoStandardsPayload(input) {
       osAuditItems: osAuditItems.length,
       historicalRows: historicalRows.length,
       totalRows: sampleItems.length,
-      baseUsed: osAuditItems.length ? 'os_audit' : 'historical_rows'
+      baseUsed: pdfRecords.length ? 'pdf_records' : (osAuditItems.length ? 'os_audit' : 'historical_rows')
     },
     officialStandard,
     masterModel: MASTER_MODEL,
@@ -398,7 +447,11 @@ function buildLaudoStandardsPayload(input) {
     quality: {
       qualityIndex,
       qualityLevel: qualityIndex >= 80 ? 'high' : (qualityIndex >= 60 ? 'medium' : 'low'),
-      lowCoverageBlocks: lowBlocks.map((item) => item.block)
+      lowCoverageBlocks: lowBlocks.map((item) => item.block),
+      pdfClaros: laudosClaros,
+      pdfIncompletos: laudosVazios,
+      pdfTotal: totalAnalisados,
+      pdfQualityPerc: Math.round(qualidadePerc * 10) / 10
     },
     compliance,
     byTechnician,

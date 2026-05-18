@@ -1,0 +1,197 @@
+REGRA FIXA ESTABELECIDA: DIRETORIO C:\Painel_Operacional_Corrigido E A UNICA FONTE DA VERDADE
+
+PROJETO FODA ESTABILIZADO: NOMES REAIS E CUSTOS DE MERCADO ATIVOS
+
+Data de execucao: 2026-05-13
+Workspace oficial: C:\Painel_Operacional_Corrigido
+
+FINAL_CLEANUP - SOBERANIA DE DADOS ABRIL/2026
+- Expurgo visual aplicado no app.js: nomes fora da equipe Abril/2026 nao sao renderizados no dashboard.
+- Equipe autorizada no cockpit: Talles Henrique, Ronaldo Zuliani, Israel Osvaldo Inacio, Bruno Henrique Naidhig, Celso Luis, Leandro Tiago e Bruno Martuci.
+- Produtividade vinculada: Talles 3,86 O.S./dia; Ronaldo 3,50 O.S./dia; Israel 14,26 O.S./dia.
+- Meta financeira por tecnico: R$ 19.000,00.
+- Israel Osvaldo Inacio destacado como meta superada.
+
+CUSTOS DE MERCADO ATIVOS
+- Fonte MD 402: A2800403 - R$ 43,00.
+- Disco Optico: A2790017 - R$ 30,00.
+- Leitor MS CLASSI-D: A2790295 - R$ 1.681,00.
+- DRE preservada: Faturamento - (Custo Real da Peca + R$ 188,00 de Deslocamento).
+- R$ 188,00 permanece apenas como deslocamento/retrabalho, nunca como preco de peca.
+
+ESTABILIDADE VISUAL
+- Score 83 e SLA 93% continuam persistidos no primeiro frame.
+- Watchdog de topo mantido.
+- Blocos de BI de Abril/2026 ativos: gmFsmOperationalAwardsRanking, gmFsmFinancialTopExpensiveParts, gmFsmFinancialDreList e gmTaxTechnicianTableBody.
+- Bloco de custos de mercado ativo: gmFsmFinancialMarketReference.
+
+VALIDACAO
+- node --check app.js sem erro.
+- node --check src\services\realDataService.js sem erro.
+- Endpoint /api/fsm/v11-real-data validado com 263 registros e 3202 itens de mercado.
+
+REFORMA ESTRUTURAL CONCLUIDA: ABAS ATIVAS, UTF-8 CORRIGIDO E TABELAS NO ESQUADRO
+REFORMA ESTRUTURAL CONCLUÍDA: ABAS ATIVAS, UTF-8 CORRIGIDO E TABELAS NO ESQUADRO
+
+UI_UX_REBUILD
+- Encoding visual saneado em index.html, app.js e style.css.
+- Sanitizador runtime remove mojibake remanescente antes da exibicao.
+- Texto proibido "Dados FSM ativos" removido; fallback padrao agora e "-" ou "Sem Registros".
+- Funcao global show(sectionId) reconstruida para ativar Agenda, Comparativos, Diagnostico Consolidado, Executivo e Melhorias.
+- mobileSectionSelect sincronizado com o roteamento lateral.
+- Tabela de ranking tecnico reestruturada com colunas fixas: Tecnico | Data | Cliente | Equipamento | Desfecho.
+- Desfecho passa a ler Acao Feita / solucao / regra operacional da O.S.
+- CSS aplicado com table-layout fixo, overflow controlado e text-overflow ellipsis.
+
+FASE 1 CONCLUIDA: PAINEL PRINCIPAL FORMATADO PARA ALTA LEGIBILIDADE
+FASE 1 CONCLUÍDA: PAINEL PRINCIPAL FORMATADO PARA ALTA LEGIBILIDADE
+
+MAIN_DASHBOARD_UI
+- Tela inicial lapidada sem alterar backend ou roteamento.
+- Cards principais padronizados: Score, SLA/Execucao, Faturamento e Perda.
+- KPIs do topo com fonte 24px, peso alto, sombra leve e radius 8px.
+- Tabela principal com colunas proporcionais: Data 10%, Tecnico 15%, Cliente 20%, Equipamento 20%, Desfecho 35%.
+- Celulas com padding 12px 15px, fonte Segoe UI/Roboto/Arial, cor #333 e hover cinza claro.
+- Separacao de linhas com border-bottom #e0e0e0.
+- Rolagem horizontal evitada em desktop e mantida apenas como protecao responsiva em telas estreitas.
+FASE 1 CONCLUÍDA: PAINEL PRINCIPAL FORMATADO PARA ALTA LEGIBILIDADE
+- Estado inicial ajustado para abrir no Painel do Dia com os KPIs visíveis.
+- Nenhum arquivo de backend foi alterado nesta fase.
+FASE 1 VISIBILIDADE: KPIs do Painel do Dia blindados contra ocultação visual do template.
+FASE 2 CONCLUÍDA: FALSOS ALERTAS REMOVIDOS E COCKPIT PREENCHIDO COM DADOS DINÂMICOS
+- Regra antiga de tamanho de laudo substituída por validação objetiva de Ação Feita/Desfecho vazio, traço ou pendente.
+- Equipamento mais incidente agora é calculado dinamicamente pela coluna Descrição do Produto/produto/modelo.
+- Mix de atendimento e cobertura de garantia preenchidos a partir dos 263 laudos.
+- Toggle Resumo/Detalhado controla a coluna Desfecho na tabela principal.
+FASE 3 CONCLUÍDA: CACHE DELETADO, SISTEMA LENDO APENAS ARQUIVOS DE IMPORTAÇÃO PUROS
+- data/auditoria.json e data/records.json foram esvaziados para impedir leitura residual.
+- server.js ativa PURE_DATA_READ e limpa caches internos na inicialização.
+- realDataService usa exclusivamente CSV/XLSX em data/import/campinas para records.
+- app.js não faz fallback para /api/dashboard/tabela quando não há planilha; exibe Aguardando Arquivo O.S.
+FASE 4 CONCLUÍDA: LOGIN DESTRAVADO, LEITURA ASSÍNCRONA E MEMÓRIA ZERADA CORRETAMENTE
+- realDataService passou a usar fs.promises para varredura de import/campinas e leitura de planilhas.
+- Endpoint /api/fsm/v11-real-data devolve cache leve imediatamente e processa atualização em background.
+- Quando não há CSV/XLSX, o serviço não lê pricing nem JSON legado; retorna registros, técnicos, produtos e alertas zerados.
+- app.js desativa injeções antigas V10/V11 no modo PURE_DATA_READ e preserva Aguardando Arquivo O.S.
+FASE 5 CONCLUÍDA: LEITURA FORÇADA ATIVA - DADOS EXTRAÍDOS DOS FICHEIROS EXISTENTES
+- Varredura recursiva de data/import/campinas para CSV/XLSX/XLS ativada.
+- CSV validado com separador ponto e vírgula e vírgula.
+- Mapeamento flexível por colunas contendo Produto/Equipamento/Descricao do Produto, Acao Feita/Desfecho/Solucao e Tecnico/Funcionario/Nome.
+- Parser agora registra console.log detalhado para arquivos encontrados, linhas extraídas e erros de leitura.
+- Estado real atual validado: não há CSV/XLSX/XLS persistente em data/import/campinas; cockpit permanece em Aguardando Arquivo O.S.
+
+[2026-05-13 15:31:57] FASE 6 CONCLUÍDA: CAMINHO ABSOLUTO FORÇADO E ARQUIVOS MAPEADOS COM SUCESSO
+Diretório validado: C:\Painel_Operacional_Corrigido\data\import\campinas
+Diagnóstico de arranque ativo em server.js com fs.readdirSync(dirPath).
+Leitura CSV/XLSX/XLS validada com arquivo temporário __codex_force_read_test.csv e removida após teste.
+Snapshot atual do Node: PDFs encontrados na pasta oficial; CSV/XLSX/XLS não estavam presentes no momento da validação.
+
+[2026-05-13 16:50:12] FASE 8 CONCLUÍDA: DEPENDÊNCIA DE PRÊMIO REMOVIDA - PAINEL 100% BASEADO NAS O.S.
+realDataService.js não usa PREMIO_REFERENCIA_ABRIL, META_FATURAMENTO_TECNICO ou EQUIPE_ELITE_CAMPINAS.
+Ranking de técnicos agora nasce somente da coluna Técnico/Funcionário/Nome do relatório de O.S.
+Teste OS_CENTRIC_ONLY validado com CSV temporário: 2 O.S., Ronaldo Zuliani e Israel Osvaldo Inacio; arquivo removido após validação.
+Sem arquivo CSV/XLSX/XLS real, status correto: Aguardando Extração de O.S. do Dia.
+
+[2026-05-13 16:58:50] ROLLBACK EXECUTADO: DADOS DO PROJETO RESTAURADOS COM O VISUAL CORRIGIDO MANTIDO
+PURE_DATA_READ desativado em server.js; limpeza automática de auditoria.json/records.json não executa mais.
+HYBRID_DATA_READ ativo: import/campinas + data/auditoria.json + data/records.json + data/diagnostico_os_linhas.csv.
+Base interna restaurada validada: data/diagnostico_os_linhas.csv com 104 linhas, 101 registros selecionados, 11 técnicos e 50 produtos no cockpit.
+Visual, CSS, HTML e grid principal preservados.
+
+[2026-05-13 17:02:33] SISTEMA RESTAURADO: DADOS ANTIGOS RECUPERADOS COM UI PRESERVADA
+RESTORE_BASE_HYBRID_V2: records.json restaurado de data/backups/latest-records-backup.json.
+Fonte híbrida ativa: data/records.json + data/diagnostico_os_linhas.csv + planilhas novas compatíveis em import/campinas.
+Validação: 374 registros, 14 técnicos, 128 produtos; base histórica exibida mesmo sem planilha nova.
+UI/CSS/HTML preservados; V10 hardcoded bloqueado em modo híbrido; V11 e MAIN_DATA_SYNC usam endpoint restaurado.
+
+[2026-05-13 17:19:29] DATA_MAPPING_FIX CONCLUÍDO: TABELAS ALINHADAS E FALLBACK LIMPO ATIVO
+Mapeamento flexível ajustado para chaves oficiais: Data Operacao, Numero OS, Cliente mais critico, Descricao do Produto, Acao Feita e Status Operacao.
+Interface saneada: placeholders de erro substituídos por '-' e linhas sem técnico/cliente filtradas.
+Validação endpoint: 365 registros, 0 ocorrências de Técnico/Cliente/Produto não identificado na saída normalizada.
+
+[2026-05-13 17:30:41] FRONTEND HIGIENIZADO: CACHE BUSTING APLICADO E RENDERIZAÇÃO LIMPA
+index.html atualizado para style.css?v=99 e app.js?v=99.
+Renderização limpa: containers principais executam innerHTML='' antes de popular.
+DOM_CLEANUP_FORCE ativo: textos de erro remanescentes são substituídos por '-' no navegador.
+
+[2026-05-13] SISTEMA ALIMENTADO: MOTOR DE PDF TAGUS-TEC OPERANDO EM CAPACIDADE MAXIMA
+ULTIMATE_PDF_AUDITOR ativo em C:\Painel_Operacional_Corrigido.
+Fonte operacional dominante: data/import/campinas/*.pdf.
+Leitura validada: 266 PDFs encontrados; 266 PDFs extraidos; 263 O.S. unicas entregues ao cockpit apos deduplicacao.
+auditoria.json regravado com memoria estruturada extraida dos PDFs.
+Campos extraidos: O.S., data, tipo de servico, cliente, tecnico, equipamento, codigo do produto, numero de serie, descricao, laudo/solucao/observacao, hora de chegada, hora de saida, tempo de permanencia, status de atendimento, status de orcamento, pecas, valores, custo de pecas, deslocamento e margem.
+Dashboard atualizado: tabela principal recebe tecnico, cliente, equipamento e solucao; Mix de Atendimento usa tipo_servico; Cobertura usa classificacao; Faturamento usa valores encontrados nos PDFs.
+Auditoria visual: atendimentos de Retorno recebem destaque; laudo vazio gera alerta automatico.
+Servidor reiniciado e validado em /api/health e /api/fsm/v11-real-data?wait=1.
+
+[2026-05-13] TELA DESTRAVADA: FRONTEND CONECTADO AO MOTOR DE PDFs E CACHE MORTO
+FRONTEND_UNLOCK ativo em C:\Painel_Operacional_Corrigido.
+index.html atualizado para style.css?v=PDF_FORCE e app.js?v=PDF_FORCE.
+app.js agora usa timestamp dinamico nos fetches: /api/fsm/v11-real-data?wait=1&t=<timestamp>.
+Console do navegador registra: DADOS RECEBIDOS DO MOTOR PDF.
+Renderizacao principal mapeada para dados de PDF: cliente, tecnico, produto/modelo/equipamento e acaoFeita/solucao/laudo_tecnico/observacao.
+Validacao em navegador: gmOsTotal=263, faturamento=R$ 138.260,05, Mix=Corretiva/Instalacao/Preventiva, Cobertura=Contrato/Retorno, tabela com Talles Henrique e OS V68836 renderizadas.
+
+[2026-05-13] TRANSMISSAO CORRIGIDA: TABELAS E CONTADORES ALINHADOS COM O MOTOR PDF
+FRONTEND_EXACT_MAPPING aplicado em C:\Painel_Operacional_Corrigido\app.js.
+Coluna Equipamento agora usa somente campos de equipamento/produto/descricao_produto, com limpeza de marcadores de laudo para impedir vazamento da solucao longa.
+Coluna Desfecho agora prioriza solucao, observacao, laudo e laudo_tecnico antes de qualquer fallback.
+Datas mantidas em DD/MM/YYYY a partir de data_atendimento/data extraida dos PDFs.
+Contadores da aba Operacao sincronizados com records do motor PDF: O.S. analisadas, alertas, risco de nao faturar, codigo pendente, laudo sem clareza, risco estimado e operacao interna/externa.
+Validacao em navegador: O.S.=263, alertas=106, risco de nao faturar=R$ 66.510,50, codigo pendente=204, operacao interna/externa=0 / 263.
+
+[2026-05-13] ESTADO GLOBAL ATUALIZADO: TODAS AS TELAS AGORA CONSOMEM O MOTOR DE PDFs
+GLOBAL_STATE_OVERRIDE aplicado em C:\Painel_Operacional_Corrigido\app.js.
+A base PDF extraida passou a ser publicada em window.__FSM_PDF_RECORDS__ e window.__FSM_PDF_GLOBAL_STATE__.
+Status da IA Operacional agora usa o motor PDF: IA ATIVA - MOTOR PDF, total de O.S., cobertura, equipamento mais incidente e alertas.
+Cockpit e taxonomia agora recalculam equipamento incidente a partir dos registros PDF, ignorando estados antigos e placeholders de base historica.
+Clientes, ativos, taxonomia, cockpit e auditoria foram amarrados ao mesmo estado global PDF.
+Watchdog leve reescreve o estado global a cada 1,5s para impedir retorno de 'Aguardando base de OS' quando ha 263 registros carregados.
+
+[2026-05-14] ANALYTICS V1 ATIVADO: VISUALIZACAO CORRIGIDA E INSTALACOES CATEGORIZADAS (PONTO/ACESSO)
+ANALYTICS_V1 aplicado em C:\Painel_Operacional_Corrigido.
+Backend: classifyPdfService separa Instalacao Ponto e Instalacao Acesso usando equipamento/produto extraido do PDF.
+Mix validado no endpoint: Corretiva 165, Instalacao Ponto 58, Preventiva 16, Instalacao 14, Instalacao Acesso 9, Vistoria 1.
+Risco financeiro refinado: apenas O.S. Avulso/Orcamento sem acao feita entram no risco de nao faturar; validacao atual encontrou 0 O.S. nesse criterio.
+Frontend: console.table lista as O.S. de risco quando houver; quando nao houver, registra ausencia de risco nesse criterio.
+Abas Analise Tecnica e Comparativos recebem window.__FSM_PDF_RECORDS__ para pareto, mix de instalacoes, cobertura e equipamento lider.
+Toggle Resumo/Detalhado recebeu camada global para aplicar/remover .hidden na coluna Desfecho/Laudo.
+HARD FIX APLICADO: TELA ESTÁVEL, MIX SEPARADO EM PONTO/ACESSO E TOGGLE RESOLVIDO VIA CSS
+HARD FIX APLICADO: TELA ESTÁVEL, MIX SEPARADO EM PONTO/ACESSO E TOGGLE RESOLVIDO VIA CSS
+ALVO 1 CONCLUÍDO: BOTÃO RESUMO/DETALHADO FUNCIONANDO VIA CLASSE CSS
+ALVO 2 CONCLUÍDO: MIX DE INSTALAÇÃO SEPARADO EM PONTO E ACESSO
+ALVO 3 CONCLUÍDO: RISCO FINANCEIRO FALSO ZERADO NA UI
+ALVO 3.1 CONCLUÍDO: FATURAMENTO RESTAURADO E 66 MIL ELIMINADOS DA TELA
+ALVO 4 CONCLUÍDO: MÓDULOS DE ANÁLISE E LAUDO CONECTADOS AO MOTOR PDF
+ALVO 5 CONCLUÍDO: DADOS AVANÇADOS DO LAUDO (SÉRIE, GARANTIA E VALORES) INJETADOS NA TABELA
+ALVO 6 CONCLUÍDO: WATCHDOGS LEGADOS NEUTRALIZADOS E CONFLITO DE DADOS RESOLVIDO
+ALVO 7 CONCLUÍDO: PURIFICAÇÃO DE LAYOUT, MENU LIMPO E DADOS RESTAURADOS
+ALVO 8 CONCLUÍDO: COCKPIT ISOLADO, MIX VISUAL ESTABILIZADO E ABAS ANALÍTICAS ALIMENTADAS
+
+2026-05-15T16:04:29.825Z - ALVO 10 MASTER CONCLU?DO: PE?AS CORRIGIDAS, DESEMPENHO ATIVO, CRM HIST?RICO LIGADO, COMPARATIVOS E QUALIDADE RENDERIZADOS
+
+2026-05-15T16:41:48.018Z - ALVO 11 CONCLU?DO: DEBUG DA IA OCULTADO, LAUDO POR PALAVRA-CHAVE, HEATMAP E UX AJUSTADA
+
+2026-05-15T17:37:03.959Z - ALVO 12 CONCLU?DO: VISUAL WAR ROOM APLICADO, BOT?ES LIMPOS E MIX TRAVADO
+
+2026-05-15T17:51:34.151Z - ALVO 13 CONCLU?DO: NOC DESIGN CORRIGIDO, MAPA IFRAME INJETADO E CRM HIST?RICO ATIVADO
+
+2026-05-15T18:10:35.010Z - ALVO 14 CONCLU?DO: ESTRUTURA DOM DO WAR ROOM APLICADA E VAZAMENTOS BRANCOS ELIMINADOS
+
+2026-05-15T18:36:52.194Z - COCKPIT NOC CONCLU?DO: MINI-CARDS SOC ATIVOS, MIX VIVO RECONSTRU?DO E VISUAL LEGADO REMOVIDO
+
+2026-05-15T18:41:01.623Z - TORRE DE CONTROLE IA CONCLU?DA: RADAR PASSIVO SUBSTITU?DO POR A??ES RECOMENDADAS NOC
+
+2026-05-15T19:04:25.079Z - ISOLAMENTO NOC CONCLU?DO: MAPA E GRID INFERIOR RESTRITOS AO PAINEL DO DIA
+
+2026-05-15T19:28:39.237Z - HOTFIX OPERA??O CONCLU?DO: WRAPPER RESSUSCITADO E T?TULOS LEGADOS OCULTOS CIRURGICAMENTE
+
+2026-05-15T19:52:51.836Z - NOC TECH HEALTH SCORE CONCLU?DO: ABA T?CNICOS CONVERTIDA EM RANKING DE SA?DE OPERACIONAL
+
+2026-05-15T21:52:35.847Z - HOTFIX PERFORMANCE CONCLU?DO: HEALTH SCORE ANTI-FLICKER COM HASH DE DADOS
+
+2026-05-15T22:06:28.790Z - HOTFIX PERFORMANCE CONCLU?DO: VIGILANTE DE LAYOUT TAB-AWARE E ANTI-FLICKER ATIVO
+
+2026-05-15T22:15:17.455Z - HOTFIX VISIBILIDADE CONCLU?DO: ABAS ATIVAS CURADAS SEM FLICKERING GLOBAL
+
+2026-05-15T22:24:37.393Z - NOC TECH HEALTH SCORE REIMPLANTADO: RANKING EST?VEL COM DATA STATE HASH ATIVO

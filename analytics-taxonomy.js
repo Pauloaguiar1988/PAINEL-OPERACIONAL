@@ -57,26 +57,26 @@ const SERVICE_RULES = [
   { key: 'configuracao', tokens: ['configur', 'parametriz', 'ajuste sistema', 'atualizacao firmware', 'software'] },
   { key: 'treinamento', tokens: ['treinamento', 'capacita', 'orientacao usuario', 'homologacao assistida'] },
   { key: 'vistoria', tokens: ['vistoria', 'inspecao', 'diagnostico tecnico', 'avaliacao tecnica'] },
-  { key: 'suporte_ajuste', tokens: ['suporte', 'ajuste', 'calibr', 'limpeza', 'regulagem', 'afinacao'] }
+  { key: 'suporte_ajuste', tokens: ['suporte', 'ajuste', 'calibr', 'limpeza', 'lubrific', 'regulagem', 'afinacao', 'teste de impressora'] }
 ];
 
 const PROBABLE_CAUSE_RULES = [
-  { key: 'integracao', tokens: ['integracao', 'api', 'webservice', 'middleware', 'erp', 'interface'] },
-  { key: 'infraestrutura_cliente', tokens: ['rede', 'internet', 'switch', 'energia', 'tomada', 'nobreak', 'infraestrutura', 'cliente sem acesso'] },
-  { key: 'software_configuracao', tokens: ['software', 'firmware', 'configur', 'parametriz', 'versao', 'update'] },
-  { key: 'instalacao', tokens: ['instalacao', 'fixacao', 'montagem', 'cabeamento', 'infra instalacao'] },
-  { key: 'peca_acessorio', tokens: ['peca', 'acessorio', 'consumivel', 'bateria', 'cabo', 'sensor'] },
-  { key: 'operacao_uso', tokens: ['usuario', 'uso incorreto', 'procedimento', 'treinamento', 'operacao'] },
-  { key: 'equipamento', tokens: ['equipamento', 'hardware', 'leitor', 'catraca', 'placa', 'motor', 'display'] }
+  { key: 'integracao', tokens: ['integracao', 'api', 'webservice', 'middleware', 'erp', 'interface', 'kairos', 'rep ponto', 'comunicacao sistema'] },
+  { key: 'infraestrutura_cliente', tokens: ['rede', 'internet', 'switch', 'energia', 'tomada', 'nobreak', 'infraestrutura', 'cliente sem acesso', 'cabeamento externo', 'sem acesso', 'cabo de rede', 'queda de energia', 'instabilidade', 'wifi', 'wi fi', 'sem comunicacao na rede'] },
+  { key: 'software_configuracao', tokens: ['software', 'firmware', 'configur', 'parametriz', 'parametro', 'versao', 'update', 'atualiz', 'banco', 'sql', 'servico', 'comunicacao', 'cadastro', 'envio de cadastro'] },
+  { key: 'instalacao', tokens: ['instalacao', 'implantacao', 'fixacao', 'montagem', 'cabeamento', 'infra instalacao', 'comissionamento'] },
+  { key: 'peca_acessorio', tokens: ['peca', 'acessorio', 'consumivel', 'bateria', 'cabo', 'sensor', 'bobina', 'impressora', 'guilhotina', 'fonte', 'modulo', 'touch', 'display', 'biometrico', 'sagem'] },
+  { key: 'operacao_uso', tokens: ['usuario', 'uso incorreto', 'procedimento', 'treinamento', 'operacao', 'orientacao', 'acompanhado', 'validado juntamente', 'instrucao', 'configuracao incorreta'] },
+  { key: 'equipamento', tokens: ['equipamento', 'hardware', 'leitor', 'catraca', 'placa', 'motor', 'display', 'relogio', 'controlador', 'printpoint', 'd-rep', 'micropoint', 'defeito', 'falha', 'nao liga', 'nao inicializa', 'travado', 'travando', 'luz vermelha', 'erro hardware'] }
 ];
 
 const OUTCOME_RULES = [
   { key: 'requer_fabrica', tokens: ['fabrica', 'fabricante', 'rma', 'engenharia fabricante'] },
-  { key: 'requer_peca', tokens: ['requer peca', 'aguardando peca', 'sem peca', 'pedido de peca', 'troca de peca'] },
+  { key: 'requer_peca', tokens: ['requer peca', 'aguardando peca', 'sem peca', 'pedido de peca', 'troca de peca', 'necessario peca'] },
   { key: 'requer_cliente', tokens: ['aguardando cliente', 'dependencia cliente', 'liberacao cliente', 'cliente pendente', 'sem acesso cliente'] },
-  { key: 'requer_nova_visita', tokens: ['nova visita', 'retorno tecnico', 'reagend', 'revisita'] },
+  { key: 'requer_nova_visita', tokens: ['nova visita', 'retorno tecnico', 'reagend', 'revisita', 'nao resolvido', 'sem solucao'] },
   { key: 'paliativo', tokens: ['paliativo', 'temporario', 'contingencia', 'workaround'] },
-  { key: 'resolvido', tokens: ['resolvido', 'concluido', 'encerrado', 'normalizado', 'feito'] }
+  { key: 'resolvido', tokens: ['resolvido', 'concluido', 'encerrado', 'normalizado', 'feito', 'realizado', 'realizada', 'sucesso', 'validado', 'testado', 'teste realizado', 'sem apresentar falha', 'configurado', 'configurada', 'ajustado', 'ajustada', 'parametrizado', 'parametrizada', 'atualizado', 'atualizada', 'corrigido', 'corrigida', 'substituido', 'substituida', 'substituicao', 'troca realizada', 'limpeza', 'lubrificacao', 'preventiva realizada'] }
 ];
 
 function toNumber(value) {
@@ -92,7 +92,10 @@ function normalizeText(value) {
   return toText(value)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
+    .toLowerCase()
+    .replace(/[^a-z0-9\s$.,:/_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function pct(value, total) {
@@ -348,6 +351,70 @@ function joinEvidence(parts) {
   return output.slice(0, 8);
 }
 
+function shortEvidenceText(valueLike, maxLen = 120) {
+  const text = toText(valueLike).replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  return text.length > maxLen ? `${text.slice(0, maxLen - 1)}...` : text;
+}
+
+function pickTextFieldEvidence(itemLike) {
+  const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+  const candidates = [
+    ['problema_relato', item.problemaRelatado || item.problema_relatado || item.defeito || item.problema],
+    ['problema_encontrado', item.problemaEncontrado || item.problema_encontrado],
+    ['solucao', item.solucao || item.acao || item.acaoRealizada],
+    ['laudo', item.laudo],
+    ['observacao', item.observacao],
+    ['historico', item.historico],
+    ['classificacao', item.classificacao],
+    ['nextStep', item.nextStep]
+  ];
+  return candidates
+    .map(([source, value]) => ({ source, text: shortEvidenceText(value) }))
+    .filter(item => item.text)
+    .slice(0, 4);
+}
+
+function stringifyIssueText(issuesLike) {
+  return (Array.isArray(issuesLike) ? issuesLike : [])
+    .map((issue) => `${toText(issue?.type)} ${toText(issue?.message)} ${toText(issue?.description)} ${toText(issue?.detail)}`)
+    .join(' ');
+}
+
+function buildOperationalFullText(itemLike) {
+  const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+  return normalizeText([
+    item.problemaRelatado,
+    item.problema_relatado,
+    item.problema,
+    item.problemaEncontrado,
+    item.problema_encontrado,
+    item.defeito,
+    item.causa,
+    item.solucao,
+    item.acao,
+    item.acaoRealizada,
+    item.acao_realizada,
+    item.laudo,
+    item.historico,
+    item.observacao,
+    item.classificacao,
+    item.nextStep,
+    item.tipoServico,
+    item.codigoRaw,
+    item.codigoOperacional,
+    item.cobertura,
+    item.produto,
+    item.equipamento,
+    item.ordemCompra,
+    stringifyIssueText(item.issues)
+  ].filter(Boolean).join(' '));
+}
+
+function hasUsefulOperationalText(textLike) {
+  return normalizeText(textLike).replace(/[-_.:/,$\s0-9]/g, '').length >= 12;
+}
+
 function scoreKeywordRules(normalizedText, rules) {
   const scores = [];
   const text = normalizeText(normalizedText);
@@ -462,6 +529,13 @@ function detectProbableCause(baseText) {
   const scored = scoreKeywordRules(baseText, PROBABLE_CAUSE_RULES);
   const top = scored[0] || null;
   if (!top) {
+    if (hasUsefulOperationalText(baseText)) {
+      return {
+        probableCause: 'equipamento',
+        confidence: 0.42,
+        evidence: ['signal:cause_low_confidence_text_available']
+      };
+    }
     return {
       probableCause: 'indefinido',
       confidence: 0.2,
@@ -475,11 +549,38 @@ function detectProbableCause(baseText) {
   };
 }
 
+function refineCauseForService(causeLike, serviceLike, itemLike) {
+  const cause = (causeLike && typeof causeLike === 'object') ? { ...causeLike } : {};
+  const service = toText(serviceLike);
+  const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+  const text = normalizeText([
+    item.produto,
+    item.observacao,
+    item.laudo,
+    item.nextStep
+  ].filter(Boolean).join(' '));
+  if (cause.probableCause !== 'indefinido') return cause;
+  if (service === 'preventiva') {
+    return {
+      probableCause: text.includes('limpeza') || text.includes('lubrific') || text.includes('teste')
+        ? 'operacao_uso'
+        : 'equipamento',
+      confidence: 0.58,
+      evidence: ['signal:preventive_context']
+    };
+  }
+  if (service === 'instalacao') {
+    return { probableCause: 'instalacao', confidence: 0.62, evidence: ['signal:installation_context'] };
+  }
+  if (service === 'configuracao' || service === 'suporte_ajuste') {
+    return { probableCause: 'software_configuracao', confidence: 0.56, evidence: ['signal:service_context'] };
+  }
+  return cause;
+}
+
 function detectOutcome(item, baseText) {
   const issues = Array.isArray(item?.issues) ? item.issues : [];
-  const issuesText = issues
-    .map((issue) => `${toText(issue?.type)} ${toText(issue?.message)} ${toText(issue?.description)}`)
-    .join(' ');
+  const issuesText = stringifyIssueText(issues);
   const text = normalizeText(`${baseText} ${issuesText}`);
   const scored = scoreKeywordRules(text, OUTCOME_RULES);
   const top = scored[0] || null;
@@ -500,6 +601,23 @@ function detectOutcome(item, baseText) {
     };
   }
 
+  if (hasUsefulOperationalText([
+    item?.solucao,
+    item?.acao,
+    item?.acaoRealizada,
+    item?.acao_realizada,
+    item?.laudo,
+    item?.observacao,
+    item?.historico,
+    baseText
+  ].filter(Boolean).join(' '))) {
+    return {
+      outcomeType: 'resolvido',
+      confidence: 0.46,
+      evidence: ['signal:solution_low_confidence_text_available']
+    };
+  }
+
   return {
     outcomeType: 'indefinido',
     confidence: 0.2,
@@ -507,27 +625,322 @@ function detectOutcome(item, baseText) {
   };
 }
 
+function pickFirstText(item, keys) {
+  const source = (item && typeof item === 'object') ? item : {};
+  for (const key of keys) {
+    const value = toText(source[key]);
+    if (value) return value;
+  }
+  return '';
+}
+
+function detectBooleanFromText(textLike, tokens) {
+  const text = normalizeText(textLike);
+  return (Array.isArray(tokens) ? tokens : []).some((token) => text.includes(normalizeText(token)));
+}
+
+function detectOperationalRecurrenceSignals(item, fullText, classification, piece) {
+  const source = (item && typeof item === 'object') ? item : {};
+  const text = normalizeText(fullText);
+  const textSignals = [];
+  const pendingSignals = [];
+  const linkedOs = pickFirstText(source, [
+    'osAnterior',
+    'os_anterior',
+    'osOrigem',
+    'os_origem',
+    'rr',
+    'retornoOs',
+    'retorno_os'
+  ]);
+
+  [
+    ['retorno', ['retorno', 'retornou', 'retornar']],
+    ['reabertura', ['reabertura', 'reaberto', 'reaberta']],
+    ['reincidencia', ['reincidencia', 'reincidente', 'recorrente']],
+    ['novamente', ['novamente', 'voltou a apresentar', 'apresentou novamente']],
+    ['persistente', ['persistente', 'permanece', 'continua com', 'falha persiste']]
+  ].forEach(([signal, tokens]) => {
+    if (detectBooleanFromText(text, tokens)) textSignals.push(signal);
+  });
+
+  [
+    ['aguardando_peca', ['aguardando peca', 'sem peca', 'pedido de peca', 'necessario peca']],
+    ['aguardando_cliente', ['aguardando cliente', 'dependencia cliente', 'cliente pendente', 'liberacao cliente']],
+    ['aguardando_retorno', ['aguardando retorno', 'aguarda retorno', 'cliente ira retornar']],
+    ['reagendamento', ['reagend', 'nova visita', 'necessario retornar', 'retorno tecnico']],
+    ['visita_improdutiva', ['visita improdutiva', 'improdutiva', 'sem acesso', 'cliente ausente', 'local fechado']]
+  ].forEach(([signal, tokens]) => {
+    if (detectBooleanFromText(text, tokens)) pendingSignals.push(signal);
+  });
+
+  const fieldsUsed = [];
+  if (hasOperationalValue(source.cliente || classification?.cliente)) fieldsUsed.push('cliente');
+  if (hasOperationalValue(source.produto || source.equipamento)) fieldsUsed.push('equipamento');
+  if (hasOperationalValue(source.defeito || source.problemaRelatado || source.problemaEncontrado || source.causa)) fieldsUsed.push('defeito_causa');
+  if (hasOperationalValue(linkedOs)) fieldsUsed.push('os_anterior');
+  if (piece?.used) fieldsUsed.push('peca_acao');
+  if (textSignals.length) fieldsUsed.push('texto_recorrencia');
+  if (pendingSignals.length) fieldsUsed.push('texto_pendencia');
+
+  return {
+    textSignals,
+    pendingSignals,
+    linkedOs,
+    repeatedAction: piece?.used || classification?.outcomeType === 'requer_peca',
+    fieldsUsed
+  };
+}
+
+function classifyBaseRecurrence(signals) {
+  const s = (signals && typeof signals === 'object') ? signals : {};
+  if (Array.isArray(s.pendingSignals) && s.pendingSignals.length) {
+    return {
+      level: 'pendencia_operacional',
+      reason: 'Texto indica pendencia operacional; nao conta como recorrencia real sem cluster confirmado.'
+    };
+  }
+  if (hasOperationalValue(s.linkedOs)) {
+    return {
+      level: 'forte',
+      reason: 'Existe OS anterior vinculada, mas a consolidacao do cluster ainda depende dos demais campos.'
+    };
+  }
+  if (Array.isArray(s.textSignals) && s.textSignals.length) {
+    return {
+      level: 'fraco',
+      reason: 'Ha palavra de recorrencia no texto, sem cluster operacional consolidado.'
+    };
+  }
+  return {
+    level: 'sem_recorrencia',
+    reason: 'Nao ha evidencia suficiente de retorno ou recorrencia operacional.'
+  };
+}
+
+function detectPieceUsed(item, fullText) {
+  const pieceText = pickFirstText(item, [
+    'peca',
+    'pecas',
+    'pecaUtilizada',
+    'peca_utilizada',
+    'codigoPeca',
+    'codigo_peca',
+    'partCode'
+  ]);
+  const text = normalizeText(`${pieceText} ${fullText}`);
+  const used = !!pieceText || detectBooleanFromText(text, ['troca', 'substituicao', 'substituido', 'peca', 'placa', 'fonte', 'display', 'modulo', 'impressora', 'bateria', 'bobina', 'guilhotina']);
+  return {
+    used,
+    label: pieceText || (used ? 'peca_ou_componente_inferido' : '')
+  };
+}
+
+function detectBilling(item, fullText) {
+  const billingText = pickFirstText(item, ['cobranca', 'faturamento', 'valor', 'valorTotal', 'valor_total', 'ordemCompra', 'oc']);
+  const text = normalizeText(`${billingText} ${fullText}`);
+  if (detectBooleanFromText(text, ['sem debito', 'sem cobrança', 'sem cobranca', 'nao cobrar', 'garantia', 'cortesia'])) return 'sem_debito_ou_garantia';
+  if (detectBooleanFromText(text, ['cobrar', 'faturamento', 'valor da primeira hora', 'valor hora adicional', 'ordem de compra', 'oc ', 'r$'])) return 'cobranca_aplicavel';
+  return 'nao_identificada';
+}
+
+function detectSla(item, fullText) {
+  const text = normalizeText(`${pickFirstText(item, ['sla', 'prazo', 'dataLimite', 'data_limite'])} ${fullText}`);
+  if (detectBooleanFromText(text, ['atraso', 'vencido', 'fora do prazo', 'sla estourado'])) return 'nao_cumprido';
+  if (detectBooleanFromText(text, ['dentro do prazo', 'prazo cumprido', 'sla cumprido'])) return 'cumprido';
+  return 'nao_identificado';
+}
+
+function operationalFallback(valueLike, fallback) {
+  const value = toText(valueLike);
+  return value || fallback;
+}
+
+function normalizeOperationalDate(valueLike) {
+  const text = toText(valueLike);
+  if (!text) return '';
+  const iso = text.match(/\b(20\d{2})-(\d{2})-(\d{2})\b/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const br = text.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](20\d{2})\b/);
+  if (br) return `${br[3]}-${String(br[2]).padStart(2, '0')}-${String(br[1]).padStart(2, '0')}`;
+  const date = new Date(text);
+  if (!Number.isNaN(date.getTime())) return date.toISOString().slice(0, 10);
+  return '';
+}
+
+function getOperationalDate(itemLike) {
+  const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+  return normalizeOperationalDate(pickFirstText(item, [
+    'sourceRecordDate',
+    'recordDate',
+    'dataReferencia',
+    'data_referencia',
+    'dataAbertura',
+    'data_abertura',
+    'openedDate',
+    'dataConclusao',
+    'data_conclusao',
+    'closedDate',
+    'date'
+  ]));
+}
+
+function daysBetweenDates(firstDateLike, lastDateLike) {
+  const first = normalizeOperationalDate(firstDateLike);
+  const last = normalizeOperationalDate(lastDateLike);
+  if (!first || !last) return null;
+  const a = new Date(`${first}T00:00:00Z`);
+  const b = new Date(`${last}T00:00:00Z`);
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+  return Math.max(0, Math.round((b.getTime() - a.getTime()) / 86400000));
+}
+
+function classifyRecurrenceWindow(daysLike, hasDate) {
+  if (!hasDate || daysLike == null) {
+    return { window: 'sem_data', severity: 'nao_aplicavel', reason: 'Cluster sem data suficiente para janela temporal.' };
+  }
+  const days = toNumber(daysLike);
+  if (days <= 7) return { window: 'ate_7_dias', severity: 'critica', reason: 'Mesmo cliente/equipamento/causa em ate 7 dias.' };
+  if (days <= 15) return { window: 'ate_15_dias', severity: 'relevante', reason: 'Mesmo cliente/equipamento/causa em ate 15 dias.' };
+  if (days <= 30) return { window: 'ate_30_dias', severity: 'historica', reason: 'Mesmo cliente/equipamento/causa entre 16 e 30 dias.' };
+  return { window: 'acima_30_dias', severity: 'volume_concentrado', reason: 'Volume no periodo sem proximidade temporal suficiente para retorno real.' };
+}
+
+function buildOperationalContext(itemLike, classification) {
+  const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+  const fullText = buildOperationalFullText(item);
+  const occurrenceDate = getOperationalDate(item);
+  const piece = detectPieceUsed(item, fullText);
+  const recurrenceSignals = detectOperationalRecurrenceSignals(item, fullText, classification, piece);
+  const baseRecurrence = classifyBaseRecurrence(recurrenceSignals);
+  const returnSignal = detectBooleanFromText(fullText, ['retorno', 'reincidencia', 'reincid', 'revisita', 'reabertura', 'rr', 'nova visita']);
+  const improductive = detectBooleanFromText(fullText, ['improdutiva', 'visita improdutiva', 'sem acesso', 'cliente ausente', 'local fechado']);
+  const escalated = detectBooleanFromText(fullText, ['escalon', 'sap', 'fabricante', 'engenharia', 'matriz', 'bruno', 'suporte nivel']);
+  const paliative = classification.outcomeType === 'paliativo'
+    || classification.outcomeType === 'requer_nova_visita'
+    || detectBooleanFromText(fullText, ['paliativo', 'temporario', 'contingencia', 'workaround', 'nao resolvido', 'sem solucao']);
+  const definitive = classification.outcomeType === 'resolvido' && !paliative && !returnSignal;
+  const responsibilityMap = {
+    infraestrutura_cliente: 'infraestrutura',
+    software_configuracao: 'software',
+    integracao: 'integracao',
+    operacao_uso: 'operacao_cliente',
+    instalacao: 'procedimento',
+    peca_acessorio: 'equipamento',
+    equipamento: 'equipamento',
+    indefinido: 'nao_identificada'
+  };
+  const responsibility = responsibilityMap[classification.probableCause] || 'nao_identificada';
+  const issueSignature = normalizeText([
+    item.defeito,
+    item.problemaRelatado,
+    item.problema_relatado,
+    item.problemaEncontrado,
+    item.problema_encontrado,
+    item.causa
+  ].filter(Boolean).join(' ')).slice(0, 80);
+  const recurrenceKey = [
+    normalizeText(item.cliente || item.unidade || item.local || 'cliente_nao_identificado').slice(0, 50),
+    normalizeText(item.produto || item.equipamento || 'equipamento_nao_identificado').slice(0, 50),
+    issueSignature || classification.probableCause
+  ].join('__');
+  const riskScore = [
+    returnSignal ? 2 : 0,
+    paliative ? 2 : 0,
+    piece.used ? 1 : 0,
+    classification.outcomeType !== 'resolvido' ? 2 : 0,
+    improductive ? 1 : 0,
+    escalated ? 1 : 0,
+    classification.confidence < 0.55 ? 1 : 0
+  ].reduce((acc, value) => acc + value, 0);
+  const riskLevel = riskScore >= 5 ? 'critical' : (riskScore >= 3 ? 'high' : (riskScore >= 1 ? 'medium' : 'low'));
+  const evidence = pickTextFieldEvidence(item).slice(0, 3);
+  return {
+    version: 'OPERATIONAL_CONTEXT_V1',
+    os: operationalFallback(classification.os, 'nao informado'),
+    cliente: operationalFallback(classification.cliente, 'nao informado'),
+    equipamento: operationalFallback(item.produto || item.equipamento, 'nao informado'),
+    tecnico: operationalFallback(item.tecnico || item.responsavelTecnico || item.responsavel || item.technician, 'nao informado'),
+    occurrenceDate: operationalFallback(occurrenceDate, 'sem_data'),
+    jornada: {
+      abertura: {
+        motivo: operationalFallback(item.tipoServico || item.classificacao || classification.serviceType, 'nao informado'),
+        problemaRelatado: operationalFallback(pickFirstText(item, ['problemaRelatado', 'problema_relatado', 'problema', 'defeito']), 'nao informado')
+      },
+      diagnostico: {
+        problemaEncontrado: operationalFallback(pickFirstText(item, ['problemaEncontrado', 'problema_encontrado', 'causa', 'laudo']), 'nao evidenciado'),
+        causaRaizProvavel: classification.probableCause,
+        responsabilidadeProvavel: responsibility
+      },
+      execucao: {
+        acaoExecutada: operationalFallback(pickFirstText(item, ['solucao', 'acao', 'acaoRealizada', 'acao_realizada', 'observacao']), 'nao evidenciado'),
+        pecaUtilizada: operationalFallback(piece.label, piece.used ? 'peca inferida sem codigo' : 'nao informado'),
+        houveTroca: piece.used
+      },
+      conclusao: {
+        outcomeType: classification.outcomeType,
+        definitiva: definitive,
+        paliativa: paliative,
+        sla: detectSla(item, fullText)
+      },
+      retornoRecorrencia: {
+        houveRetorno: baseRecurrence.level === 'forte',
+        possivelRecorrencia: false,
+        recurrenceKey,
+        recurrenceLevel: baseRecurrence.level,
+        recurrenceWindow: 'sem_data',
+        recurrenceSeverity: 'nao_aplicavel',
+        recurrenceReason: baseRecurrence.reason,
+        recurrenceEvidence: {
+          sinaisEncontrados: [
+            ...recurrenceSignals.textSignals,
+            ...recurrenceSignals.pendingSignals,
+            recurrenceSignals.linkedOs ? 'os_anterior_vinculada' : '',
+            recurrenceSignals.repeatedAction ? 'mesma_peca_acao_possivel' : ''
+          ].filter(Boolean),
+          camposUsados: recurrenceSignals.fieldsUsed,
+          clusterId: '',
+          motivo: baseRecurrence.reason
+        }
+      }
+    },
+    garantia: classification.warrantyType,
+    cobranca: detectBilling(item, fullText),
+    visitaImprodutiva: improductive,
+    clienteCritico: detectBooleanFromText(fullText, ['critico', 'crítico', 'vip', 'prioridade alta', 'urgente']),
+    escalonamento: escalated,
+    efetividadeSolucao: definitive ? 'definitiva' : (paliative ? 'paliativa' : 'pendente_ou_nao_confirmada'),
+    riscoOperacional: riskLevel,
+    recurrenceLevel: baseRecurrence.level,
+    recurrenceWindow: 'sem_data',
+    recurrenceSeverity: 'nao_aplicavel',
+    recurrenceReason: baseRecurrence.reason,
+    recurrenceEvidence: {
+      sinaisEncontrados: [
+        ...recurrenceSignals.textSignals,
+        ...recurrenceSignals.pendingSignals,
+        recurrenceSignals.linkedOs ? 'os_anterior_vinculada' : '',
+        recurrenceSignals.repeatedAction ? 'mesma_peca_acao_possivel' : ''
+      ].filter(Boolean),
+      camposUsados: recurrenceSignals.fieldsUsed,
+      clusterId: '',
+      motivo: baseRecurrence.reason
+    },
+    chanceRecorrencia: baseRecurrence.level === 'forte'
+      ? 'alta'
+      : (baseRecurrence.level === 'fraco' || piece.used || classification.outcomeType !== 'resolvido' ? 'media' : 'baixa'),
+    confidencePct: Math.round(toNumber(classification.confidence) * 10000) / 100,
+    evidence: evidence.length ? evidence : [{ source: 'contexto', text: 'dados insuficientes' }]
+  };
+}
+
 function classifyItem(itemLike) {
   const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
-  const issueText = Array.isArray(item.issues)
-    ? item.issues.map((issue) => `${toText(issue?.type)} ${toText(issue?.message)} ${toText(issue?.description)}`).join(' ')
-    : '';
-
-  const baseText = [
-    item.tipoServico,
-    item.codigoRaw,
-    item.codigoOperacional,
-    item.cobertura,
-    item.observacao,
-    item.laudo,
-    item.nextStep,
-    item.ordemCompra,
-    issueText
-  ].filter(Boolean).join(' ');
+  const baseText = buildOperationalFullText(item);
 
   const service = detectPrimaryService(item, baseText);
   const warranty = detectWarranty(item, baseText);
-  const cause = detectProbableCause(baseText);
+  const cause = refineCauseForService(detectProbableCause(baseText), service.serviceType, item);
   const outcome = detectOutcome(item, baseText);
   const confidence = Math.round(((service.confidence + warranty.confidence + cause.confidence + outcome.confidence) / 4) * 100) / 100;
   const evidence = joinEvidence([
@@ -537,7 +950,9 @@ function classifyItem(itemLike) {
     ...outcome.evidence
   ]);
 
-  return {
+  const result = {
+    os: toText(item.os || item.id || ''),
+    cliente: toText(item.cliente || item.clienteNome || item.razaoSocial || item.nomeCliente || ''),
     serviceType: service.serviceType,
     primaryServiceType: service.primaryServiceType,
     secondarySignals: service.secondarySignals,
@@ -546,8 +961,11 @@ function classifyItem(itemLike) {
     probableCause: cause.probableCause,
     outcomeType: outcome.outcomeType,
     confidence,
-    evidence
+    evidence,
+    fieldEvidence: pickTextFieldEvidence(item)
   };
+  result.operationalContext = buildOperationalContext(item, result);
+  return result;
 }
 
 function createGroupBucket(name, categoryKeys) {
@@ -561,6 +979,7 @@ function createGroupBucket(name, categoryKeys) {
     probableCause: buildCounter(PROBABLE_CAUSES),
     outcomeType: buildCounter(OUTCOME_TYPES),
     secondarySignals: Object.create(null),
+    evidenceSamples: [],
     categoryKeys
   };
 }
@@ -578,6 +997,19 @@ function addClassificationToBucket(bucket, classification) {
     if (!key) return;
     bucket.secondarySignals[key] = toNumber(bucket.secondarySignals[key]) + 1;
   });
+  if (bucket.evidenceSamples.length < 8) {
+    const field = Array.isArray(classification.fieldEvidence) ? classification.fieldEvidence[0] : null;
+    bucket.evidenceSamples.push({
+      os: toText(classification.os || ''),
+      cliente: toText(classification.cliente || ''),
+      source: toText(field?.source || classification.evidence?.[0] || 'classification'),
+      text: shortEvidenceText(field?.text || classification.evidence?.[0] || ''),
+      cause: toText(classification.probableCause || ''),
+      outcome: toText(classification.outcomeType || ''),
+      serviceType: toText(classification.serviceType || ''),
+      confidencePct: Math.round(toNumber(classification.confidence) * 10000) / 100
+    });
+  }
 }
 
 function normalizeGroupBucket(bucket) {
@@ -596,7 +1028,8 @@ function normalizeGroupBucket(bucket) {
     warrantyType: counterToDistribution(bucket.warrantyType, bucket.totalOs),
     probableCause: counterToDistribution(bucket.probableCause, bucket.totalOs),
     outcomeType: counterToDistribution(bucket.outcomeType, bucket.totalOs),
-    secondarySignals: topSignals
+    secondarySignals: topSignals,
+    evidenceSamples: bucket.evidenceSamples.slice(0, 8)
   };
 }
 
@@ -1381,10 +1814,652 @@ function buildGuidedReviewQueue(input) {
   };
 }
 
+function incrementMapCounter(map, keyLike, amountLike) {
+  const key = toText(keyLike || 'nao_identificado') || 'nao_identificado';
+  map.set(key, toNumber(map.get(key)) + (amountLike == null ? 1 : toNumber(amountLike)));
+}
+
+function mapToRanking(map, total, valueKey) {
+  return Array.from(map.entries())
+    .map(([key, count]) => ({
+      key,
+      [valueKey || 'count']: count,
+      count,
+      ratePct: pct(count, Math.max(1, total))
+    }))
+    .sort((a, b) => b.count - a.count || String(a.key).localeCompare(String(b.key)))
+    .slice(0, 15);
+}
+
+function hasOperationalValue(valueLike) {
+  const value = normalizeText(valueLike);
+  return !!value
+    && value !== 'nao informado'
+    && value !== 'nao evidenciado'
+    && value !== 'dados insuficientes'
+    && value !== 'requer revisao'
+    && value !== 'nao identificada'
+    && value !== 'nao_identificada'
+    && value !== 'nao_identificado';
+}
+
+function buildOperationalAudit(contexts, recurrenceClusters, paliativeCases, riskCases) {
+  const total = contexts.length;
+  const clusterKeys = new Set((Array.isArray(recurrenceClusters) ? recurrenceClusters : []).map((row) => row.key).filter(Boolean));
+  const validationIssues = [];
+  const recurrenceCounters = {
+    confirmado: 0,
+    forte: 0,
+    fraco: 0,
+    pendencia_operacional: 0,
+    sem_recorrencia: 0
+  };
+  const counters = {
+    totalOsContexto: total,
+    jornadaCompleta: 0,
+    aberturaIdentificada: 0,
+    diagnosticoIdentificado: 0,
+    execucaoIdentificada: 0,
+    conclusaoIdentificada: 0,
+    recorrenciaOuRetorno: 0,
+    riscoAltoCritico: Array.isArray(riskCases) ? riskCases.length : 0,
+    solucaoPaliativa: Array.isArray(paliativeCases) ? paliativeCases.length : 0,
+    responsabilidadeProvavelIdentificada: 0
+  };
+
+  contexts.forEach((ctx) => {
+    const aberturaOk = hasOperationalValue(ctx?.jornada?.abertura?.motivo);
+    const diagnosticoOk = hasOperationalValue(ctx?.jornada?.diagnostico?.problemaEncontrado)
+      || hasOperationalValue(ctx?.jornada?.diagnostico?.causaRaizProvavel);
+    const execucaoOk = hasOperationalValue(ctx?.jornada?.execucao?.acaoExecutada);
+    const conclusaoOk = hasOperationalValue(ctx?.jornada?.conclusao?.outcomeType);
+    const responsabilidadeOk = hasOperationalValue(ctx?.jornada?.diagnostico?.responsabilidadeProvavel);
+    const evidenceOk = Array.isArray(ctx?.evidence)
+      && ctx.evidence.some((item) => hasOperationalValue(item?.text));
+    const recurrenceKey = toText(ctx?.jornada?.retornoRecorrencia?.recurrenceKey);
+    const recurrenceLevel = toText(ctx?.recurrenceLevel || ctx?.jornada?.retornoRecorrencia?.recurrenceLevel || 'sem_recorrencia');
+    const hasReturnSignal = ['confirmado', 'forte'].includes(recurrenceLevel);
+    if (Object.prototype.hasOwnProperty.call(recurrenceCounters, recurrenceLevel)) {
+      recurrenceCounters[recurrenceLevel] += 1;
+    } else {
+      recurrenceCounters.sem_recorrencia += 1;
+    }
+
+    if (aberturaOk) counters.aberturaIdentificada += 1;
+    if (diagnosticoOk) counters.diagnosticoIdentificado += 1;
+    if (execucaoOk) counters.execucaoIdentificada += 1;
+    if (conclusaoOk) counters.conclusaoIdentificada += 1;
+    if (hasReturnSignal) counters.recorrenciaOuRetorno += 1;
+    if (responsabilidadeOk) counters.responsabilidadeProvavelIdentificada += 1;
+    if (aberturaOk && diagnosticoOk && execucaoOk && conclusaoOk && responsabilidadeOk) counters.jornadaCompleta += 1;
+
+    if (['high', 'critical'].includes(String(ctx?.riscoOperacional || '').toLowerCase()) && !evidenceOk) {
+      validationIssues.push({
+        code: 'high_risk_without_evidence',
+        os: ctx.os,
+        severity: 'high',
+        message: 'OS com risco alto/critico sem evidencia operacional util.'
+      });
+    }
+    if (ctx?.efetividadeSolucao === 'paliativa' && !evidenceOk) {
+      validationIssues.push({
+        code: 'paliative_without_justification',
+        os: ctx.os,
+        severity: 'medium',
+        message: 'Solucao paliativa sem justificativa/evidencia.'
+      });
+    }
+    const recurrenceFields = Array.isArray(ctx?.recurrenceEvidence?.camposUsados)
+      ? ctx.recurrenceEvidence.camposUsados
+      : [];
+    const strongHasOperationalLink = recurrenceLevel === 'forte'
+      && (clusterKeys.has(recurrenceKey) || recurrenceFields.includes('os_anterior'));
+    if (recurrenceLevel === 'confirmado' && (!recurrenceKey || !clusterKeys.has(recurrenceKey))) {
+      validationIssues.push({
+        code: 'recurrence_without_valid_cluster',
+        os: ctx.os,
+        severity: 'medium',
+        message: 'Sinal de recorrencia sem cluster consolidado valido.'
+      });
+    }
+    if (recurrenceLevel === 'forte' && !strongHasOperationalLink) {
+      validationIssues.push({
+        code: 'strong_recurrence_without_operational_link',
+        os: ctx.os,
+        severity: 'medium',
+        message: 'Possivel recorrencia forte sem cluster ou OS anterior vinculada.'
+      });
+    }
+    if (!responsabilidadeOk) {
+      validationIssues.push({
+        code: 'missing_probable_responsibility',
+        os: ctx.os,
+        severity: 'medium',
+        message: 'Responsabilidade provavel vazia ou nao identificada.'
+      });
+    }
+    if (!aberturaOk && !(diagnosticoOk && execucaoOk && conclusaoOk)) {
+      validationIssues.push({
+        code: 'incomplete_journey_without_reason',
+        os: ctx.os,
+        severity: 'low',
+        message: 'Jornada incompleta sem motivo de abertura identificado.'
+      });
+    }
+  });
+
+  const pctOfTotal = (value) => pct(value, Math.max(1, total));
+  return {
+    ...counters,
+    recurrenceLevels: recurrenceCounters,
+    percentuais: {
+      jornadaCompletaPct: pctOfTotal(counters.jornadaCompleta),
+      aberturaIdentificadaPct: pctOfTotal(counters.aberturaIdentificada),
+      diagnosticoIdentificadoPct: pctOfTotal(counters.diagnosticoIdentificado),
+      execucaoIdentificadaPct: pctOfTotal(counters.execucaoIdentificada),
+      conclusaoIdentificadaPct: pctOfTotal(counters.conclusaoIdentificada),
+      responsabilidadeIdentificadaPct: pctOfTotal(counters.responsabilidadeProvavelIdentificada)
+    },
+    validationIssues: validationIssues.slice(0, 100),
+    validationSummary: validationIssues.reduce((acc, item) => {
+      acc[item.code] = toNumber(acc[item.code]) + 1;
+      return acc;
+    }, {})
+  };
+}
+
+function syncContextRecurrence(ctx, level, evidence, temporal) {
+  if (!ctx || typeof ctx !== 'object') return;
+  const safeLevel = toText(level || 'sem_recorrencia');
+  const safeEvidence = (evidence && typeof evidence === 'object') ? evidence : {};
+  const safeTemporal = (temporal && typeof temporal === 'object') ? temporal : {};
+  ctx.recurrenceLevel = safeLevel;
+  ctx.recurrenceWindow = toText(safeTemporal.recurrenceWindow || safeTemporal.window || ctx.recurrenceWindow || 'sem_data');
+  ctx.recurrenceSeverity = toText(safeTemporal.recurrenceSeverity || safeTemporal.severity || ctx.recurrenceSeverity || 'nao_aplicavel');
+  ctx.recurrenceReason = toText(safeTemporal.recurrenceReason || safeTemporal.reason || safeEvidence.motivo || '');
+  ctx.recurrenceEvidence = {
+    sinaisEncontrados: Array.isArray(safeEvidence.sinaisEncontrados) ? safeEvidence.sinaisEncontrados.filter(Boolean) : [],
+    camposUsados: Array.isArray(safeEvidence.camposUsados) ? safeEvidence.camposUsados.filter(Boolean) : [],
+    clusterId: toText(safeEvidence.clusterId || ''),
+    motivo: toText(safeEvidence.motivo || '')
+  };
+  ctx.chanceRecorrencia = safeLevel === 'confirmado' || safeLevel === 'forte'
+    ? 'alta'
+    : (safeLevel === 'fraco' || safeLevel === 'pendencia_operacional' ? 'media' : 'baixa');
+  if (ctx.jornada?.retornoRecorrencia) {
+    ctx.jornada.retornoRecorrencia.recurrenceLevel = ctx.recurrenceLevel;
+    ctx.jornada.retornoRecorrencia.recurrenceWindow = ctx.recurrenceWindow;
+    ctx.jornada.retornoRecorrencia.recurrenceSeverity = ctx.recurrenceSeverity;
+    ctx.jornada.retornoRecorrencia.recurrenceReason = ctx.recurrenceReason;
+    ctx.jornada.retornoRecorrencia.recurrenceEvidence = ctx.recurrenceEvidence;
+    ctx.jornada.retornoRecorrencia.houveRetorno = safeLevel === 'confirmado';
+    ctx.jornada.retornoRecorrencia.possivelRecorrencia = safeLevel === 'forte';
+  }
+}
+
+function classifyRecurrenceWithCluster(ctx, cluster) {
+  const current = toText(ctx?.recurrenceLevel || ctx?.jornada?.retornoRecorrencia?.recurrenceLevel || 'sem_recorrencia');
+  const currentEvidence = ctx?.recurrenceEvidence || ctx?.jornada?.retornoRecorrencia?.recurrenceEvidence || {};
+  const signals = new Set(Array.isArray(currentEvidence.sinaisEncontrados) ? currentEvidence.sinaisEncontrados : []);
+  const fields = new Set(Array.isArray(currentEvidence.camposUsados) ? currentEvidence.camposUsados : []);
+  const hasCluster = !!cluster && toNumber(cluster.count) >= 2;
+
+  if (hasCluster) {
+    signals.add('cluster_cliente_equipamento_causa');
+    fields.add('cliente');
+    fields.add('equipamento');
+    fields.add('causa');
+  }
+  if (toNumber(cluster?.count) >= 2) signals.add('ocorrencia_repetida_periodo');
+
+  const signalCount = [
+    hasCluster,
+    fields.has('cliente'),
+    fields.has('equipamento'),
+    fields.has('defeito_causa') || fields.has('causa'),
+    fields.has('os_anterior'),
+    signals.has('retorno') || signals.has('reabertura') || signals.has('reincidencia') || signals.has('novamente') || signals.has('persistente'),
+    fields.has('peca_acao') || signals.has('mesma_peca_acao_possivel')
+  ].filter(Boolean).length;
+
+  if (current === 'pendencia_operacional') {
+    return {
+      level: 'pendencia_operacional',
+      temporal: {
+        recurrenceWindow: 'sem_data',
+        recurrenceSeverity: 'nao_aplicavel',
+        recurrenceReason: hasCluster
+          ? 'Pendencia operacional com volume relacionado; separada de recorrencia real.'
+          : 'Pendencia operacional sem cluster temporal confirmado.'
+      },
+      evidence: {
+        sinaisEncontrados: Array.from(signals),
+        camposUsados: Array.from(fields),
+        clusterId: hasCluster ? toText(cluster.key) : '',
+        motivo: 'Caso separado como pendencia operacional; nao entra como recorrencia real.'
+      }
+    };
+  }
+  if (hasCluster && cluster.recurrenceSeverity === 'volume_concentrado') {
+    return {
+      level: 'sem_recorrencia',
+      temporal: {
+        recurrenceWindow: cluster.recurrenceWindow,
+        recurrenceSeverity: 'volume_concentrado',
+        recurrenceReason: cluster.recurrenceReason
+      },
+      evidence: {
+        sinaisEncontrados: Array.from(signals),
+        camposUsados: Array.from(fields),
+        clusterId: toText(cluster.key),
+        motivo: 'Volume concentrado separado de retorno real por janela temporal acima de 30 dias.'
+      }
+    };
+  }
+  if (hasCluster && signalCount >= 2 && current !== 'pendencia_operacional') {
+    return {
+      level: 'confirmado',
+      temporal: {
+        recurrenceWindow: cluster.recurrenceWindow,
+        recurrenceSeverity: cluster.recurrenceSeverity,
+        recurrenceReason: cluster.recurrenceReason
+      },
+      evidence: {
+        sinaisEncontrados: Array.from(signals),
+        camposUsados: Array.from(fields),
+        clusterId: toText(cluster.key),
+        motivo: 'Retorno real confirmado por cluster operacional e ao menos dois sinais consistentes.'
+      }
+    };
+  }
+  if ((fields.has('os_anterior') || hasCluster) && current !== 'pendencia_operacional') {
+    return {
+      level: 'forte',
+      temporal: {
+        recurrenceWindow: hasCluster ? cluster.recurrenceWindow : 'sem_data',
+        recurrenceSeverity: hasCluster ? cluster.recurrenceSeverity : 'relevante',
+        recurrenceReason: hasCluster ? cluster.recurrenceReason : 'OS anterior vinculada sem cluster temporal completo.'
+      },
+      evidence: {
+        sinaisEncontrados: Array.from(signals),
+        camposUsados: Array.from(fields),
+        clusterId: hasCluster ? toText(cluster.key) : '',
+        motivo: 'Possivel recorrencia forte por vinculo operacional, mas sem todos os sinais para confirmacao.'
+      }
+    };
+  }
+  if (current === 'fraco') {
+    return {
+      level: 'fraco',
+      temporal: {
+        recurrenceWindow: 'sem_data',
+        recurrenceSeverity: 'nao_aplicavel',
+        recurrenceReason: 'Sinal textual fraco sem janela temporal confirmada.'
+      },
+      evidence: {
+        sinaisEncontrados: Array.from(signals),
+        camposUsados: Array.from(fields),
+        clusterId: '',
+        motivo: 'Sinal textual fraco sem cluster consistente.'
+      }
+    };
+  }
+  return {
+    level: 'sem_recorrencia',
+    temporal: {
+      recurrenceWindow: hasCluster ? cluster.recurrenceWindow : 'sem_data',
+      recurrenceSeverity: hasCluster ? cluster.recurrenceSeverity : 'nao_aplicavel',
+      recurrenceReason: hasCluster ? cluster.recurrenceReason : 'Sem evidencia operacional suficiente de recorrencia.'
+    },
+    evidence: {
+      sinaisEncontrados: Array.from(signals),
+      camposUsados: Array.from(fields),
+      clusterId: '',
+      motivo: 'Sem evidencia operacional suficiente de recorrencia.'
+    }
+  };
+}
+
+function buildOperationalExamples(contextsLike, limit) {
+  return (Array.isArray(contextsLike) ? contextsLike : [])
+    .slice(0, Math.max(1, limit || 10))
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      motivoAbertura: ctx.jornada?.abertura?.motivo || 'nao informado',
+      problemaEncontrado: ctx.jornada?.diagnostico?.problemaEncontrado || 'nao evidenciado',
+      acaoExecutada: ctx.jornada?.execucao?.acaoExecutada || 'nao evidenciado',
+      solucao: ctx.jornada?.conclusao?.outcomeType || 'requer revisao',
+      responsabilidadeProvavel: ctx.jornada?.diagnostico?.responsabilidadeProvavel || 'requer revisao',
+      risco: ctx.riscoOperacional,
+      chanceRecorrencia: ctx.chanceRecorrencia,
+      recurrenceLevel: ctx.recurrenceLevel || ctx.jornada?.retornoRecorrencia?.recurrenceLevel || 'sem_recorrencia',
+      recurrenceWindow: ctx.recurrenceWindow || ctx.jornada?.retornoRecorrencia?.recurrenceWindow || 'sem_data',
+      recurrenceSeverity: ctx.recurrenceSeverity || ctx.jornada?.retornoRecorrencia?.recurrenceSeverity || 'nao_aplicavel',
+      recurrenceReason: ctx.recurrenceReason || ctx.jornada?.retornoRecorrencia?.recurrenceReason || '',
+      recurrenceEvidence: ctx.recurrenceEvidence || ctx.jornada?.retornoRecorrencia?.recurrenceEvidence || {},
+      evidenciaUsada: ctx.evidence?.[0]?.text || 'dados insuficientes',
+      origemEvidencia: ctx.evidence?.[0]?.source || 'contexto'
+    }));
+}
+
+function buildOperationalExecutiveView(operationalContextLike) {
+  const oc = (operationalContextLike && typeof operationalContextLike === 'object') ? operationalContextLike : {};
+  const audit = (oc.audit && typeof oc.audit === 'object') ? oc.audit : {};
+  const summary = (oc.summary && typeof oc.summary === 'object') ? oc.summary : {};
+  const rankings = (oc.rankings && typeof oc.rankings === 'object') ? oc.rankings : {};
+  const alerts = Array.isArray(oc.managementAlerts) ? oc.managementAlerts : [];
+  return {
+    version: 'OPERATIONAL_EXECUTIVE_VIEW_V1',
+    resumoExecutivo: `Contexto operacional processou ${toNumber(oc.totalOs)} O.S.; jornada completa em ${formatPctLabel(audit.percentuais?.jornadaCompletaPct || 0, 'pt-BR')}; recorrencia confirmada em ${toNumber(oc.recurrence?.levels?.confirmado)} caso(s); risco alto/critico em ${toNumber(audit.riscoAltoCritico)} caso(s).`,
+    alertasCriticos: alerts.filter((item) => String(item.severity || '').toLowerCase() === 'high').slice(0, 8),
+    rankingRecorrencia: oc.recurrence?.clusters || [],
+    clustersConfirmados: oc.recurrence?.clustersConfirmados || [],
+    possiveisRecorrenciasFortes: oc.recurrence?.possiveisRecorrenciasFortes || [],
+    sinaisFracos: oc.recurrence?.sinaisFracos || [],
+    pendenciasOperacionais: oc.recurrence?.pendenciasOperacionais || [],
+    volumesConcentrados: oc.recurrence?.volumesConcentrados || [],
+    rankingRisco: oc.operationalRiskCases || [],
+    rankingSolucoesPaliativas: oc.paliativeSolutions || [],
+    rankingResponsabilidadeProvavel: rankings.topResponsibilities || [],
+    topClientesRecorrentes: rankings.topReturnClients || [],
+    topEquipamentosRecorrentes: rankings.topReturnEquipment || []
+  };
+}
+
+function buildOperationalContextAnalytics(contextsLike) {
+  const contexts = Array.isArray(contextsLike) ? contextsLike : [];
+  const total = contexts.length;
+  const recurrenceMap = new Map();
+  const clientMap = new Map();
+  const equipmentReturnMap = new Map();
+  const pieceMap = new Map();
+  const causeMap = new Map();
+  const solutionEffectivenessMap = new Map();
+  const responsibilityMap = new Map();
+  const technicianMap = new Map();
+  const alerts = [];
+
+  contexts.forEach((ctx) => {
+    incrementMapCounter(causeMap, ctx?.jornada?.diagnostico?.causaRaizProvavel);
+    incrementMapCounter(solutionEffectivenessMap, ctx?.efetividadeSolucao);
+    incrementMapCounter(responsibilityMap, ctx?.jornada?.diagnostico?.responsabilidadeProvavel);
+    if (ctx?.jornada?.execucao?.houveTroca) incrementMapCounter(pieceMap, ctx.jornada.execucao.pecaUtilizada || 'peca_inferida');
+    const key = ctx?.jornada?.retornoRecorrencia?.recurrenceKey;
+    if (key) {
+      if (!recurrenceMap.has(key)) {
+        recurrenceMap.set(key, {
+          key,
+          cliente: ctx.cliente || '',
+          equipamento: ctx.equipamento || '',
+          causa: ctx.jornada?.diagnostico?.causaRaizProvavel || '',
+          count: 0,
+          os: [],
+          dates: []
+        });
+      }
+      const row = recurrenceMap.get(key);
+      row.count += 1;
+      if (ctx.os && row.os.length < 8 && !row.os.includes(ctx.os)) row.os.push(ctx.os);
+      const occurrenceDate = normalizeOperationalDate(ctx.occurrenceDate);
+      if (occurrenceDate) row.dates.push(occurrenceDate);
+    }
+  });
+
+  const recurrenceClusterCandidates = Array.from(recurrenceMap.values())
+    .filter((row) => row.count >= 2)
+    .sort((a, b) => b.count - a.count || String(a.equipamento).localeCompare(String(b.equipamento)))
+    .map((row) => {
+      const sortedDates = Array.from(new Set(Array.isArray(row.dates) ? row.dates : []))
+        .filter(Boolean)
+        .sort();
+      const firstOsDate = sortedDates[0] || '';
+      const lastOsDate = sortedDates[sortedDates.length - 1] || '';
+      const daysBetween = daysBetweenDates(firstOsDate, lastOsDate);
+      const temporal = classifyRecurrenceWindow(daysBetween, !!(firstOsDate && lastOsDate));
+      return {
+        ...row,
+        clusterId: row.key,
+        firstOsDate,
+        lastOsDate,
+        daysBetween,
+        recurrenceWindow: temporal.window,
+        recurrenceSeverity: temporal.severity,
+        recurrenceReason: temporal.reason
+      };
+    });
+  const recurrenceClusterByKey = new Map(recurrenceClusterCandidates.map((row) => [row.key, row]));
+  contexts.forEach((ctx) => {
+    const cluster = recurrenceClusterByKey.get(ctx?.jornada?.retornoRecorrencia?.recurrenceKey);
+    const calibrated = classifyRecurrenceWithCluster(ctx, cluster);
+    syncContextRecurrence(ctx, calibrated.level, calibrated.evidence, calibrated.temporal);
+    if (['confirmado', 'forte'].includes(ctx.recurrenceLevel)) {
+      incrementMapCounter(clientMap, ctx.cliente || 'cliente_nao_identificado');
+      incrementMapCounter(equipmentReturnMap, ctx.equipamento || 'equipamento_nao_identificado');
+      incrementMapCounter(technicianMap, ctx.tecnico || 'tecnico_nao_identificado');
+    }
+  });
+
+  const contextsByRecurrenceKey = new Map();
+  contexts.forEach((ctx) => {
+    const key = ctx?.jornada?.retornoRecorrencia?.recurrenceKey;
+    if (!key) return;
+    if (!contextsByRecurrenceKey.has(key)) contextsByRecurrenceKey.set(key, []);
+    contextsByRecurrenceKey.get(key).push(ctx);
+  });
+
+  const clusterRows = recurrenceClusterCandidates.map((row) => {
+    const members = contextsByRecurrenceKey.get(row.key) || [];
+    const levels = new Set(members.map((ctx) => ctx.recurrenceLevel));
+    const level = row.recurrenceSeverity === 'volume_concentrado'
+      ? 'sem_recorrencia'
+      : (levels.has('confirmado') ? 'confirmado' : (levels.has('forte') ? 'forte' : 'fraco'));
+    return {
+      ...row,
+      recurrenceLevel: level,
+      possibleRecurrence: level !== 'sem_recorrencia',
+      signal: row.recurrenceSeverity === 'volume_concentrado'
+        ? 'volume_concentrado'
+        : (level === 'confirmado' ? 'retorno_real_confirmado' : (level === 'forte' ? 'possivel_recorrencia_forte' : 'sinal_fraco'))
+    };
+  });
+
+  const allClustersConfirmados = clusterRows
+    .filter((row) => row.recurrenceLevel === 'confirmado')
+    .sort((a, b) => b.count - a.count || String(a.equipamento).localeCompare(String(b.equipamento)));
+  const clustersConfirmados = allClustersConfirmados
+    .slice(0, 15);
+  const possiveisRecorrenciasFortes = contexts
+    .filter((ctx) => ctx.recurrenceLevel === 'forte')
+    .slice(0, 30)
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      causa: ctx.jornada?.diagnostico?.causaRaizProvavel || '',
+      recurrenceLevel: ctx.recurrenceLevel,
+      recurrenceEvidence: ctx.recurrenceEvidence
+    }));
+  const sinaisFracos = contexts
+    .filter((ctx) => ctx.recurrenceLevel === 'fraco')
+    .slice(0, 30)
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      causa: ctx.jornada?.diagnostico?.causaRaizProvavel || '',
+      recurrenceLevel: ctx.recurrenceLevel,
+      recurrenceEvidence: ctx.recurrenceEvidence
+    }));
+  const pendenciasOperacionais = contexts
+    .filter((ctx) => ctx.recurrenceLevel === 'pendencia_operacional')
+    .slice(0, 30)
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      causa: ctx.jornada?.diagnostico?.causaRaizProvavel || '',
+      recurrenceLevel: ctx.recurrenceLevel,
+      recurrenceEvidence: ctx.recurrenceEvidence
+    }));
+  const volumesConcentrados = clusterRows
+    .filter((row) => row.recurrenceSeverity === 'volume_concentrado')
+    .sort((a, b) => b.count - a.count || String(a.equipamento).localeCompare(String(b.equipamento)))
+    .slice(0, 15);
+  const recurrenceClusters = clustersConfirmados;
+  const recurrenceLevelSeverityMatrix = contexts.reduce((acc, ctx) => {
+    const level = toText(ctx.recurrenceLevel || 'sem_recorrencia');
+    const severity = toText(ctx.recurrenceSeverity || 'nao_aplicavel');
+    if (!acc[level]) acc[level] = {};
+    acc[level][severity] = toNumber(acc[level][severity]) + 1;
+    return acc;
+  }, {});
+
+  const paliativeCases = contexts
+    .filter((ctx) => ctx.efetividadeSolucao === 'paliativa')
+    .slice(0, 20)
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      causa: ctx.jornada?.diagnostico?.causaRaizProvavel || '',
+      solucao: ctx.jornada?.conclusao?.outcomeType || '',
+      riscoOperacional: ctx.riscoOperacional,
+      evidence: ctx.evidence?.[0]?.text || ''
+    }));
+
+  const riskCases = contexts
+    .filter((ctx) => ['critical', 'high'].includes(String(ctx.riscoOperacional || '').toLowerCase()))
+    .sort((a, b) => String(a.riscoOperacional).localeCompare(String(b.riscoOperacional)))
+    .slice(0, 25)
+    .map((ctx) => ({
+      os: ctx.os,
+      cliente: ctx.cliente,
+      equipamento: ctx.equipamento,
+      tecnico: ctx.tecnico,
+      riscoOperacional: ctx.riscoOperacional,
+      chanceRecorrencia: ctx.chanceRecorrencia,
+      efetividadeSolucao: ctx.efetividadeSolucao,
+      garantia: ctx.garantia,
+      cobranca: ctx.cobranca
+    }));
+
+  if (recurrenceClusters.length) {
+    alerts.push({
+      type: 'recorrencia',
+      severity: recurrenceClusters[0].count >= 3 ? 'high' : 'medium',
+      title: 'Possível recorrência operacional',
+      evidence: `${recurrenceClusters[0].count} O.S. no mesmo cliente/equipamento/defeito`,
+      recommendedAction: 'Validar causa raiz, confirmar se a solução foi definitiva e abrir plano de redução de retorno.'
+    });
+  }
+  const topPiece = mapToRanking(pieceMap, total, 'totalTrocas')[0] || null;
+  if (topPiece && topPiece.count >= 3) {
+    alerts.push({
+      type: 'peca',
+      severity: topPiece.count >= 8 ? 'high' : 'medium',
+      title: 'Uso recorrente de peça/componente',
+      evidence: `${topPiece.key}: ${topPiece.count} ocorrência(s)`,
+      recommendedAction: 'Conferir estoque, lote, instalação e reincidência após troca.'
+    });
+  }
+  const highRiskCount = riskCases.length;
+  if (highRiskCount) {
+    alerts.push({
+      type: 'risco_operacional',
+      severity: highRiskCount >= 10 ? 'high' : 'medium',
+      title: 'Casos com risco operacional elevado',
+      evidence: `${highRiskCount} O.S. com risco alto/crítico no contexto operacional`,
+      recommendedAction: 'Priorizar revisão gerencial dos casos críticos antes do fechamento.'
+    });
+  }
+
+  const operationalContext = {
+    version: 'OPERATIONAL_CONTEXT_V1',
+    totalOs: total,
+    journeyModel: ['abertura', 'diagnostico', 'execucao', 'conclusao', 'retorno_recorrencia'],
+    summary: {
+      definitiveRatePct: pct(contexts.filter((ctx) => ctx.efetividadeSolucao === 'definitiva').length, total),
+      paliativeRatePct: pct(contexts.filter((ctx) => ctx.efetividadeSolucao === 'paliativa').length, total),
+      highRecurrenceChancePct: pct(contexts.filter((ctx) => ctx.chanceRecorrencia === 'alta').length, total),
+      warrantyRatePct: pct(contexts.filter((ctx) => String(ctx.garantia || '').includes('garantia')).length, total),
+      billingApplicableRatePct: pct(contexts.filter((ctx) => ctx.cobranca === 'cobranca_aplicavel').length, total),
+      improductiveRatePct: pct(contexts.filter((ctx) => ctx.visitaImprodutiva).length, total),
+      escalatedRatePct: pct(contexts.filter((ctx) => ctx.escalonamento).length, total)
+    },
+    rankings: {
+      topCauses: mapToRanking(causeMap, total, 'totalOs'),
+      topResponsibilities: mapToRanking(responsibilityMap, total, 'totalOs'),
+      topSolutionEffectiveness: mapToRanking(solutionEffectivenessMap, total, 'totalOs'),
+      topReturnEquipment: mapToRanking(equipmentReturnMap, total, 'returnCount'),
+      topReturnClients: mapToRanking(clientMap, total, 'returnCount'),
+      topTechnicianReturns: mapToRanking(technicianMap, total, 'returnCount'),
+      topPieces: mapToRanking(pieceMap, total, 'totalTrocas')
+    },
+    recurrence: {
+      clusters: recurrenceClusters,
+      clustersConfirmados,
+      possiveisRecorrenciasFortes,
+      sinaisFracos,
+      pendenciasOperacionais,
+      volumesConcentrados,
+      possibleRecurrenceCount: allClustersConfirmados.reduce((acc, row) => acc + row.count, 0),
+      totalConfirmedClusters: allClustersConfirmados.length,
+      levels: {
+        confirmado: contexts.filter((ctx) => ctx.recurrenceLevel === 'confirmado').length,
+        forte: contexts.filter((ctx) => ctx.recurrenceLevel === 'forte').length,
+        fraco: contexts.filter((ctx) => ctx.recurrenceLevel === 'fraco').length,
+        pendencia_operacional: contexts.filter((ctx) => ctx.recurrenceLevel === 'pendencia_operacional').length,
+        sem_recorrencia: contexts.filter((ctx) => ctx.recurrenceLevel === 'sem_recorrencia').length
+      },
+      severityLevels: {
+        critica: contexts.filter((ctx) => ctx.recurrenceSeverity === 'critica').length,
+        relevante: contexts.filter((ctx) => ctx.recurrenceSeverity === 'relevante').length,
+        historica: contexts.filter((ctx) => ctx.recurrenceSeverity === 'historica').length,
+        volume_concentrado: contexts.filter((ctx) => ctx.recurrenceSeverity === 'volume_concentrado').length,
+        nao_aplicavel: contexts.filter((ctx) => ctx.recurrenceSeverity === 'nao_aplicavel').length
+      },
+      windows: {
+        ate_7_dias: contexts.filter((ctx) => ctx.recurrenceWindow === 'ate_7_dias').length,
+        ate_15_dias: contexts.filter((ctx) => ctx.recurrenceWindow === 'ate_15_dias').length,
+        ate_30_dias: contexts.filter((ctx) => ctx.recurrenceWindow === 'ate_30_dias').length,
+        acima_30_dias: contexts.filter((ctx) => ctx.recurrenceWindow === 'acima_30_dias').length,
+        sem_data: contexts.filter((ctx) => ctx.recurrenceWindow === 'sem_data').length
+      },
+      levelSeverityMatrix: recurrenceLevelSeverityMatrix
+    },
+    paliativeSolutions: paliativeCases,
+    operationalRiskCases: riskCases,
+    managementAlerts: alerts.slice(0, 12),
+    audit: buildOperationalAudit(contexts, allClustersConfirmados, paliativeCases, riskCases),
+    examples: buildOperationalExamples(contexts, 10),
+    sampleContexts: contexts.slice(0, 40)
+  };
+  operationalContext.operationalExecutiveView = buildOperationalExecutiveView(operationalContext);
+  return operationalContext;
+}
+
 function buildAnalyticsTaxonomy(itemsLike, options) {
   const opts = (options && typeof options === 'object') ? options : {};
   const locale = detectLocale(opts.locale);
-  const items = Array.isArray(itemsLike) ? itemsLike : [];
+  let dadosBase = Array.isArray(itemsLike) ? itemsLike : [];
+  // FORÇANDO ESTADO GLOBAL DE PDF
+  if (typeof window !== 'undefined' && window.__FSM_PDF_RECORDS__ && window.__FSM_PDF_RECORDS__.length > 0) {
+    dadosBase = window.__FSM_PDF_RECORDS__;
+  }
+  const items = dadosBase.map((itemLike) => {
+    const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+    return {
+      ...item,
+      os: item.os || item.os_numero || item.numero_os || item.id,
+      produto: item.produto || item.equipamento || item.descricao_produto || item.descricaoProduto,
+      laudo: item.laudo || item.solucao || item.observacao || item.acaoFeita || item.acao_feita,
+      apontamento: item.apontamento || item.descricao_atendimento || item.descricao || item.observacao,
+      tecnico: item.tecnico || item.technicianName || item.responsavelTecnico,
+      cliente: item.cliente || item.clientName || item.razao_social
+    };
+  });
   const totalOs = items.length;
   const period = {
     type: toText(opts.periodType || 'daily'),
@@ -1402,6 +2477,7 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
   const byTechnician = new Map();
   const byLocation = new Map();
   const classifiedPreview = [];
+  const operationalContexts = [];
   let confidenceSum = 0;
   let lowConfidenceCount = 0;
   let technicianIdentifiedCount = 0;
@@ -1418,6 +2494,7 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
   items.forEach((itemLike) => {
     const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
     const classification = classifyItem(item);
+    if (classification.operationalContext) operationalContexts.push(classification.operationalContext);
     confidenceSum += toNumber(classification.confidence);
     if (classification.confidence < 0.45) lowConfidenceCount += 1;
 
@@ -1458,6 +2535,8 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
     }
   });
 
+  const operationalContext = buildOperationalContextAnalytics(operationalContexts);
+
   const classificationQuality = buildClassificationQuality({
     totalOs,
     confidenceSum,
@@ -1483,13 +2562,13 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
     percentNaoIdentificado: classificationQuality.percentNaoIdentificado,
     percentIndefinido: classificationQuality.percentIndefinido,
     classificationQuality: classificationQuality.classificationQuality,
+    operationalContext: operationalContext.summary,
     sampleClassifications: classifiedPreview.slice(0, 40)
   };
 
   const taxonomyByEquipment = Array.from(byEquipment.values())
     .map(normalizeGroupBucket)
-    .sort((a, b) => toNumber(b.totalOs) - toNumber(a.totalOs))
-    .slice(0, 30);
+    .sort((a, b) => toNumber(b.totalOs) - toNumber(a.totalOs));
   const taxonomyByTechnician = Array.from(byTechnician.values())
     .map(normalizeGroupBucket)
     .sort((a, b) => toNumber(b.totalOs) - toNumber(a.totalOs))
@@ -1507,6 +2586,7 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
     taxonomyByEquipment,
     taxonomyByTechnician,
     taxonomyByLocation,
+    operationalContext,
     technicianIdentifiedCount,
     technicianUnknownCount: Math.max(0, totalOs - technicianIdentifiedCount)
   });
@@ -1527,6 +2607,7 @@ function buildAnalyticsTaxonomy(itemsLike, options) {
     taxonomyByEquipment,
     taxonomyByTechnician,
     taxonomyByLocation,
+    operationalContext,
     technicalNarrativeV2,
     classificationQuality,
     reviewQueue: guidedReview.reviewQueue,

@@ -1,0 +1,28 @@
+LAUDO TECNICO DE CAMPO
+
+Cliente:
+OS:
+Data do atendimento:
+Tecnico responsavel:
+Equipamento:
+Local:
+
+1. Relato inicial
+
+2. Condicao encontrada
+
+3. Testes realizados
+
+4. Diagnostico tecnico
+
+5. Acao executada
+
+6. Pecas, materiais ou configuracoes
+
+7. Evidencias anexadas
+
+8. Pendencias
+
+9. Conclusao
+
+10. Recomendacoes preventivas

@@ -1,0 +1,18 @@
+CONTEXTO:
+Notificacao interna para tecnico responsavel por atendimento, retorno, pendencia ou risco de SLA.
+
+OBJETIVO:
+Gerar mensagem curta e acionavel para orientar execucao tecnica.
+
+REGRAS:
+- Informar OS, cliente, problema e prioridade.
+- Destacar prazo ou risco quando houver.
+- Indicar acao esperada sem ambiguidades.
+- Evitar texto longo.
+- Nao incluir informacoes comerciais sensiveis.
+
+FORMATO DE SAIDA:
+Titulo:
+Mensagem:
+Prioridade:
+Acao esperada:

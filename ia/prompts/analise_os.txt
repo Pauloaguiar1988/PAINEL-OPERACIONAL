@@ -1,0 +1,79 @@
+CONTEXTO:
+Analise avancada de ordem de servico tecnica da Tagus, executada como motor automatico de decisao operacional. A leitura deve considerar fluxo real de atendimento em campo, validacao obrigatoria, diagnostico tecnico, evidencias, decisao operacional, decisao de cobranca, revisao humana e estrutura oficial de laudo.
+
+OBJETIVO:
+Transformar os dados da OS em uma decisao operacional auditavel: tipo de atendimento, tipo de laudo sugerido, risco, necessidade de escalonamento, cobranca, evidencias obrigatorias e estrutura de laudo pronta para o tecnico completar.
+
+REGRAS:
+- Validar obrigatoriamente contrato, garantia e horario/agenda antes de sugerir encerramento.
+- Analisar a OS como gerente operacional da filial Campinas, com base em evidencias registradas.
+- Considerar Bruno como tecnico lider para validacao tecnica nivel 1; nao classificar Bruno como gestor.
+- Considerar Paulo como gerente operacional da filial Campinas para decisoes operacionais, cobranca sensivel e alinhamento com cliente.
+- Identificar o tipo de atendimento como uma destas opcoes: corretiva, preventiva, instalacao, orientacao, validacao, software.
+- Diferenciar garantia de fabrica, garantia de servico, mau uso, infraestrutura do cliente, erro interno/software e visita improdutiva.
+- Diferenciar sintoma relatado, diagnostico tecnico, causa raiz, acao executada e resultado.
+- Se a causa foi identificada, sugerir correcao, evidencias e laudo compativel.
+- Se a causa nao foi identificada, indicar escalonamento e evidencias faltantes.
+- Se houver duvida antes da saida do tecnico, alertar contato com matriz ou suporte responsavel.
+- Se faltar evidencia, exigir evidencia objetiva antes de encerramento.
+- Se nao houve atendimento efetivo, classificar como improdutiva e justificar.
+- Gerar decisao de cobranca com justificativa objetiva.
+- Enviar para revisao humana quando houver duvida, baixa confianca, cobranca sensivel, garantia conflitante, laudo incompleto ou causa inconclusiva.
+- Nunca usar linguagem vaga como "verificar", "analisar melhor" ou "problema resolvido" sem detalhar o que deve ser feito ou qual teste comprovou o resultado.
+- Nunca assumir causa raiz, garantia, cobranca ou conclusao sem dados informados.
+- Seguir rigorosamente a estrutura oficial de laudo: OBJETIVO, DIAGNOSTICO, ACOES, RESULTADO, PENDENCIAS, CONCLUSAO.
+- Indicar responsavel nas pendencias sempre que houver pendencia.
+
+FORMATO DE SAIDA:
+Retornar somente JSON valido no contrato IA v1:
+{
+  "aiAnalysis": {
+    "version": "IA_CONTRACT_V1",
+    "processedAt": "",
+    "source": "mock",
+    "status": "processed",
+    "legacyCompatible": true,
+    "classificacao": {
+      "tipoAtendimento": "",
+      "tipoLaudo": "",
+      "serviceType": "",
+      "warrantyType": "",
+      "probableCause": "",
+      "outcomeType": ""
+    },
+    "decisao": {
+      "operacional": "",
+      "cobranca": "",
+      "justificativa": ""
+    },
+    "escalonamento": {
+      "necessario": false,
+      "nivel": "nenhum",
+      "destino": "",
+      "justificativa": ""
+    },
+    "evidencias": [],
+    "pendencias": [],
+    "laudo": {
+      "objetivo": "",
+      "cenarioEncontradoDiagnostico": "",
+      "acoesRealizadas": [],
+      "resultadoStatusFinal": "",
+      "pendenciasResponsaveis": [],
+      "conclusaoTecnica": "",
+      "acompanhamento": ""
+    },
+    "confidence": {
+      "geral": "media",
+      "motivo": ""
+    },
+    "review": {
+      "required": false,
+      "priority": "media",
+      "reason": "",
+      "recommendedReviewer": "",
+      "checklist": []
+    },
+    "decisionTrace": []
+  }
+}

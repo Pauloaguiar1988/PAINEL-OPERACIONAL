@@ -1,0 +1,17 @@
+ASSUNTO: Atualizacao tecnica - OS {{os}}
+
+Prezado(a) {{cliente}},
+
+Segue atualizacao referente ao atendimento {{os}}.
+
+Equipamento:
+Problema relatado:
+Diagnostico/constatacao:
+Acao realizada:
+Pendencias:
+Proxima acao:
+
+Permanecemos a disposicao para esclarecimentos.
+
+Atenciosamente,
+Equipe Tecnica

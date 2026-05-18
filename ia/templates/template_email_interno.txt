@@ -1,0 +1,17 @@
+ASSUNTO: Alinhamento interno - OS {{os}}
+
+Equipe,
+
+Resumo do caso:
+Cliente:
+Equipamento:
+Problema:
+Status atual:
+Risco:
+Responsavel:
+
+Acao esperada:
+Prazo sugerido:
+Observacoes:
+
+Registrar qualquer atualizacao diretamente na OS.

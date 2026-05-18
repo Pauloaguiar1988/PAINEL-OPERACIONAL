@@ -1,0 +1,47 @@
+# Checklist IA Operacional
+
+- [x] `/api/health` antes da alteracao OK.
+- [x] `/api/system/status` antes da alteracao OK.
+- [x] `/api/health` depois da alteracao OK.
+- [x] `/api/system/status` depois da alteracao OK.
+- [x] Endpoints `/api/ai/*` funcionando.
+- [x] Endpoints `/api/ai/*` protegidos com `requireAuth`.
+- [x] `loadPrompt(promptName)` implementado.
+- [x] Montagem padronizada de prompt com dados operacionais implementada.
+- [x] Timeout operacional implementado.
+- [x] Limite basico de tamanho de payload implementado.
+- [x] Auditoria de uso da IA registrada em log.
+- [x] Mock permanece padrao sem variaveis reais.
+- [x] `OPENAI_API_KEY` sozinha nao ativa IA real.
+- [x] `AI_PROVIDER=openai` e `AI_REAL_ENABLED=true` exigidos para provider real.
+- [x] `OPENAI_MODEL` documentado com padrao `gpt-4.1-mini`.
+- [x] Timeout por provider implementado.
+- [x] Erro de provider retorna resposta padronizada.
+- [x] Logs mascaram segredos basicos.
+- [x] Rate limit simples para `/api/ai/*` implementado.
+- [x] Retorno JSON normalizado com `result` simples.
+- [x] `result.recomendacoes` sempre como array de strings.
+- [x] Script `scripts/test-ai-auth.ps1` criado sem token salvo.
+- [x] Script autenticado imprime JSON com `ConvertTo-Json -Depth 10`.
+- [x] Botao `Analisar OS com IA` criado no painel.
+- [x] Resultado visual da IA exibe resumo, risco, classificacao, recomendacoes e proxima acao.
+- [x] Estados de carregamento, sucesso, erro de autenticacao e erro generico implementados.
+- [x] IA real permanece desativada nesta etapa.
+- [x] Contrato `IA_CONTRACT_V1` gerado.
+- [x] Campos legados preservados no retorno normalizado.
+- [x] Camada `/ia/rules` criada com regras puras.
+- [x] Analise automatica integrada ao salvamento de OS auditada.
+- [x] `sourceDataHash` usado para evitar reprocessamento desnecessario.
+- [x] Resultado IA persistido junto a OS em `import_os_audit_json`.
+- [x] Review humana indicada para baixa confianca ou cobranca inconclusiva.
+- [x] Botao rebaixado para reprocessamento/detalhe.
+- [x] Script `scripts/test-ai-operacional.ps1` criado.
+- [x] Modo mock ativo quando `OPENAI_API_KEY` nao existir.
+- [x] Nenhuma chave exposta.
+- [x] Sem erro novo no console/log durante a validacao da IA.
+- [x] Painel sem quebra aparente nos endpoints de saude/status.
+- [x] Estrutura `/ia` criada.
+- [x] Prompts criados com padrao obrigatorio.
+- [x] Templates criados.
+- [x] Playbooks criados.
+- [x] Documentacao criada.

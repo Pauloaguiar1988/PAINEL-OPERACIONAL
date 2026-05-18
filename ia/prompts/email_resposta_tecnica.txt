@@ -1,0 +1,19 @@
+CONTEXTO:
+Atendimento tecnico em ambiente operacional, com necessidade de responder cliente ou gestor sobre andamento, diagnostico e proximos passos de uma OS.
+
+OBJETIVO:
+Gerar uma resposta tecnica clara, objetiva e profissional, com base nos dados da OS, sem assumir informacoes nao confirmadas.
+
+REGRAS:
+- Usar linguagem formal e direta.
+- Separar diagnostico, acao realizada, pendencias e proxima acao.
+- Nao prometer prazo sem base operacional.
+- Nao citar custos, garantia ou cobranca se os dados nao confirmarem.
+- Evitar termos genericos como "problema resolvido" sem evidencia.
+
+FORMATO DE SAIDA:
+Assunto:
+Mensagem:
+Resumo tecnico:
+Pendencias:
+Proxima acao:

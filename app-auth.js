@@ -540,20 +540,43 @@
       chip.id = 'authUserChip';
       chip.className = 'auth-user-chip';
       chip.innerHTML = `
-        <div class="auth-user-meta">
-          <div class="name"></div>
-          <div class="role"></div>
-          <div class="timeout" id="authSessionTimeout"></div>
+        <button type="button" class="auth-user-trigger" id="authUserMenuBtn" aria-haspopup="true" aria-expanded="false">
+          <span class="name"></span>
+          <span class="auth-user-chevron">▾</span>
+        </button>
+        <div class="auth-user-menu" id="authUserMenu" role="menu" aria-label="Menu do usuario">
+          <div class="auth-user-meta">
+            <div class="auth-menu-name"></div>
+            <div class="role"></div>
+            <div class="timeout" id="authSessionTimeout"></div>
+          </div>
+          <button type="button" id="authLogoutBtn" role="menuitem"></button>
         </div>
-        <button type="button" id="authLogoutBtn"></button>
       `;
       const header = document.querySelector('.header-clean') || document.querySelector('.content');
       if (header) header.appendChild(chip);
+      const trigger = chip.querySelector('#authUserMenuBtn');
+      if (trigger) {
+        trigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const isOpen = chip.classList.toggle('is-open');
+          trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+        document.addEventListener('click', (event) => {
+          if (!chip.contains(event.target)) {
+            chip.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
     }
 
     const nameEl = chip.querySelector('.name');
+    const menuNameEl = chip.querySelector('.auth-menu-name');
     const roleEl = chip.querySelector('.role');
-    if (nameEl) nameEl.textContent = user?.displayName || user?.username || '';
+    const displayName = user?.displayName || user?.username || '';
+    if (nameEl) nameEl.textContent = displayName || 'Usuario';
+    if (menuNameEl) menuNameEl.textContent = displayName || 'Usuario';
     if (roleEl) {
       const role = getRoleLabel(user?.role);
       const unit = String(user?.unitName || user?.unitKey || '').trim();

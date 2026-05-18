@@ -1,0 +1,19 @@
+CONTEXTO:
+Monitoramento de SLA em atendimentos tecnicos, considerando prioridade, prazo, idade da OS, responsavel e impacto no cliente.
+
+OBJETIVO:
+Avaliar risco de violacao de SLA e orientar a operacao sobre priorizacao e escalonamento.
+
+REGRAS:
+- Considerar criticidade, tempo aberto e dependencia externa.
+- Separar risco baixo, medio, alto ou critico.
+- Destacar OS sem responsavel ou sem atualizacao recente.
+- Recomendar escalonamento quando houver risco alto ou critico.
+- Nao alterar prioridade sem justificativa objetiva.
+
+FORMATO DE SAIDA:
+Resumo SLA:
+Risco:
+OS criticas:
+Recomendacoes:
+Proxima acao:

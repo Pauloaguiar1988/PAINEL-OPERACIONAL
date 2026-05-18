@@ -159,6 +159,7 @@
   function renderOsAudit(osAudit, operacaoMix, pricing) {
     const audit = osAudit || {};
     const opMix = operacaoMix || {};
+    lastOsAuditPayload = audit;
     setText('gmOsTotal', audit.total || 0);
     setText('gmOsAlertRecords', audit.recordsWithAlert || 0);
     setText('gmOsFaturamento', audit.faturamento || 0);
@@ -191,6 +192,226 @@
       const proximo = item.nextStep || 'Revisar O.S.';
       return `<div class="system-line"><strong>${os} - ${cliente}</strong><span>${problemas}<br>Proximo passo: ${proximo}</span></div>`;
     }).join('');
+  }
+
+  function normalizeAiResultForPanel(resultLike) {
+    const result = (resultLike && typeof resultLike === 'object') ? resultLike : {};
+    const aiAnalysis = (result.aiAnalysis && typeof result.aiAnalysis === 'object') ? result.aiAnalysis : {};
+    const contractClass = (aiAnalysis.classificacao && typeof aiAnalysis.classificacao === 'object') ? aiAnalysis.classificacao : {};
+    const contractDecision = (aiAnalysis.decisao && typeof aiAnalysis.decisao === 'object') ? aiAnalysis.decisao : {};
+    const contractEscalation = (aiAnalysis.escalonamento && typeof aiAnalysis.escalonamento === 'object') ? aiAnalysis.escalonamento : {};
+    const contractConfidence = (aiAnalysis.confidence && typeof aiAnalysis.confidence === 'object') ? aiAnalysis.confidence : {};
+    const contractReview = (aiAnalysis.review && typeof aiAnalysis.review === 'object') ? aiAnalysis.review : {};
+    const contractLaudo = (aiAnalysis.laudo && typeof aiAnalysis.laudo === 'object') ? aiAnalysis.laudo : {};
+    const estrutura = (result.estruturaLaudoSugerida && typeof result.estruturaLaudoSugerida === 'object') ? result.estruturaLaudoSugerida : {};
+    return {
+      resumo: String(result.resumo || '').trim(),
+      risco: String(result.risco || '').trim(),
+      classificacao: String(result.classificacao || '').trim(),
+      statusAnalise: String(aiAnalysis.status || '').trim(),
+      confianca: String(contractConfidence.geral || '').trim(),
+      motivoConfianca: String(contractConfidence.motivo || '').trim(),
+      tipoLaudoSugerido: String(result.tipoLaudoSugerido || contractClass.tipoLaudo || '').trim(),
+      tipoAtendimento: String(result.tipoAtendimento || contractClass.tipoAtendimento || '').trim(),
+      decisaoOperacional: String(result.decisaoOperacional || contractDecision.operacional || '').trim(),
+      decisaoCobranca: String(result.decisaoCobranca || contractDecision.cobranca || '').trim(),
+      recomendacoes: Array.isArray(result.recomendacoes)
+        ? result.recomendacoes.map(item => String(item || '').trim()).filter(Boolean)
+        : [],
+      evidenciasNecessarias: Array.isArray(result.evidenciasNecessarias)
+        ? result.evidenciasNecessarias.map(item => String(item || '').trim()).filter(Boolean)
+        : [],
+      proximaAcao: String(result.proximaAcao || '').trim(),
+      necessitaEscalonamento: result.necessitaEscalonamento === true || contractEscalation.necessario === true,
+      nivelEscalonamento: String(result.nivelEscalonamento || contractEscalation.nivel || 'nenhum').trim(),
+      reviewRequired: contractReview.required === true,
+      reviewReason: String(contractReview.reason || '').trim(),
+      estruturaLaudoSugerida: {
+        objetivo: String(estrutura.objetivo || contractLaudo.objetivo || '').trim(),
+        diagnostico: String(estrutura.diagnostico || contractLaudo.cenarioEncontradoDiagnostico || '').trim(),
+        acoes: Array.isArray(estrutura.acoes) ? estrutura.acoes.map(item => String(item || '').trim()).filter(Boolean) : (Array.isArray(contractLaudo.acoesRealizadas) ? contractLaudo.acoesRealizadas : []),
+        resultado: String(estrutura.resultado || contractLaudo.resultadoStatusFinal || '').trim(),
+        pendencias: Array.isArray(estrutura.pendencias) ? estrutura.pendencias.map(item => String(item || '').trim()).filter(Boolean) : (Array.isArray(contractLaudo.pendenciasResponsaveis) ? contractLaudo.pendenciasResponsaveis : []),
+        conclusao: String(estrutura.conclusao || contractLaudo.conclusaoTecnica || '').trim()
+      }
+    };
+  }
+
+  function setAiOsState(state, payload) {
+    const resultBox = document.getElementById('gmAiOsResult');
+    const btn = document.getElementById('gmAiAnalyzeOsBtn');
+    if (!resultBox) return;
+    resultBox.classList.remove('is-error', 'is-loading');
+    if (btn) {
+      btn.disabled = state === 'loading';
+      btn.classList.toggle('is-loading', state === 'loading');
+    }
+    if (state === 'loading') {
+      resultBox.classList.add('is-loading');
+      resultBox.innerHTML = '<span class="gm-ai-status gm-ai-status-pending">IA: pendente</span>';
+      return;
+    }
+    if (state === 'auth') {
+      resultBox.classList.add('is-error');
+      resultBox.innerHTML = '<span class="gm-ai-status gm-ai-status-error">IA: erro de autenticacao</span>';
+      return;
+    }
+    if (state === 'error') {
+      resultBox.classList.add('is-error');
+      resultBox.innerHTML = `<span class="gm-ai-status gm-ai-status-error">IA: erro</span><small>${escapeHtml(payload || 'Nao foi possivel atualizar a analise.')}</small>`;
+      return;
+    }
+    if (state === 'status') {
+      const status = String(payload?.status || 'pending').trim().toLowerCase();
+      const label = status === 'updated' ? 'Atualizado' : (status === 'error' ? 'Erro' : 'Pendente');
+      const cls = status === 'updated' ? 'updated' : (status === 'error' ? 'error' : 'pending');
+      const detail = String(payload?.detail || '').trim();
+      resultBox.innerHTML = `<span class="gm-ai-status gm-ai-status-${cls}">IA: ${escapeHtml(label)}</span>${detail ? `<small>${escapeHtml(detail)}</small>` : ''}`;
+      return;
+    }
+    if (state === 'success') {
+      const result = normalizeAiResultForPanel(payload?.result);
+      const recommendations = result.recomendacoes.length
+        ? `<ul class="gm-ai-os-list">${result.recomendacoes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+        : '<span>--</span>';
+      const evidences = result.evidenciasNecessarias.length
+        ? `<ul class="gm-ai-os-list">${result.evidenciasNecessarias.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+        : '<span>--</span>';
+      const laudo = result.estruturaLaudoSugerida;
+      const laudoActions = laudo.acoes.length
+        ? `<ul class="gm-ai-os-list">${laudo.acoes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+        : '<span>--</span>';
+      const laudoPendencies = laudo.pendencias.length
+        ? `<ul class="gm-ai-os-list">${laudo.pendencias.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+        : '<span>--</span>';
+      resultBox.innerHTML = `
+        <div class="gm-ai-os-card">
+          <div class="gm-ai-os-line"><strong>Resumo</strong><span>${escapeHtml(result.resumo || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Status IA</strong><span>${escapeHtml(result.statusAnalise || 'processed')} | Confianca: ${escapeHtml(result.confianca || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Risco</strong><span>${escapeHtml(result.risco || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Classificacao</strong><span>${escapeHtml(result.classificacao || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Tipo de atendimento</strong><span>${escapeHtml(result.tipoAtendimento || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Tipo de laudo sugerido</strong><span>${escapeHtml(result.tipoLaudoSugerido || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Decisao operacional</strong><span>${escapeHtml(result.decisaoOperacional || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Decisao de cobranca</strong><span>${escapeHtml(result.decisaoCobranca || '--')}</span></div>
+          <div class="gm-ai-os-line"><strong>Escalonamento</strong><span>${result.necessitaEscalonamento ? 'Sim' : 'Nao'} | ${escapeHtml(result.nivelEscalonamento || 'nenhum')}</span></div>
+          <div class="gm-ai-os-line"><strong>Revisao humana</strong><span>${result.reviewRequired ? 'Sim' : 'Nao'}${result.reviewReason ? ` | ${escapeHtml(result.reviewReason)}` : ''}</span></div>
+          <div class="gm-ai-os-line"><strong>Recomendacoes</strong>${recommendations}</div>
+          <div class="gm-ai-os-line"><strong>Evidencias necessarias</strong>${evidences}</div>
+          <div class="gm-ai-os-line"><strong>Proxima acao</strong><span>${escapeHtml(result.proximaAcao || '--')}</span></div>
+          <details class="gm-ai-os-details">
+            <summary>Estrutura de laudo sugerida</summary>
+            <div class="gm-ai-os-line"><strong>Objetivo</strong><span>${escapeHtml(laudo.objetivo || '--')}</span></div>
+            <div class="gm-ai-os-line"><strong>Diagnostico</strong><span>${escapeHtml(laudo.diagnostico || '--')}</span></div>
+            <div class="gm-ai-os-line"><strong>Acoes</strong>${laudoActions}</div>
+            <div class="gm-ai-os-line"><strong>Resultado</strong><span>${escapeHtml(laudo.resultado || '--')}</span></div>
+            <div class="gm-ai-os-line"><strong>Pendencias</strong>${laudoPendencies}</div>
+            <div class="gm-ai-os-line"><strong>Conclusao</strong><span>${escapeHtml(laudo.conclusao || '--')}</span></div>
+          </details>
+        </div>`;
+      return;
+    }
+    resultBox.innerHTML = '<span class="gm-ai-status gm-ai-status-pending">IA: pendente</span>';
+  }
+
+  function buildAiOsContext() {
+    const payload = lastInsightsPayload || {};
+    const insights = payload.insights || {};
+    const audit = lastOsAuditPayload || insights.osAudit || {};
+    const items = Array.isArray(audit.items) ? audit.items : [];
+    const item = items.find(row => Array.isArray(row?.issues) && row.issues.length) || items[0] || {};
+    const issues = Array.isArray(item.issues) ? item.issues.map(issue => issue?.message || issue).filter(Boolean) : [];
+    return {
+      data: payload.date || insights.date || activeDate(),
+      cliente: item.cliente || item.client || '',
+      os: item.os || item.codigoOS || item.ordemServico || '',
+      equipamento: item.equipamento || item.equipment || '',
+      problema: issues.join(' | ') || item.nextStep || insights.topAlert || '',
+      classificacaoAtual: item.classificacao || '',
+      proximaAcaoAtual: item.nextStep || '',
+      totais: {
+        osAnalisadas: audit.total || 0,
+        registrosComAlerta: audit.recordsWithAlert || 0,
+        riscoNaoFaturar: audit.faturamento || 0,
+        laudoSemClareza: audit.laudo || 0
+      }
+    };
+  }
+
+  async function analyzeCurrentOsWithAi(optionsLike) {
+    const options = (optionsLike && typeof optionsLike === 'object') ? optionsLike : {};
+    const token = getToken();
+    if (!token) {
+      setAiOsState('auth');
+      return;
+    }
+    setAiOsState('loading');
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-auth-token': token,
+      'x-panel-lang': getLanguageTag()
+    };
+    try {
+      const response = await fetch(withAuth('/api/ai/analisar-os'), {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(buildAiOsContext())
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (response.status === 401 || response.status === 403) {
+        setAiOsState('auth');
+        return;
+      }
+      if (!response.ok || payload?.success !== true) {
+        setAiOsState('error', payload?.error || 'Nao foi possivel analisar a OS agora.');
+        return;
+      }
+      if (options.statusOnly === true) {
+        setAiOsState('status', { status: 'updated', detail: `Contrato ${payload?.result?.aiAnalysis?.version || payload?.promptName || 'mock'}` });
+      } else {
+        setAiOsState('success', payload);
+      }
+    } catch (_) {
+      setAiOsState('error', 'Falha de comunicacao ao consultar a IA.');
+    }
+  }
+
+  function bindAiOsPanel() {
+    const title = document.querySelector('#gmAiOsPanel .gm-ai-os-head strong');
+    if (title) title.textContent = 'Status da IA Operacional';
+    setAiOsState('status', { status: 'pending', detail: 'Aguardando base de OS.' });
+    const btn = document.getElementById('gmAiAnalyzeOsBtn');
+    if (!btn || btn.dataset.gmBound === '1') return;
+    btn.dataset.gmBound = '1';
+    btn.addEventListener('click', () => {
+      analyzeCurrentOsWithAi().catch(() => {
+        setAiOsState('error', 'Nao foi possivel analisar a OS agora.');
+      });
+    });
+  }
+
+  function updateAutomaticAiStatus(payload) {
+    const insights = payload?.insights || {};
+    const audit = lastOsAuditPayload || insights.osAudit || {};
+    const total = Number(audit.total || 0);
+    const dateKey = String(payload?.date || insights.date || activeDate() || '').trim();
+    const title = document.querySelector('#gmAiOsPanel .gm-ai-os-head strong');
+    if (title) title.textContent = 'Status da IA Operacional';
+    if (!dateKey || total <= 0) {
+      lastAiAutoAnalysisKey = '';
+      setAiOsState('status', { status: 'pending', detail: 'Aguardando base de OS.' });
+      return;
+    }
+    const signature = `${dateKey}|${total}|${audit.recordsWithAlert || 0}|${audit.faturamento || 0}|${audit.laudo || 0}`;
+    if (signature === lastAiAutoAnalysisKey) {
+      setAiOsState('status', { status: 'updated', detail: 'Analise automatica sincronizada.' });
+      return;
+    }
+    lastAiAutoAnalysisKey = signature;
+    setAiOsState('status', { status: 'pending', detail: 'Atualizando leitura automatica...' });
+    analyzeCurrentOsWithAi({ statusOnly: true }).catch(() => {
+      setAiOsState('status', { status: 'error', detail: 'Falha ao atualizar a leitura automatica.' });
+    });
   }
 
   function cockpitFriendlyServiceType(key, locale) {
@@ -244,12 +465,44 @@
     return [...top, other];
   }
 
+  function buildCockpitFixedDistribution(distLike, specs) {
+    const rows = Array.isArray(distLike) ? distLike : [];
+    const used = new Set();
+    const total = rows.reduce((acc, item) => acc + Math.max(0, Number(item?.count || 0)), 0);
+    const normalizedRows = rows.map((item) => ({
+      key: String(item?.key || '').trim().toLowerCase(),
+      count: Math.max(0, Number(item?.count || 0))
+    })).filter((item) => item.key && item.count > 0);
+    const result = specs.map((spec) => {
+      const keys = Array.isArray(spec.keys) ? spec.keys.map((key) => String(key || '').trim().toLowerCase()) : [];
+      const count = normalizedRows.reduce((acc, item) => {
+        if (!keys.includes(item.key)) return acc;
+        used.add(item.key);
+        return acc + item.count;
+      }, 0);
+      return {
+        label: spec.label,
+        count,
+        ratePct: total > 0 ? (count / total) * 100 : 0
+      };
+    });
+    const otherCount = normalizedRows
+      .filter((item) => !used.has(item.key))
+      .reduce((acc, item) => acc + item.count, 0);
+    const other = result.find((item) => String(item.label || '').toLowerCase().includes('outro') || String(item.label || '').toLowerCase().includes('other'));
+    if (other) {
+      other.count += otherCount;
+      other.ratePct = total > 0 ? (other.count / total) * 100 : 0;
+    }
+    return result;
+  }
+
   function renderCockpitBars(targetId, itemsLike, locale) {
     const host = document.getElementById(targetId);
     if (!host) return;
-    const items = Array.isArray(itemsLike) ? itemsLike : [];
+    const items = (Array.isArray(itemsLike) ? itemsLike : []).filter((item) => Number(item?.count || 0) > 0);
     if (!items.length) {
-      host.textContent = '--';
+      host.innerHTML = `<div class="gm-cockpit-empty">${escapeHtml(locale === 'en-US' ? 'No operational baseline for this view.' : 'Não há base operacional para esta leitura.')}</div>`;
       return;
     }
     const maxPct = Math.max(1, ...items.map((item) => Number(item.ratePct || 0)));
@@ -278,7 +531,7 @@
     const sharePct = Math.max(0, Number(top.sharePct || 0));
     const cause = String(top?.topCause?.label || top?.topCause || '').trim();
     if (!name && !totalOs) {
-      host.textContent = '--';
+      host.innerHTML = `<span>${escapeHtml(locale === 'en-US' ? 'No equipment baseline for this view.' : 'Não há equipamento incidente nesta leitura.')}</span>`;
       return;
     }
     const pctLabel = `${sharePct.toLocaleString(locale === 'en-US' ? 'en-US' : 'pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}%`;
@@ -293,6 +546,20 @@
 
   function renderCockpitOperationalRead(payload, locale) {
     const monthly = (payload?.monthlyOs && typeof payload.monthlyOs === 'object') ? payload.monthlyOs : {};
+    const hasDailyBase = payload?.exists === true;
+    const hasMonthlyBase = Number(monthly?.sampleDays || 0) > 0;
+    const scopeHint = document.getElementById('gmCockpitScopeHint');
+    if (scopeHint) {
+      scopeHint.textContent = hasDailyBase
+        ? (locale === 'en-US' ? 'Daily reading' : 'Leitura do dia')
+        : (hasMonthlyBase ? (locale === 'en-US' ? 'Monthly reading used as reference' : 'Leitura mensal usada como referência') : (locale === 'en-US' ? 'No baseline' : 'Sem base operacional'));
+    }
+    if (!hasDailyBase && !hasMonthlyBase) {
+      renderCockpitBars('gmMixAtendimento', [], locale);
+      renderCockpitBars('gmMixCobertura', [], locale);
+      renderCockpitTopEquipment('gmProdutoTop', null, locale);
+      return;
+    }
     const em = (monthly?.executiveMonthly && typeof monthly.executiveMonthly === 'object') ? monthly.executiveMonthly : {};
     const rankings = (em?.rankings && typeof em.rankings === 'object') ? em.rankings : {};
     const detailed = (monthly?.detailedAnalytics && typeof monthly.detailedAnalytics === 'object') ? monthly.detailedAnalytics : {};
@@ -305,17 +572,31 @@
       ? rankings.warrantyType
       : (Array.isArray(taxonomySummary.warrantyType) ? taxonomySummary.warrantyType : []);
 
-    const serviceDist = buildTop4PlusOthers(serviceRaw);
-    const warrantyDist = buildTop4PlusOthers(warrantyRaw);
+    const isEn = locale === 'en-US';
+    const serviceDist = buildCockpitFixedDistribution(serviceRaw, [
+      { label: isEn ? 'Corrective' : 'Corretiva', keys: ['corretiva', 'corretivo'] },
+      { label: isEn ? 'Preventive' : 'Preventiva', keys: ['preventiva', 'preventivo'] },
+      { label: isEn ? 'REP installation' : 'Instalacao REP', keys: ['instalacao', 'instalacao_rep', 'rep'] },
+      { label: isEn ? 'Access installation' : 'Instalacao Acesso', keys: ['configuracao', 'instalacao_acesso', 'acesso'] },
+      { label: 'Software', keys: ['software', 'suporte_ajuste', 'atualizacao'] },
+      { label: isEn ? 'Other' : 'Outros', keys: ['nao_identificado', 'outros', 'outro'] }
+    ]);
+    const warrantyDist = buildCockpitFixedDistribution(warrantyRaw, [
+      { label: isEn ? 'No warranty' : 'Sem garantia', keys: ['sem_garantia', 'fora_garantia'] },
+      { label: isEn ? 'Factory warranty' : 'Garantia fabrica', keys: ['garantia_fabrica'] },
+      { label: isEn ? 'Service warranty' : 'Garantia servico', keys: ['garantia_servico', 'garantia_servico_instalacao'] },
+      { label: isEn ? 'Part warranty' : 'Garantia peca', keys: ['garantia_peca'] },
+      { label: isEn ? 'Not identified' : 'Nao identificado', keys: ['nao_identificado', 'indefinido'] }
+    ]);
 
     renderCockpitBars('gmMixAtendimento', serviceDist.map((item) => ({
-      label: cockpitFriendlyServiceType(item.key, locale),
+      label: item.label || cockpitFriendlyServiceType(item.key, locale),
       count: item.count,
       ratePct: item.ratePct
     })), locale);
 
     renderCockpitBars('gmMixCobertura', warrantyDist.map((item) => ({
-      label: cockpitFriendlyWarrantyType(item.key, locale),
+      label: item.label || cockpitFriendlyWarrantyType(item.key, locale),
       count: item.count,
       ratePct: item.ratePct
     })), locale);
@@ -437,8 +718,17 @@
   let activeModuleKey = DEFAULT_MODULE_KEY;
   let activeViewMode = 'executivo';
   let lastInsightsPayload = null;
+  let lastOsAuditPayload = null;
   let appliedInsightsFilters = null;
   let filterOptionsCache = {};
+  const insightsPayloadCache = new Map();
+  const insightsInFlight = new Map();
+  const INSIGHTS_CACHE_TTL_MS = 120000;
+  const MAX_INSIGHTS_CACHE_ENTRIES = 8;
+  const equipmentEvidenceCache = new Map();
+  let equipmentEvidenceBound = false;
+  let lastAiAutoAnalysisKey = '';
+  let equipmentIntelExpanded = false;
   const filterSearchState = {
     clients: '',
     cnpj: '',
@@ -456,6 +746,50 @@
   let queuedRefreshDate = null;
   let moduleRootsInitialized = false;
   let autoFallbackDateAttempted = false;
+  let activeFallbackNotice = null;
+
+  function isPerfDebugEnabled() {
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      if (params.get('debugPerf') === '1') return true;
+      return localStorage.getItem('gm_perf_debug') === '1'
+        || sessionStorage.getItem('gm_perf_debug') === '1';
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function perfInfo(message) {
+    if (!isPerfDebugEnabled()) return;
+    console.info(message);
+  }
+
+  function perfTime(label) {
+    if (!isPerfDebugEnabled()) return;
+    console.time(label);
+  }
+
+  function perfTimeEnd(label) {
+    if (!isPerfDebugEnabled()) return;
+    console.timeEnd(label);
+  }
+
+  function clearInsightsRuntimeCache() {
+    insightsPayloadCache.clear();
+    insightsInFlight.clear();
+  }
+
+  function clearInsightsCacheForDate(dateLike) {
+    const date = String(dateLike || activeDate() || '').trim();
+    if (!date) {
+      clearInsightsRuntimeCache();
+      return;
+    }
+    const filters = ensureAppliedInsightsFilters();
+    const cacheKey = getInsightsCacheKey(date, filters, getLanguageTag());
+    insightsPayloadCache.delete(cacheKey);
+    insightsInFlight.delete(cacheKey);
+  }
 
   function emptyInsightsFilters() {
     return {
@@ -810,7 +1144,7 @@
       node.classList.toggle('gm-module-hidden', !visible);
     });
     const viewModeWrap = document.getElementById('gmViewMode');
-    if (viewModeWrap) viewModeWrap.hidden = activeModuleKey !== 'painel_dia';
+    if (viewModeWrap) viewModeWrap.hidden = !['analise_tecnica', 'tecnicos'].includes(activeModuleKey);
     const mobileModuleSelect = document.getElementById('gmMobileModuleSelect');
     if (mobileModuleSelect && mobileModuleSelect.value !== activeModuleKey) {
       mobileModuleSelect.value = activeModuleKey;
@@ -826,8 +1160,9 @@
     const options = (optionsLike && typeof optionsLike === 'object') ? optionsLike : {};
     const next = normalizeModuleKey(moduleLike);
     activeModuleKey = next;
-    if (next !== 'painel_dia') activeViewMode = 'tecnico';
-    else activeViewMode = readStoredViewMode();
+    if (next === 'painel_dia') activeViewMode = 'executivo';
+    else if (next === 'analise_tecnica' || next === 'tecnicos') activeViewMode = readStoredViewMode();
+    else activeViewMode = 'tecnico';
     ensurePainelSectionVisible();
     const preferredTab = normalizeTabKey(MODULE_DEFAULT_TAB[next] || 'interna');
     setAnalyticsTab(preferredTab);
@@ -836,6 +1171,7 @@
       renderTaxonomy(lastInsightsPayload);
     }
     if (!lastInsightsPayload && options.skipRefresh !== true) {
+      if (moduleRequiresTaxonomy(next)) setTechnicalAnalysisLoadingState();
       refreshGodMode().catch(() => {});
     }
   }
@@ -1107,9 +1443,9 @@
           moduleComparativos: 'Comparatives',
           moduleLaudo: 'Report / Quality',
           moduleGovernanca: 'Governance',
-          viewModeLabel: 'View mode',
-          viewModeExecutive: 'Executive',
-          viewModeTechnical: 'Technical',
+          viewModeLabel: 'Mode',
+          viewModeExecutive: 'Summary',
+          viewModeTechnical: 'Detailed',
           osAnalyzed: 'WO analyzed',
           taxBase: 'Taxonomy consolidated base',
           dominantService: 'Dominant service',
@@ -1418,9 +1754,9 @@
           moduleComparativos: 'Comparativos',
           moduleLaudo: 'Laudo / Qualidade',
           moduleGovernanca: 'Governanca',
-          viewModeLabel: 'Modo de visualizacao',
-          viewModeExecutive: 'Executivo',
-          viewModeTechnical: 'Tecnico',
+          viewModeLabel: 'Modo',
+          viewModeExecutive: 'Resumo',
+          viewModeTechnical: 'Detalhado',
           osAnalyzed: 'O.S. analisadas',
           taxBase: 'Base consolidada da taxonomia',
           dominantService: 'Atendimento dominante',
@@ -1587,8 +1923,8 @@
           severityCritical: 'Critica',
           noActionAvailable: 'Sem recomendacao de acao no momento',
           cockpitTitle: 'Cockpit Operacional — Tagus-Tec Campinas',
-          priorityCardTitle: 'Prioridade imediata',
-          priorityTopAlert: 'Alerta principal',
+          priorityCardTitle: 'Cockpit Operacional',
+          priorityTopAlert: 'Risco operacional do dia',
           priorityAction24h: 'Ação em 24h',
           priorityTicketsLate: 'Tickets e atrasos',
           priorityAdministrative: 'Pendências administrativas',
@@ -1835,10 +2171,10 @@
 
     setText('gmCockpitTitle', t.cockpitTitle);
     setText('gmPriorityCardTitle', t.priorityCardTitle);
-    setText('gmLblTopAlert', t.priorityTopAlert);
-    setText('gmLblAction24h', t.priorityAction24h);
+    setText('gmLblTopAlert', locale === 'en-US' ? 'Operational risk of the day' : 'Risco operacional do dia');
+    setText('gmLblAction24h', locale === 'en-US' ? 'Action in 24h' : 'Ação em 24h');
     setText('gmLblTicketsLate', t.priorityTicketsLate);
-    setText('gmLblPendAdm', t.priorityAdministrative);
+    setText('gmLblPendAdm', locale === 'en-US' ? 'Administrative pending items' : 'Pendências administrativas');
     setText('gmLblMixAtendimento', t.priorityServiceMix);
     setText('gmLblMixGarantia', t.priorityWarrantyMix);
     setText('gmLblProdutoTop', t.priorityTopEquipment);
@@ -2155,6 +2491,451 @@
     return rows[0] || null;
   }
 
+  function equipmentRiskLabel(key, locale) {
+    const value = String(key || '').toLowerCase();
+    const isEn = locale === 'en-US';
+    if (value === 'critical') return isEn ? 'Critical' : 'Critico';
+    if (value === 'high') return isEn ? 'High' : 'Alto';
+    if (value === 'medium') return isEn ? 'Medium' : 'Medio';
+    if (value === 'low') return isEn ? 'Low' : 'Baixo';
+    return isEn ? 'Not identified' : 'Nao identificado';
+  }
+
+  function equipmentSolutionTypeLabel(key, locale) {
+    const value = String(key || '').toLowerCase();
+    const isEn = locale === 'en-US';
+    const pt = {
+      troca_peca: 'Troca de peca',
+      atualizacao: 'Atualizacao',
+      configuracao: 'Configuracao',
+      mau_uso: 'Mau uso',
+      erro_procedimento: 'Erro de procedimento',
+      infraestrutura_cliente: 'Infra cliente',
+      orientacao: 'Orientacao',
+      sem_solucao_definida: 'Sem solucao definida',
+      nao_identificado: 'Nao identificado'
+    };
+    const en = {
+      troca_peca: 'Part replacement',
+      atualizacao: 'Update',
+      configuracao: 'Configuration',
+      mau_uso: 'Misuse',
+      erro_procedimento: 'Procedure error',
+      infraestrutura_cliente: 'Customer infra',
+      orientacao: 'Guidance',
+      sem_solucao_definida: 'No defined solution',
+      nao_identificado: 'Not identified'
+    };
+    return (isEn ? en : pt)[value] || String(key || '--').replace(/_/g, ' ');
+  }
+
+  function equipmentAnalysisQualityLabel(key, locale) {
+    const value = String(key || '').toLowerCase();
+    const isEn = locale === 'en-US';
+    if (value === 'alta' || value === 'high') return isEn ? 'High' : 'Alta';
+    if (value === 'media' || value === 'medium') return isEn ? 'Medium' : 'Media';
+    if (value === 'baixa' || value === 'low') return isEn ? 'Low' : 'Baixa';
+    return isEn ? 'Low' : 'Baixa';
+  }
+
+  function equipmentFallbackText(locale, kind) {
+    const isEn = locale === 'en-US';
+    if (kind === 'insufficient') return isEn ? 'Insufficient data' : 'Sem dados suficientes';
+    if (kind === 'waiting') return isEn ? 'Awaiting operational baseline' : 'Aguardando base operacional';
+    return isEn ? 'Not identified' : 'Não identificado';
+  }
+
+  function equipmentSafeText(valueLike, locale, kind) {
+    if (valueLike == null) return equipmentFallbackText(locale, kind);
+    if (typeof valueLike === 'string' || typeof valueLike === 'number' || typeof valueLike === 'boolean') {
+      const text = String(valueLike).trim();
+      if (!text || text === '--' || /^undefined|null$/i.test(text) || text === '[object Object]') {
+        return equipmentFallbackText(locale, kind);
+      }
+      return text;
+    }
+    if (typeof valueLike === 'object') {
+      const text = String(valueLike.label || valueLike.name || valueLike.title || valueLike.key || '').trim();
+      return text && text !== '[object Object]' ? text : equipmentFallbackText(locale, kind);
+    }
+    return equipmentFallbackText(locale, kind);
+  }
+
+  function equipmentSafeNumber(valueLike, fallback) {
+    const value = Number(valueLike);
+    return Number.isFinite(value) && value >= 0 ? value : fallback;
+  }
+
+  function normalizeTextForFilter(valueLike) {
+    return String(valueLike || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+  }
+
+  function isEquipmentUnidentifiedName(valueLike) {
+    const value = normalizeTextForFilter(valueLike || '');
+    return !value
+      || value.includes('nao identificado')
+      || value.includes('não identificado')
+      || value.includes('not identified')
+      || value === '--';
+  }
+
+  function getEquipmentRowIntel(row, locale) {
+    const topService = getFirstDistributionEntry(row?.serviceType);
+    const topCause = getFirstDistributionEntry(row?.probableCause);
+    const topOutcome = getFirstDistributionEntry(row?.outcomeType);
+    const count = equipmentSafeNumber(row?.totalOs || row?.volume, 0);
+    const percent = equipmentSafeNumber(row?.percentOfPeriod != null ? row.percentOfPeriod : row?.sharePct, 0);
+    const evidence = Array.isArray(row?.evidence)
+      ? row.evidence.map((line) => equipmentSafeText(line, locale, 'insufficient')).filter(Boolean)
+      : [];
+    return {
+      equipmentName: equipmentSafeText(row?.equipmentName || row?.equipment, locale, 'unknown'),
+      totalOs: count,
+      percentOfPeriod: percent,
+      dominantOpeningReason: equipmentSafeText(row?.dominantOpeningReason || taxonomyValueLabel('serviceType', topService?.key || 'nao_identificado', locale), locale, 'unknown'),
+      dominantProbableCause: equipmentSafeText(row?.dominantProbableCause || taxonomyValueLabel('probableCause', topCause?.key || 'indefinido', locale), locale, 'unknown'),
+      dominantSolution: equipmentSafeText(row?.dominantSolution || taxonomyValueLabel('outcomeType', topOutcome?.key || 'indefinido', locale), locale, 'insufficient'),
+      solutionType: equipmentSafeText(row?.solutionType || 'nao_identificado', locale, 'unknown'),
+      riskLevel: equipmentSafeText(row?.riskLevel || 'low', locale, 'unknown').toLowerCase(),
+      confidencePct: equipmentSafeNumber(row?.confidencePct != null ? row.confidencePct : row?.confidenceAvgPct, 0),
+      analysisQuality: String(row?.analysisQuality || '').trim().toLowerCase() || 'baixa',
+      evidence,
+      recommendedAction: equipmentSafeText(row?.recommendedAction, locale, 'waiting')
+    };
+  }
+
+  function classificationReviewStorageKey(periodLike) {
+    const period = String(periodLike || 'current').replace(/[^a-z0-9_-]+/gi, '_').slice(0, 40) || 'current';
+    return `gm_classification_review_v1_${period}`;
+  }
+
+  function readClassificationReviewStore(periodLike) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(classificationReviewStorageKey(periodLike)) || '{}');
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function writeClassificationReviewStore(periodLike, storeLike) {
+    try {
+      localStorage.setItem(classificationReviewStorageKey(periodLike), JSON.stringify(storeLike || {}));
+    } catch (_) {}
+  }
+
+  function buildClassificationReviewCases(detailedLike, rowsLike, locale) {
+    const detailed = (detailedLike && typeof detailedLike === 'object') ? detailedLike : {};
+    const period = detailed?.period?.label || detailed?.period?.referenceDate || '';
+    const rows = Array.isArray(rowsLike) ? rowsLike : [];
+    const cases = [];
+    rows.forEach((row) => {
+      const intel = getEquipmentRowIntel(row, locale);
+      const causeEntry = getFirstDistributionEntry(row?.probableCause);
+      const outcomeEntry = getFirstDistributionEntry(row?.outcomeType);
+      const causeKey = String(causeEntry?.key || '').toLowerCase();
+      const rowConfidence = equipmentSafeNumber(intel.confidencePct, 0);
+      const rowNeedsReview = String(intel.analysisQuality || '').toLowerCase() === 'baixa'
+        || rowConfidence < 55
+        || (causeKey === 'equipamento' && rowConfidence < 70);
+      const samples = Array.isArray(row?.evidenceSamples) ? row.evidenceSamples : [];
+      samples.forEach((sample, index) => {
+        const sampleConfidence = equipmentSafeNumber(sample?.confidencePct, rowConfidence);
+        const sampleCause = String(sample?.cause || causeEntry?.key || '').toLowerCase();
+        const sampleNeedsReview = sampleConfidence < 55
+          || String(intel.analysisQuality || '').toLowerCase() === 'baixa'
+          || (sampleCause === 'equipamento' && sampleConfidence < 70);
+        if (!sampleNeedsReview && !rowNeedsReview) return;
+        const os = equipmentSafeText(sample?.os || `amostra_${index + 1}`, locale, 'unknown');
+        const id = `${period || 'periodo'}__${os}__${normalizeTextForFilter(intel.equipmentName).slice(0, 36)}`;
+        cases.push({
+          id,
+          os,
+          cliente: equipmentSafeText(sample?.cliente, locale, 'unknown'),
+          equipmentName: intel.equipmentName,
+          causeKey: sample?.cause || causeEntry?.key || 'indefinido',
+          causeLabel: taxonomyValueLabel('probableCause', sample?.cause || causeEntry?.key || 'indefinido', locale),
+          outcomeKey: sample?.outcome || outcomeEntry?.key || 'indefinido',
+          outcomeLabel: taxonomyValueLabel('outcomeType', sample?.outcome || outcomeEntry?.key || 'indefinido', locale),
+          serviceType: taxonomyValueLabel('serviceType', sample?.serviceType || getFirstDistributionEntry(row?.serviceType)?.key || 'nao_identificado', locale),
+          confidencePct: sampleConfidence,
+          evidence: equipmentSafeText(sample?.text || (Array.isArray(intel.evidence) ? intel.evidence[0] : ''), locale, 'insufficient'),
+          source: equipmentSafeText(sample?.source || 'classification', locale, 'unknown'),
+          reason: sampleConfidence < 55
+            ? 'Baixa confiança'
+            : (sampleCause === 'equipamento' ? 'Causa genérica com confiança moderada' : 'Qualidade baixa do grupo')
+        });
+      });
+      if (!samples.length && rowNeedsReview) {
+        const id = `${period || 'periodo'}__equipamento__${normalizeTextForFilter(intel.equipmentName).slice(0, 48)}`;
+        cases.push({
+          id,
+          os: 'Grupo',
+          cliente: 'Consolidado',
+          equipmentName: intel.equipmentName,
+          causeKey: causeEntry?.key || 'indefinido',
+          causeLabel: intel.dominantProbableCause,
+          outcomeKey: outcomeEntry?.key || 'indefinido',
+          outcomeLabel: intel.dominantSolution,
+          serviceType: intel.dominantOpeningReason,
+          confidencePct: rowConfidence,
+          evidence: Array.isArray(intel.evidence) && intel.evidence.length ? intel.evidence[0] : equipmentFallbackText(locale, 'insufficient'),
+          source: 'grupo_equipamento',
+          reason: 'Equipamento com baixa qualidade de análise'
+        });
+      }
+    });
+    const seen = new Set();
+    return cases
+      .filter((item) => {
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      })
+      .sort((a, b) => a.confidencePct - b.confidencePct || String(a.equipmentName).localeCompare(String(b.equipmentName)))
+      .slice(0, 30);
+  }
+
+  function classificationReviewStatusLabel(statusLike) {
+    const status = String(statusLike || '').toLowerCase();
+    if (status === 'validado') return 'Validada';
+    if (status === 'reclassificar_causa') return 'Causa ajustada';
+    if (status === 'reclassificar_solucao') return 'Solução ajustada';
+    if (status === 'analise_manual') return 'Análise manual';
+    return 'Pendente';
+  }
+
+  function setClassificationReviewAction(periodLike, caseId, action) {
+    const store = readClassificationReviewStore(periodLike);
+    const current = (store[caseId] && typeof store[caseId] === 'object') ? store[caseId] : {};
+    let note = '';
+    if (action === 'reclassificar_causa') {
+      note = window.prompt('Nova causa sugerida:', current.note || '') || '';
+    } else if (action === 'reclassificar_solucao') {
+      note = window.prompt('Nova solução sugerida:', current.note || '') || '';
+    } else if (action === 'analise_manual') {
+      note = window.prompt('Motivo da análise manual:', current.note || '') || '';
+    }
+    store[caseId] = {
+      status: action,
+      note,
+      updatedAt: new Date().toISOString()
+    };
+    writeClassificationReviewStore(periodLike, store);
+    renderTaxonomy(lastInsightsPayload || {});
+  }
+
+  function bindClassificationReviewActions(periodLike) {
+    document.querySelectorAll('[data-class-review-action]').forEach((btn) => {
+      if (btn.dataset.boundReviewAction === '1') return;
+      btn.dataset.boundReviewAction = '1';
+      btn.addEventListener('click', () => {
+        setClassificationReviewAction(periodLike, btn.dataset.caseId || '', btn.dataset.classReviewAction || '');
+      });
+    });
+  }
+
+  function renderClassificationReview(detailedLike, rowsLike, locale) {
+    const summaryBox = document.getElementById('gmClassificationReviewSummary');
+    const listBox = document.getElementById('gmClassificationReviewList');
+    const pctBox = document.getElementById('gmClassificationReviewPct');
+    if (!summaryBox || !listBox) return;
+    const detailed = (detailedLike && typeof detailedLike === 'object') ? detailedLike : {};
+    const period = detailed?.period?.label
+      || detailed?.period?.referenceDate
+      || document.getElementById('currentDateInput')?.value
+      || 'current';
+    const rows = Array.isArray(rowsLike) ? rowsLike : [];
+    const qualityCounts = rows.reduce((acc, row) => {
+      const q = String(row?.analysisQuality || '').toLowerCase();
+      if (q === 'alta') acc.alta += 1;
+      else if (q === 'media') acc.media += 1;
+      else acc.baixa += 1;
+      return acc;
+    }, { baixa: 0, media: 0, alta: 0 });
+    const cases = buildClassificationReviewCases(detailed, rows, locale);
+    const store = readClassificationReviewStore(period);
+    const reviewedCount = cases.filter((item) => store[item.id]?.status).length;
+    const reviewedPct = cases.length ? Math.round((reviewedCount * 10000) / cases.length) / 100 : 0;
+    if (pctBox) pctBox.textContent = `${formatPct(reviewedPct, locale, 0)} revisado`;
+    summaryBox.innerHTML = [
+      { label: 'Baixa confiança', value: cases.length, hint: 'Itens na fila local' },
+      { label: 'Qualidade baixa', value: qualityCounts.baixa, hint: 'Equipamentos' },
+      { label: 'Qualidade média', value: qualityCounts.media, hint: 'Equipamentos' },
+      { label: 'Qualidade alta', value: qualityCounts.alta, hint: 'Equipamentos' },
+      { label: 'Revisados', value: reviewedCount, hint: `${formatPct(reviewedPct, locale, 0)} da fila` }
+    ].map((item) => (
+      `<div class="gm-equipment-intel-card"><span>${escapeHtml(item.label)}</span><strong>${escapeHtml(String(item.value))}</strong><em>${escapeHtml(item.hint)}</em></div>`
+    )).join('');
+    if (!cases.length) {
+      listBox.innerHTML = '<div class="gm-equipment-intel-empty">Sem casos de baixa confiança para revisão nesta base.</div>';
+      return;
+    }
+    listBox.innerHTML = cases.map((item) => {
+      const saved = store[item.id] || {};
+      const status = String(saved.status || 'pendente');
+      const note = saved.note ? `<p class="gm-classification-review-note">Ajuste local: ${escapeHtml(saved.note)}</p>` : '';
+      return `<article class="gm-classification-review-item ${status !== 'pendente' ? 'is-reviewed' : ''}">`
+        + '<div class="gm-classification-review-item-head">'
+        + `<strong>OS ${escapeHtml(item.os)}</strong>`
+        + `<span>${escapeHtml(classificationReviewStatusLabel(status))}</span>`
+        + '</div>'
+        + '<div class="gm-classification-review-grid">'
+        + `<span><b>Cliente</b>${escapeHtml(item.cliente)}</span>`
+        + `<span><b>Equipamento</b>${escapeHtml(item.equipmentName)}</span>`
+        + `<span><b>Causa inferida</b>${escapeHtml(item.causeLabel)}</span>`
+        + `<span><b>Solução inferida</b>${escapeHtml(item.outcomeLabel)}</span>`
+        + `<span><b>Tipo inferido</b>${escapeHtml(item.serviceType)}</span>`
+        + `<span><b>Confiança</b>${escapeHtml(formatPct(item.confidencePct, locale, 0))}</span>`
+        + '</div>'
+        + `<p><b>Evidência</b> ${escapeHtml(item.evidence)}</p>`
+        + `<p class="gm-classification-review-source">Origem: ${escapeHtml(item.source)} | ${escapeHtml(item.reason)}</p>`
+        + note
+        + '<div class="gm-classification-review-actions">'
+        + `<button type="button" data-case-id="${escapeHtml(item.id)}" data-class-review-action="validado">Validar classificação</button>`
+        + `<button type="button" data-case-id="${escapeHtml(item.id)}" data-class-review-action="reclassificar_causa">Reclassificar causa</button>`
+        + `<button type="button" data-case-id="${escapeHtml(item.id)}" data-class-review-action="reclassificar_solucao">Reclassificar solução</button>`
+        + `<button type="button" data-case-id="${escapeHtml(item.id)}" data-class-review-action="analise_manual">Precisa análise manual</button>`
+        + '</div>'
+        + '</article>';
+    }).join('');
+    bindClassificationReviewActions(period);
+  }
+
+  function readEquipmentIntelFilters() {
+    return {
+      text: String(document.getElementById('gmEquipmentFilterText')?.value || '').trim().toLowerCase(),
+      risk: String(document.getElementById('gmEquipmentFilterRisk')?.value || '').trim().toLowerCase(),
+      quality: String(document.getElementById('gmEquipmentFilterQuality')?.value || '').trim().toLowerCase(),
+      type: String(document.getElementById('gmEquipmentFilterType')?.value || '').trim().toLowerCase()
+    };
+  }
+
+  function bindEquipmentIntelControls() {
+    ['gmEquipmentFilterText', 'gmEquipmentFilterRisk', 'gmEquipmentFilterQuality', 'gmEquipmentFilterType'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el || el.dataset.gmBound === '1') return;
+      el.dataset.gmBound = '1';
+      el.addEventListener('input', () => {
+        equipmentIntelExpanded = false;
+        renderTaxonomy(lastInsightsPayload || {});
+      });
+      el.addEventListener('change', () => {
+        equipmentIntelExpanded = false;
+        renderTaxonomy(lastInsightsPayload || {});
+      });
+    });
+  }
+
+  function buildEquipmentIntelMetrics(detailedLike, rowsLike, locale) {
+    const detailed = (detailedLike && typeof detailedLike === 'object') ? detailedLike : {};
+    const base = (detailed.base && typeof detailed.base === 'object') ? detailed.base : {};
+    const coverage = (detailed.auditCoverage && typeof detailed.auditCoverage === 'object') ? detailed.auditCoverage : {};
+    const summary = (detailed.taxonomySummary && typeof detailed.taxonomySummary === 'object') ? detailed.taxonomySummary : {};
+    const rows = Array.isArray(rowsLike) ? rowsLike : [];
+    const totalOs = equipmentSafeNumber(
+      coverage.totalInputItems || coverage.totalAnalyzedItems || base.totalOs || base.analyzedItems || summary.totalOs,
+      0
+    );
+    const missingEquipment = equipmentSafeNumber(base.missingEquipmentCount, 0);
+    const identifiedRows = rows.filter((row) => !isEquipmentUnidentifiedName(row?.equipment || row?.equipmentName));
+    const identifiedOs = totalOs > 0
+      ? Math.max(0, totalOs - missingEquipment)
+      : identifiedRows.reduce((acc, row) => acc + equipmentSafeNumber(row?.totalOs, 0), 0);
+    const equipmentCount = identifiedRows.length;
+    const analyzedOs = equipmentSafeNumber(coverage.totalAnalyzedItems || base.analyzedItems || totalOs || identifiedOs, 0);
+    const insufficientRows = rows.filter((row) => {
+      const confidence = equipmentSafeNumber(row?.confidencePct != null ? row.confidencePct : row?.confidenceAvgPct, 0);
+      const cause = getFirstDistributionEntry(row?.probableCause);
+      const outcome = getFirstDistributionEntry(row?.outcomeType);
+      return confidence > 0 && confidence < 45
+        || String(cause?.key || '').toLowerCase() === 'indefinido'
+        || String(outcome?.key || '').toLowerCase() === 'indefinido';
+    });
+    const insufficientOs = Math.max(0, insufficientRows.reduce((acc, row) => acc + equipmentSafeNumber(row?.totalOs, 0), 0) - missingEquipment);
+    const confidenceValues = identifiedRows
+      .map((row) => equipmentSafeNumber(row?.confidencePct != null ? row.confidencePct : row?.confidenceAvgPct, 0))
+      .filter((value) => value > 0);
+    const avgConfidence = confidenceValues.length
+      ? confidenceValues.reduce((acc, value) => acc + value, 0) / confidenceValues.length
+      : equipmentSafeNumber(summary.confidenceAvgPct, 0);
+    const riskOrder = { critical: 4, high: 3, medium: 2, low: 1 };
+    const topRisk = identifiedRows
+      .map((row) => getEquipmentRowIntel(row, locale))
+      .sort((a, b) => (riskOrder[b.riskLevel] || 0) - (riskOrder[a.riskLevel] || 0) || b.totalOs - a.totalOs)[0] || null;
+    const topEquipment = identifiedRows
+      .map((row) => getEquipmentRowIntel(row, locale))
+      .sort((a, b) => b.totalOs - a.totalOs)[0] || null;
+    const qualityScores = identifiedRows.map((row) => {
+      const quality = String(row?.analysisQuality || '').toLowerCase();
+      if (quality === 'alta') return 3;
+      if (quality === 'media') return 2;
+      return 1;
+    });
+    const avgQualityScore = qualityScores.length
+      ? qualityScores.reduce((acc, value) => acc + value, 0) / qualityScores.length
+      : 1;
+    const avgQuality = avgQualityScore >= 2.6 ? 'alta' : (avgQualityScore >= 1.8 ? 'media' : 'baixa');
+    return {
+      totalOs,
+      analyzedOs,
+      missingEquipment,
+      insufficientOs,
+      rawTotalOs: totalOs,
+      ignoredItems: equipmentSafeNumber(coverage.ignoredItems, 0),
+      equipmentCount,
+      avgConfidence,
+      topEquipment,
+      avgQuality,
+      topRisk
+    };
+  }
+
+  function renderEquipmentIntelSummary(id, detailedLike, rowsLike, locale) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    const metrics = buildEquipmentIntelMetrics(detailedLike, rowsLike, locale);
+    if (!metrics.totalOs) {
+      box.innerHTML = '<div class="gm-equipment-intel-empty">' + escapeHtml(equipmentFallbackText(locale, 'waiting')) + '</div>';
+      return;
+    }
+    const topRiskText = metrics.topRisk
+      ? `${equipmentRiskLabel(metrics.topRisk.riskLevel, locale)} - ${metrics.topRisk.equipmentName}`
+      : equipmentFallbackText(locale, 'unknown');
+    box.innerHTML = [
+      { label: 'Equipamento mais recorrente', value: metrics.topEquipment ? metrics.topEquipment.equipmentName : '--', hint: metrics.topEquipment ? `${metrics.topEquipment.totalOs} OS` : '--' },
+      { label: 'Qualidade media', value: equipmentAnalysisQualityLabel(metrics.avgQuality, locale), hint: `${formatPct(metrics.avgConfidence, locale, 0)} de confianca` },
+      { label: 'Equipamentos analisados', value: metrics.equipmentCount, hint: `${metrics.missingEquipment} sem equipamento identificado` },
+      { label: 'OS analisadas', value: metrics.analyzedOs, hint: `${metrics.totalOs} OS no período` },
+      { label: 'Maior risco', value: topRiskText, hint: metrics.insufficientOs ? `${metrics.insufficientOs} OS com dados insuficientes` : 'Base classificada' },
+      { label: 'Confiança média', value: formatPct(metrics.avgConfidence, locale, 0), hint: 'Média por equipamento' }
+    ].map((item) => (
+      '<div class="gm-equipment-summary-card">'
+      + '<span>' + escapeHtml(item.label) + '</span>'
+      + '<strong>' + escapeHtml(String(item.value)) + '</strong>'
+      + '<small>' + escapeHtml(item.hint) + '</small>'
+      + '</div>'
+    )).join('');
+  }
+
+  function renderEquipmentIntelListProgressive(rows, locale, emptyLabel) {
+    const box = document.getElementById('gmEquipmentIntelList');
+    if (box) {
+      box.innerHTML = '<div class="gm-equipment-intel-empty">' + escapeHtml(locale === 'en-US' ? 'Loading equipment list...' : 'Carregando lista de equipamentos...') + '</div>';
+    }
+    const countBox = document.getElementById('gmEquipmentIntelCount');
+    if (countBox) countBox.textContent = locale === 'en-US' ? 'Preparing equipment ranking...' : 'Preparando ranking de equipamentos...';
+    window.setTimeout(() => {
+      perfTime('[PERF][AI-TECH] render_lista_equipamentos');
+      renderEquipmentIntelList('gmEquipmentIntelList', rows, locale, emptyLabel);
+      perfTimeEnd('[PERF][AI-TECH] render_lista_equipamentos');
+    }, 0);
+  }
+
   function pickDetailedAnalytics(payload) {
     const daily = payload?.insights?.detailedAnalytics || payload?.insightsDetailed || null;
     const monthly = payload?.monthlyOs?.detailedAnalytics || null;
@@ -2172,6 +2953,49 @@
       scope: 'daily',
       period: daily?.period?.label || payload?.date || payload?.insights?.date || ''
     };
+  }
+
+  function setTechnicalAnalysisLoadingState(messageLike) {
+    const locale = getLanguageTag();
+    const message = String(messageLike || (locale === 'en-US' ? 'Loading technical analysis...' : 'Carregando analise tecnica...'));
+    setText('gmTaxonomyPeriod', locale === 'en-US' ? 'Period: loading' : 'Periodo: carregando');
+    setText('gmTaxonomyScope', locale === 'en-US' ? 'Scope: loading' : 'Escopo: carregando');
+    setText('gmTaxNarrativeSummary', message);
+    const summary = document.getElementById('gmEquipmentIntelSummary');
+    if (summary) summary.innerHTML = '<div class="gm-equipment-intel-empty">' + escapeHtml(message) + '</div>';
+    const list = document.getElementById('gmEquipmentIntelList');
+    if (list) list.innerHTML = '<div class="gm-equipment-intel-empty">' + escapeHtml(message) + '</div>';
+    const count = document.getElementById('gmEquipmentIntelCount');
+    if (count) count.textContent = locale === 'en-US' ? 'Loading equipment intelligence...' : 'Carregando inteligencia por equipamento...';
+  }
+
+  function getInsightsCacheKey(dateLike, filtersLike, localeLike) {
+    const date = String(dateLike || '').trim();
+    const locale = localeLike === 'en-US' ? 'en-US' : 'pt-BR';
+    const filters = normalizeInsightsFilters(filtersLike || {});
+    const token = getToken();
+    const sessionKey = token ? `${token.slice(0, 10)}:${token.slice(-10)}` : 'anonymous';
+    return `${date}::${locale}::${sessionKey}::${JSON.stringify(filters)}`;
+  }
+
+  function getInsightsPayloadFromCache(cacheKey) {
+    const cached = insightsPayloadCache.get(cacheKey);
+    if (!cached) return null;
+    if ((Date.now() - Number(cached.at || 0)) > INSIGHTS_CACHE_TTL_MS) {
+      insightsPayloadCache.delete(cacheKey);
+      return null;
+    }
+    return cached.data || null;
+  }
+
+  function putInsightsPayloadCache(cacheKey, payload) {
+    if (!cacheKey || !payload) return;
+    insightsPayloadCache.set(cacheKey, { at: Date.now(), data: payload });
+    while (insightsPayloadCache.size > MAX_INSIGHTS_CACHE_ENTRIES) {
+      const firstKey = insightsPayloadCache.keys().next().value;
+      if (!firstKey) break;
+      insightsPayloadCache.delete(firstKey);
+    }
   }
 
   function normalizeQuarterKeyLite(valueLike) {
@@ -2658,6 +3482,108 @@
     }).join('');
   }
 
+  function renderEquipmentIntelList(id, rows, locale, emptyLabel) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    bindEquipmentIntelControls();
+    bindEquipmentEvidenceLazyRender();
+    equipmentEvidenceCache.clear();
+    const filters = readEquipmentIntelFilters();
+    const sourceItems = (Array.isArray(rows) ? rows : [])
+      .filter((row) => !isEquipmentUnidentifiedName(row?.equipment || row?.equipmentName))
+      .map((row) => getEquipmentRowIntel(row, locale))
+      .filter((item) => {
+        if (filters.text && !String(item.equipmentName || '').toLowerCase().includes(filters.text)) return false;
+        if (filters.risk && String(item.riskLevel || '').toLowerCase() !== filters.risk) return false;
+        if (filters.quality && String(item.analysisQuality || '').toLowerCase() !== filters.quality) return false;
+        if (filters.type && String(item.solutionType || '').toLowerCase() !== filters.type) return false;
+        return true;
+      });
+    const items = sourceItems.slice(0, equipmentIntelExpanded ? sourceItems.length : 20);
+    const allRows = Array.isArray(rows) ? rows : [];
+    if (!items.length) {
+      const hasImportedWithoutEquipment = allRows.some((row) => isEquipmentUnidentifiedName(row?.equipment || row?.equipmentName) && equipmentSafeNumber(row?.totalOs, 0) > 0);
+      const message = hasImportedWithoutEquipment
+        ? (locale === 'en-US' ? 'Imported WO, but without identified equipment.' : 'OS importadas, porém sem equipamento identificado')
+        : (emptyLabel || equipmentFallbackText(locale, 'waiting'));
+      box.innerHTML = '<div class="gm-equipment-intel-empty">' + escapeHtml(message) + '</div>';
+      const countBox = document.getElementById('gmEquipmentIntelCount');
+      if (countBox) countBox.textContent = 'Exibindo 0 de 0 equipamentos';
+      return;
+    }
+    const countBox = document.getElementById('gmEquipmentIntelCount');
+    if (countBox) {
+      const hiddenCount = Math.max(0, sourceItems.length - items.length);
+      countBox.innerHTML = `Exibindo ${items.length} de ${sourceItems.length} equipamentos${hiddenCount ? ' <button type="button" class="gm-equipment-show-all" id="gmEquipmentShowAll">Ver todos</button>' : ''}`;
+    }
+    const header = '<div class="gm-equipment-intel-table-head">'
+      + '<span>Equipamento</span>'
+      + '<span>OS</span>'
+      + '<span>% período</span>'
+      + '<span>Causa provável</span>'
+      + '<span>Solução dominante</span>'
+      + '<span>Tipo</span>'
+      + '<span>Risco</span>'
+      + '<span>Qualidade</span>'
+      + '<span>Ação recomendada</span>'
+      + '</div>';
+    const rowsHtml = items.map((item, idx) => {
+      const risk = String(item.riskLevel || 'low').toLowerCase();
+      const evidenceKey = `eq-${idx}-${String(item.equipmentName || '').slice(0, 24)}`;
+      equipmentEvidenceCache.set(evidenceKey, {
+        lines: Array.isArray(item.evidence) ? item.evidence.slice(0, 3) : [],
+        fallback: locale === 'en-US' ? 'Insufficient data for specific evidence.' : 'Sem dados suficientes para evidencia especifica.'
+      });
+      const evidenceFallback = locale === 'en-US' ? 'Insufficient data for specific evidence.' : 'Sem dados suficientes para evidência específica.';
+      return '<article class="gm-equipment-intel-row">'
+        + '<strong class="gm-equipment-name">' + escapeHtml(item.equipmentName) + '</strong>'
+        + '<span data-label="OS">' + escapeHtml(String(item.totalOs)) + '</span>'
+        + '<span data-label="% período">' + escapeHtml(formatPct(item.percentOfPeriod, locale, 1)) + '</span>'
+        + '<span data-label="Causa provável">' + escapeHtml(item.dominantProbableCause) + '</span>'
+        + '<span data-label="Solução dominante">' + escapeHtml(item.dominantSolution) + '</span>'
+        + '<span data-label="Tipo">' + escapeHtml(equipmentSolutionTypeLabel(item.solutionType, locale)) + '</span>'
+        + '<span data-label="Risco"><span class="gm-equipment-risk ' + escapeHtml(risk) + '">' + escapeHtml(equipmentRiskLabel(risk, locale)) + '</span></span>'
+        + '<span data-label="Qualidade">' + escapeHtml(equipmentAnalysisQualityLabel(item.analysisQuality, locale)) + ' | ' + escapeHtml(formatPct(item.confidencePct, locale, 0)) + '</span>'
+        + '<div class="gm-equipment-action" data-label="Ação recomendada">'
+        + '<span>' + escapeHtml(item.recommendedAction) + '</span>'
+        + '<details class="gm-equipment-evidence" data-equipment-evidence-key="' + escapeHtml(evidenceKey) + '">'
+        + '<summary>Ver evidências</summary>'
+        + '<div class="gm-equipment-evidence-placeholder">Clique para carregar evidencias.</div>'
+        + '</details>'
+        + '</div>'
+        + '</article>';
+    }).join('');
+    box.innerHTML = header + rowsHtml;
+    const showAllBtn = document.getElementById('gmEquipmentShowAll');
+    if (showAllBtn) {
+      showAllBtn.addEventListener('click', () => {
+        equipmentIntelExpanded = true;
+        renderTaxonomy(lastInsightsPayload || {});
+      }, { once: true });
+    }
+  }
+
+  function bindEquipmentEvidenceLazyRender() {
+    if (equipmentEvidenceBound) return;
+    equipmentEvidenceBound = true;
+    document.addEventListener('toggle', function (event) {
+      const details = event.target;
+      if (!(details instanceof HTMLElement)) return;
+      if (!details.matches('.gm-equipment-evidence')) return;
+      if (!details.open || details.dataset.loaded === '1') return;
+      const key = String(details.getAttribute('data-equipment-evidence-key') || '');
+      const cached = equipmentEvidenceCache.get(key) || {};
+      const lines = Array.isArray(cached.lines) ? cached.lines : [];
+      const fallback = String(cached.fallback || 'Sem dados suficientes para evidencia especifica.');
+      details.dataset.loaded = '1';
+      details.innerHTML = '<summary>Ver evidencias</summary><ul>'
+        + (lines.length
+          ? lines.map((line) => '<li>' + escapeHtml(line) + '</li>').join('')
+          : '<li>' + escapeHtml(fallback) + '</li>')
+        + '</ul>';
+    }, true);
+  }
+
   function valueToneByPct(value) {
     const v = Number(value || 0);
     if (v >= 30) return 'bad';
@@ -2743,7 +3669,10 @@
   function formatReviewerLabel(reviewerLike, locale, t) {
     const key = String(reviewerLike || '').trim().toLowerCase();
     const dictPt = {
-      gestor_operacional: 'Gestor operacional',
+      gestor_operacional: 'Gerente operacional',
+      gerente_operacional: 'Gerente operacional',
+      gerente_operacional_campinas: 'Paulo - gerente operacional Campinas',
+      tecnico_lider: 'Bruno - tecnico lider',
       engenharia_tecnica: 'Engenharia tecnica',
       lider_tecnico: 'Lider tecnico',
       lider_administrativo: 'Lider administrativo',
@@ -2752,6 +3681,9 @@
     };
     const dictEn = {
       gestor_operacional: 'Operations manager',
+      gerente_operacional: 'Operations manager',
+      gerente_operacional_campinas: 'Paulo - Campinas operations manager',
+      tecnico_lider: 'Bruno - technical lead',
       engenharia_tecnica: 'Technical engineering',
       lider_tecnico: 'Technical lead',
       lider_administrativo: 'Administrative lead',
@@ -2968,6 +3900,18 @@
     } catch (_) {
       return fallback;
     }
+  }
+
+  function buildReviewDetailedState(detailedLike) {
+    const detailed = (detailedLike && typeof detailedLike === 'object') ? detailedLike : {};
+    return {
+      reviewQueue: Array.isArray(detailed.reviewQueue) ? detailed.reviewQueue.map((row) => ({ ...row })) : [],
+      reviewQueueSummary: deepCloneObject(detailed.reviewQueueSummary || {}, {}),
+      reviewPriority: String(detailed.reviewPriority || 'none'),
+      reviewReason: String(detailed.reviewReason || ''),
+      recommendedReviewer: String(detailed.recommendedReviewer || ''),
+      reviewChecklist: Array.isArray(detailed.reviewChecklist) ? detailed.reviewChecklist.slice(0, 8) : []
+    };
   }
 
   function safeNotify(messageLike) {
@@ -3949,6 +4893,9 @@
   }
 
   function renderTaxonomy(payload) {
+    const renderLabel = '[PERF][AI-TECH] render_analise_tecnica';
+    perfTime(renderLabel);
+    const renderStart = performance.now();
     const locale = payload?.locale || getLanguageTag();
     const t = getTaxonomyTexts(locale);
     setTaxonomyStaticTexts(locale);
@@ -3971,7 +4918,7 @@
     reviewWorkflowUiState.periodType = ['monthly', 'quarterly', 'historical', 'ytd'].includes(workflowScope) ? 'monthly' : 'daily';
     reviewWorkflowUiState.referenceDate = String(detailedPeriod.referenceDate || activeDateKey || '').trim();
     reviewWorkflowUiState.quality = deepCloneObject(quality, {});
-    reviewWorkflowUiState.detailed = deepCloneObject(detailed || {}, {});
+    reviewWorkflowUiState.detailed = buildReviewDetailedState(detailed || {});
     ensureReviewDetailedState();
     syncReviewGuidedHeaderFromQueue();
 
@@ -4006,6 +4953,8 @@
       setText('gmTaxUnknownUndefined', '0% / 0%');
       renderTaxBarChart('gmTaxServiceChart', [], t.noDataServiceChart);
       renderTaxTableBody('gmTaxEquipmentTableBody', [], t.noBaseTitle);
+      renderEquipmentIntelSummary('gmEquipmentIntelSummary', {}, [], locale);
+      renderEquipmentIntelList('gmEquipmentIntelList', [], locale, equipmentFallbackText(locale, 'waiting'));
       renderTaxTableBody('gmTaxTechnicianTableBody', [], t.noBaseTitle);
       renderTaxBarChart('gmTaxEquipmentParetoChart', [], t.noDataPareto);
       renderTaxList('gmTaxAlertsList', [], t.noAlertsTitle, t.noDataAlert);
@@ -4018,6 +4967,8 @@
       syncReviewGuidedHeaderFromQueue();
       renderGuidedReviewFromState();
       renderHistoricalLayers(payload, detailed || {}, locale, t);
+      perfTimeEnd(renderLabel);
+      perfInfo('[PERF][AI-TECH] render_analise_tecnica_empty_ms=' + Math.round(performance.now() - renderStart));
       return;
     }
 
@@ -4080,6 +5031,20 @@
 
     const equipmentSource = Array.isArray(detailed.taxonomyByEquipment) ? detailed.taxonomyByEquipment : [];
     const technicianSource = Array.isArray(detailed.taxonomyByTechnician) ? detailed.taxonomyByTechnician : [];
+    try {
+      const coverage = (detailed.auditCoverage && typeof detailed.auditCoverage === 'object') ? detailed.auditCoverage : {};
+      console.info('[OS AUDIT UI]', {
+        scope: picked.scope || 'daily',
+        period: picked.period || '',
+        totalOs: Number(summary.totalOs || 0),
+        baseTotalOs: Number(detailed?.base?.totalOs || 0),
+        analyzedItems: Number(detailed?.base?.analyzedItems || coverage.totalAnalyzedItems || 0),
+        taxonomyByEquipmentRows: equipmentSource.length,
+        missingEquipmentCount: Number(detailed?.base?.missingEquipmentCount || coverage.missingEquipmentCount || 0),
+        ignoredItems: Number(coverage.ignoredItems || 0),
+        limitedByTopN: coverage.limitedByTopN === true
+      });
+    } catch (_) {}
     const equipmentTableRows = equipmentSource.slice(0, 5).map((row) => {
       const topCauseEntry = getFirstDistributionEntry(row?.probableCause);
       const topOutcomeEntry = getFirstDistributionEntry(row?.outcomeType);
@@ -4106,6 +5071,9 @@
       label: `${Number(row?.totalOs || 0)}`
     }));
     renderTaxTableBody('gmTaxEquipmentTableBody', equipmentTableRows, t.noDataEq);
+    renderEquipmentIntelSummary('gmEquipmentIntelSummary', detailed, equipmentSource, locale);
+    renderEquipmentIntelListProgressive(equipmentSource, locale, equipmentFallbackText(locale, 'waiting'));
+    renderClassificationReview(detailed, equipmentSource, locale);
     renderTaxTableBody('gmTaxTechnicianTableBody', technicianTableRows, t.noDataTech);
     renderTaxBarChart('gmTaxEquipmentParetoChart', paretoRows, t.noDataPareto);
 
@@ -4149,6 +5117,8 @@
       t.noDataAxis,
       (row) => valueToneByPct(row.value)
     );
+    perfTimeEnd(renderLabel);
+    perfInfo('[PERF][AI-TECH] render_analise_tecnica_done_ms=' + Math.round(performance.now() - renderStart));
   }
 
   function normalizeAlertText(itemLike) {
@@ -4175,13 +5145,21 @@
     updateFilterControlsFromPayload(payload, locale, t);
     renderFilterStatus(payload, t);
     renderActiveFilterChips(payload, t);
+    const fallbackNotice = (activeFallbackNotice && String(activeFallbackNotice.loadedDate || '') === String(payload?.date || ''))
+      ? activeFallbackNotice
+      : null;
+    const fallbackText = fallbackNotice
+      ? (locale === 'en-US'
+        ? `Requested date ${formatDate(fallbackNotice.requestedDate)} has no operational baseline. Loaded ${formatDate(fallbackNotice.loadedDate)} as the latest historical reference.`
+        : `Data solicitada ${formatDate(fallbackNotice.requestedDate)} sem base operacional. Carregada ${formatDate(fallbackNotice.loadedDate)} como ultima referencia historica.`)
+      : '';
     const isRecordBaseAvailable = payload?.exists === true;
     const noBaseText = locale === 'en-US'
-      ? 'No baseline for selected date'
-      : 'Sem base para a data selecionada';
+      ? 'No operational baseline is registered for this date.'
+      : 'Não há base operacional registrada para esta data.';
     const noBaseActionText = locale === 'en-US'
-      ? 'Fill operation data and save to create the baseline.'
-      : 'Preencha os dados de operacao e salve para criar a base.';
+      ? 'Register the day operation data to enable the executive analysis.'
+      : 'Registre os dados operacionais do dia para habilitar a análise executiva.';
     const insights = payload?.insights || {};
     const monthlyOs = payload?.monthlyOs || {};
     const brain = payload?.brain || {};
@@ -4243,11 +5221,22 @@
       || normalizeAlertText(insights.topAlert)
       || normalizedInsightAlerts[0]
       || '';
-    setText('gmTopAlert', topAlertFromBackend || (locale === 'en-US' ? 'No alert' : 'Sem alerta'));
-    setText('gmMainAction', mainActions.length ? mainActions[0] : (locale === 'en-US' ? 'Monitor routine' : 'Monitorar rotina'));
+    setText('gmTopAlert', isRecordBaseAvailable
+      ? (topAlertFromBackend || (locale === 'en-US' ? 'No critical operational alert for the selected base.' : 'Sem risco operacional crítico na base selecionada.'))
+      : noBaseText);
+    setText('gmMainAction', isRecordBaseAvailable
+      ? (mainActions.length ? mainActions[0] : (locale === 'en-US' ? 'Maintain execution cadence and review new exceptions as they arrive.' : 'Manter cadência de execução e revisar novas exceções conforme entrada.'))
+      : noBaseActionText);
+    if (isRecordBaseAvailable && fallbackText) {
+      setText('gmTopAlert', fallbackText);
+      setText('gmMainAction', locale === 'en-US'
+        ? 'Review the loaded historical date before operational decisions.'
+        : 'Revise a data historica carregada antes da decisao operacional.');
+    }
     renderClientList(insights.criticalClients || []);
     renderActionList(mainActions);
     renderOsAudit(osAudit, operacaoMix, pricing);
+    updateAutomaticAiStatus(payload);
     if (moduleRequiresTaxonomy(activeModuleKey)) {
       renderTaxonomy(payload);
     } else {
@@ -4257,6 +5246,8 @@
       setText('gmTopAlert', noBaseText);
       setText('gmMainAction', noBaseActionText);
       setText('gmTaxNarrativeSummary', `${noBaseText}. ${noBaseActionText}`);
+    } else if (fallbackText) {
+      setText('gmTaxNarrativeSummary', fallbackText);
     }
   }
 
@@ -4264,6 +5255,16 @@
     const date = (forceDate || activeDate()).trim();
     if (!date) return null;
     const filters = ensureAppliedInsightsFilters();
+    const cacheKey = getInsightsCacheKey(date, filters, getLanguageTag());
+    const cached = getInsightsPayloadFromCache(cacheKey);
+    if (cached) {
+      perfInfo('[PERF][AI-TECH] insights_cache_hit date=' + date);
+      return cached;
+    }
+    if (insightsInFlight.has(cacheKey)) {
+      perfInfo('[PERF][AI-TECH] insights_join_inflight date=' + date);
+      return insightsInFlight.get(cacheKey);
+    }
     const query = buildInsightsFilterQuery(filters);
     const endpoint = query
       ? `/api/insights/${encodeURIComponent(date)}?${query}`
@@ -4273,18 +5274,38 @@
       'x-panel-lang': getLanguageTag()
     };
     if (token) headers['x-auth-token'] = token;
-    const response = await Promise.race([
-      fetch(withAuth(endpoint), {
-        cache: 'no-store',
-        headers,
-        signal
-      }),
-      new Promise((_, reject) => {
-        window.setTimeout(() => reject(new Error('timeout_insights')), 45000);
-      })
-    ]);
-    if (!response.ok) return null;
-    return await response.json();
+    const fetchLabel = '[PERF][AI-TECH] api_insights_' + date;
+    const startedAt = performance.now();
+    perfInfo('[PERF][AI-TECH] inicio chamada /api/insights date=' + date);
+    perfTime(fetchLabel);
+    const requestPromise = (async () => {
+      try {
+        const response = await Promise.race([
+          fetch(withAuth(endpoint), {
+            cache: 'no-store',
+            headers,
+            signal
+          }),
+          new Promise((_, reject) => {
+            window.setTimeout(() => reject(new Error('timeout_insights')), 45000);
+          })
+        ]);
+        perfTimeEnd(fetchLabel);
+        perfInfo('[PERF][AI-TECH] fim chamada /api/insights date=' + date + ' status=' + response.status + ' ms=' + Math.round(performance.now() - startedAt));
+        if (response.status === 401) {
+          setTechnicalAnalysisLoadingState(getLanguageTag() === 'en-US' ? 'Session expired. Sign in again.' : 'Sessao encerrada. Entre novamente.');
+          return null;
+        }
+        if (!response.ok) return null;
+        const payload = await response.json();
+        putInsightsPayloadCache(cacheKey, payload);
+        return payload;
+      } finally {
+        insightsInFlight.delete(cacheKey);
+      }
+    })();
+    insightsInFlight.set(cacheKey, requestPromise);
+    return requestPromise;
   }
 
   async function fetchLatestHistoricalDate(signal) {
@@ -4316,11 +5337,36 @@
       queuedRefreshDate = normalizedForcedDate || queuedRefreshDate || '';
       return;
     }
+    const refreshStartedAt = performance.now();
+    perfInfo('[PERF][AI-TECH] inicio carregamento painel');
+    perfTime('[PERF][AI-TECH] carregamento_painel_total');
     filterRefreshInFlight = true;
     try {
-      const targetDate = String((normalizedForcedDate || activeDate() || '')).trim();
-      const data = await fetchInsights(normalizedForcedDate || undefined);
+      let targetDate = String((normalizedForcedDate || activeDate() || '')).trim();
+      if (!activeFallbackNotice || String(activeFallbackNotice.loadedDate || '') !== targetDate) {
+        activeFallbackNotice = null;
+      }
+      if (moduleRequiresTaxonomy(activeModuleKey)) {
+        setTechnicalAnalysisLoadingState();
+      }
+      const todayDateKey = getLocalISODate(new Date());
+      if (!normalizedForcedDate && !autoFallbackDateAttempted && targetDate === todayDateKey) {
+        const fallbackDate = await fetchLatestHistoricalDate().catch(() => '');
+        if (fallbackDate && fallbackDate !== targetDate) {
+          perfInfo('[PERF][AI-TECH] current_date_fallback from=' + targetDate + ' to=' + fallbackDate);
+          autoFallbackDateAttempted = true;
+          activeFallbackNotice = {
+            requestedDate: targetDate,
+            loadedDate: fallbackDate,
+            reason: 'current_date_without_operational_baseline'
+          };
+          targetDate = fallbackDate;
+          applyActiveDate(fallbackDate);
+        }
+      }
+      const data = await fetchInsights(normalizedForcedDate || targetDate || undefined);
       if (!data) return;
+      if (data.date) applyActiveDate(data.date);
       // Defensive hydration: keep filter drawer populated even if later rendering branches short-circuit.
       try {
         const locale = data?.locale || getLanguageTag();
@@ -4330,11 +5376,11 @@
         renderActiveFilterChips(data, t);
         if (data.exists === false) {
           const noBaseText = locale === 'en-US'
-            ? 'No baseline for selected date'
-            : 'Sem base para a data selecionada';
+            ? 'No operational baseline is registered for this date.'
+            : 'Não há base operacional registrada para esta data.';
           const noBaseActionText = locale === 'en-US'
-            ? 'Fill operation data and save to create the baseline.'
-            : 'Preencha os dados de operacao e salve para criar a base.';
+            ? 'Register the day operation data to enable the executive analysis.'
+            : 'Registre os dados operacionais do dia para habilitar a análise executiva.';
           setText('gmTopAlert', noBaseText);
           setText('gmMainAction', noBaseActionText);
           setText('gmTaxNarrativeSummary', `${noBaseText}. ${noBaseActionText}`);
@@ -4345,6 +5391,11 @@
         const fallbackDate = await fetchLatestHistoricalDate().catch(() => '');
         if (fallbackDate && fallbackDate !== targetDate) {
           applyActiveDate(fallbackDate);
+          activeFallbackNotice = {
+            requestedDate: targetDate,
+            loadedDate: fallbackDate,
+            reason: 'no_operational_baseline'
+          };
           const fallbackPayload = await fetchInsights(fallbackDate);
           if (fallbackPayload) {
             renderInsights(fallbackPayload);
@@ -4352,11 +5403,19 @@
           }
         }
       }
-      if (data.exists === true) autoFallbackDateAttempted = true;
+      if (data.exists === true) {
+        autoFallbackDateAttempted = true;
+        if (!activeFallbackNotice || String(activeFallbackNotice.loadedDate || '') !== String(data.date || '')) {
+          activeFallbackNotice = null;
+        }
+      }
       renderInsights(data);
     } catch (err) {
       console.warn('Falha ao atualizar painel inteligente.', err);
+      setTechnicalAnalysisLoadingState(getLanguageTag() === 'en-US' ? 'Could not load technical analysis.' : 'Nao foi possivel carregar a analise tecnica.');
     } finally {
+      perfInfo('[PERF][AI-TECH] fim carregamento painel ms=' + Math.round(performance.now() - refreshStartedAt));
+      perfTimeEnd('[PERF][AI-TECH] carregamento_painel_total');
       filterRefreshInFlight = false;
       if (queuedRefreshDate !== null) {
         const nextDate = queuedRefreshDate;
@@ -4391,13 +5450,45 @@
     return false;
   }
 
+  function bindManualReloadCacheInvalidation() {
+    if (window.__gmManualReloadCacheBound === true) return;
+    window.__gmManualReloadCacheBound = true;
+    const originalLoadSelectedDate = window.loadSelectedDate;
+    if (typeof originalLoadSelectedDate === 'function') {
+      window.loadSelectedDate = function () {
+        const selectedDate = document.getElementById('currentDateInput')?.value || activeDate();
+        clearInsightsCacheForDate(selectedDate);
+        autoFallbackDateAttempted = false;
+        activeFallbackNotice = null;
+        const result = originalLoadSelectedDate.apply(this, arguments);
+        window.setTimeout(() => refreshGodMode(selectedDate).catch(() => {}), 0);
+        return result;
+      };
+    }
+    const originalLoadTodayRecord = window.loadTodayRecord;
+    if (typeof originalLoadTodayRecord === 'function') {
+      window.loadTodayRecord = function () {
+        clearInsightsRuntimeCache();
+        autoFallbackDateAttempted = false;
+        activeFallbackNotice = null;
+        const result = originalLoadTodayRecord.apply(this, arguments);
+        Promise.resolve(result).finally(() => {
+          window.setTimeout(() => refreshGodMode().catch(() => {}), 0);
+        });
+        return result;
+      };
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     activeViewMode = readStoredViewMode();
     appliedInsightsFilters = cloneInsightsFilters(collectInsightsFiltersFromUI());
     bindAnalyticsTabs();
     bindModuleAndViewControls();
+    bindAiOsPanel();
     bindReviewActionModal();
     bindReviewQueueActions();
+    bindManualReloadCacheInvalidation();
     setActiveModule(DEFAULT_MODULE_KEY, { skipRender: true, skipRefresh: true });
     const runInitialRefresh = function () {
       refreshGodMode().catch(() => {});
@@ -4460,6 +5551,7 @@
 
   window.addEventListener('panel-auth-changed', function (event) {
     const detail = (event && event.detail && typeof event.detail === 'object') ? event.detail : {};
+    clearInsightsRuntimeCache();
     if (detail.authenticated === true) {
       refreshGodMode().catch(() => {});
     }

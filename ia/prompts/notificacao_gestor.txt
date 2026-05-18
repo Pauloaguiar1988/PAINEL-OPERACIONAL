@@ -1,0 +1,19 @@
+CONTEXTO:
+Notificacao para gestor operacional sobre risco, pendencia, SLA, cobranca ou decisao necessaria.
+
+OBJETIVO:
+Gerar comunicacao executiva curta com contexto suficiente para decisao.
+
+REGRAS:
+- Explicar impacto operacional.
+- Indicar motivo do alerta e responsavel atual.
+- Sugerir decisao ou escalonamento.
+- Nao detalhar excesso tecnico se nao for necessario.
+- Manter tom profissional e direto.
+
+FORMATO DE SAIDA:
+Alerta:
+Impacto:
+Evidencia:
+Recomendacao:
+Prazo sugerido:

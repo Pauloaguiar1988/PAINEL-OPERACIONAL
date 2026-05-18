@@ -822,6 +822,96 @@ function resolveDefaultHistoricalWorkbookPath(options) {
   return '';
 }
 
+function getGlobalPdfRecords() {
+  if (typeof window === 'undefined') return [];
+  return Array.isArray(window.__FSM_PDF_RECORDS__) ? window.__FSM_PDF_RECORDS__ : [];
+}
+
+function normalizePdfRecordsForHistorical(recordsLike, locale) {
+  const records = Array.isArray(recordsLike) ? recordsLike : [];
+  const rows = records.map((itemLike, index) => {
+    const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
+    const dateRef = normalizeDateKey(item.data || item.data_atendimento || item.dataAtendimento || item.createdAt) || localIso(new Date());
+    const clientName = normalizeSpaces(item.cliente || item.clientName || item.razao_social || 'Cliente PDF');
+    const technicianName = normalizeSpaces(item.tecnico || item.technicianName || item.responsavelTecnico || item.responsavel || 'Tecnico PDF');
+    const osId = normalizeSpaces(item.os || item.os_numero || item.numero_os || item.id || `PDF_${index + 1}`).toUpperCase();
+    const apontamento = normalizeSpaces(item.solucao || item.laudo || item.observacao || item.acaoFeita || item.acao_feita || '');
+    const modalidade = normalizeSpaces(item.tipo_servico || item.tipoServico || item.tipo_atendimento || '');
+    const modelo = normalizeSpaces(item.equipamento || item.produto || item.descricao_produto || item.modelo || '');
+    const motivoLaudo = normalizeSpaces(item.solucao || item.laudo || item.observacao || '');
+    const technicianKey = canonicalKey(technicianName);
+    const clientKey = canonicalKey(clientName);
+
+    return {
+      rowNumber: index + 2,
+      dateRef,
+      monthRef: dateRef.slice(0, 7),
+      osId,
+      clientName,
+      cnpjRaw: normalizeSpaces(item.cnpj || ''),
+      cnpjNormalized: normalizeCnpj(item.cnpj || ''),
+      clientIdentityQuality: clientName ? 'medium' : 'low',
+      clientKey,
+      filial: normalizeSpaces(item.filial || 'Campinas'),
+      filialKey: canonicalKey(item.filial || clientName || 'Campinas'),
+      technicianName,
+      technicianKey,
+      technicianSource: item.tecnico || item.technicianName ? 'tecnico' : 'pdf_global',
+      sourceConfidence: item.tecnico || item.technicianName ? 0.95 : 0.55,
+      attendantName: '',
+      modalidade,
+      sigla: normalizeSpaces(item.sigla || ''),
+      apontamento,
+      tipoCliente: normalizeSpaces(item.tipo_cliente || item.tipoCliente || ''),
+      modeloContrato: normalizeSpaces(item.contrato || item.modeloContrato || ''),
+      numeroContrato: normalizeSpaces(item.numeroContrato || ''),
+      novoRetorno: item.isRecurrent ? 'Retorno' : '',
+      defeitoGarantia: normalizeSpaces(item.defeitoGarantia || ''),
+      laudoOk: motivoLaudo ? 'Sim' : 'Nao',
+      motivoLaudo,
+      statusClassificacao: normalizeSpaces(item.classificacao || item.status || ''),
+      semDebito: normalizeSpaces(item.semDebito || ''),
+      pedidoInstalacao: normalizeSpaces(item.pedidoInstalacao || ''),
+      modelo,
+      serviceType: detectServiceType(modalidade, item.sigla || '', apontamento),
+      warranty: detectWarranty(apontamento, item.defeitoGarantia || '', item.tipoCliente || '', item.modeloContrato || ''),
+      probableCause: detectProbableCause(item.sigla || '', apontamento, item.defeitoGarantia || '', motivoLaudo),
+      outcomeType: detectOutcomeType(motivoLaudo ? 'Sim' : 'Nao', motivoLaudo, apontamento, item.isRecurrent ? 'Retorno' : ''),
+      isReturn: Boolean(item.isRecurrent),
+      isCriticalSignal: Boolean(item.isRecurrent) || !motivoLaudo
+    };
+  });
+
+  return {
+    schema: HISTORICAL_ANALYTICS_SCHEMA,
+    version: HISTORICAL_ANALYTICS_VERSION,
+    generatedAt: nowIso(),
+    locale: detectLocale(locale),
+    source: {
+      exists: true,
+      workbookPath: 'window.__FSM_PDF_RECORDS__',
+      workbookName: 'FSM PDF Records',
+      workbookSignature: hashCompact(records.map((item) => item.osId || item.os || item.os_numero || '').join('|')),
+      importedRows: records.length
+    },
+    thresholds: normalizeThresholds({}),
+    normalization: sanitizeHistoricalNormalization({ totalRows: records.length, normalizedRows: rows.length }),
+    fieldCoverage: {
+      statusClassificacaoFilled: rows.filter((row) => hasVal(row.statusClassificacao)).length,
+      semDebitoFilled: rows.filter((row) => hasVal(row.semDebito)).length,
+      pedidoInstalacaoFilled: rows.filter((row) => hasVal(row.pedidoInstalacao)).length,
+      modeloContratoFilled: rows.filter((row) => hasVal(row.modeloContrato)).length,
+      tecnicoFilled: rows.filter((row) => hasVal(row.technicianName)).length,
+      statusClassificacaoCoveragePct: pct(rows.filter((row) => hasVal(row.statusClassificacao)).length, records.length),
+      semDebitoCoveragePct: pct(rows.filter((row) => hasVal(row.semDebito)).length, records.length),
+      pedidoInstalacaoCoveragePct: pct(rows.filter((row) => hasVal(row.pedidoInstalacao)).length, records.length),
+      modeloContratoCoveragePct: pct(rows.filter((row) => hasVal(row.modeloContrato)).length, records.length),
+      tecnicoCoveragePct: pct(rows.filter((row) => hasVal(row.technicianName)).length, records.length)
+    },
+    rows
+  };
+}
+
 function mapClientStatus(daysWithoutService, thresholds, itemLike) {
   const item = (itemLike && typeof itemLike === 'object') ? itemLike : {};
   const hasRelevantHistory = Number(item.totalOs || 0) >= 6
@@ -1282,10 +1372,24 @@ function buildComparatives(rows, referenceDate, locale) {
 function buildHistoricalComparativesView(storeLike, referenceDateLike, localeRaw, customRangeLike) {
   const locale = detectLocale(localeRaw);
   const referenceDate = normalizeDateKey(referenceDateLike) || localIso(new Date());
-  const store = (storeLike && typeof storeLike === 'object') ? storeLike : buildEmptyHistoricalStore({ locale });
+  const pdfRecords = getGlobalPdfRecords();
+  const store = pdfRecords.length > 0
+    ? normalizePdfRecordsForHistorical(pdfRecords, locale)
+    : ((storeLike && typeof storeLike === 'object') ? storeLike : buildEmptyHistoricalStore({ locale }));
   const rows = Array.isArray(store.rows) ? store.rows : [];
   const rowsUntilDate = rows.filter((row) => row?.dateRef && row.dateRef <= referenceDate);
-  const base = buildComparatives(rowsUntilDate, referenceDate, locale);
+  const pdfFallbackRows = pdfRecords.length > 0 ? normalizePdfRecordsForHistorical(pdfRecords, locale).rows : [];
+  const comparativeRows = rowsUntilDate.length ? rowsUntilDate : pdfFallbackRows;
+  const base = buildComparatives(comparativeRows, referenceDate, locale);
+  const leaderFrom = (field) => {
+    const map = new Map();
+    comparativeRows.forEach((row) => {
+      const key = normalizeSpaces(row?.[field] || '') || 'nao_identificado';
+      map.set(key, Number(map.get(key) || 0) + 1);
+    });
+    const top = Array.from(map.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+    return top ? { name: top[0], total: top[1] } : { name: '', total: 0 };
+  };
 
   const customRaw = (customRangeLike && typeof customRangeLike === 'object') ? customRangeLike : {};
   const customCurrent = {
@@ -1300,12 +1404,17 @@ function buildHistoricalComparativesView(storeLike, referenceDateLike, localeRaw
   let custom = null;
   const hasCustom = customCurrent.from && customCurrent.to && customReference.from && customReference.to;
   if (hasCustom) {
-    custom = buildPeriodComparative('custom', rowsUntilDate, customCurrent, customReference, locale);
+    custom = buildPeriodComparative('custom', comparativeRows, customCurrent, customReference, locale);
   }
 
   return {
     referenceDate,
     locale,
+    fallbackUsed: rowsUntilDate.length === 0 && pdfFallbackRows.length > 0 ? 'window.__FSM_PDF_RECORDS__' : '',
+    currentPdfLeaders: {
+      mixLider: leaderFrom('serviceType'),
+      equipamentoLider: leaderFrom('equipamento')
+    },
     automatic: base.automatic,
     custom,
     customTemplate: base.customTemplate
@@ -1360,6 +1469,22 @@ function importHistoricalWorkbook(filePathLike, options) {
 
   const workbookPath = resolveDefaultHistoricalWorkbookPath({ filePath: filePathLike });
   if (!workbookPath || !fs.existsSync(workbookPath)) {
+    const pdfRecords = getGlobalPdfRecords();
+    if (pdfRecords.length > 0) {
+      const store = normalizePdfRecordsForHistorical(pdfRecords, locale);
+      return {
+        ok: true,
+        imported: true,
+        store,
+        importMeta: {
+          workbookPath: 'window.__FSM_PDF_RECORDS__',
+          sheetName: 'pdf_records',
+          importedRows: pdfRecords.length,
+          normalizedRows: store.rows.length,
+          referenceDate
+        }
+      };
+    }
     return { ok: false, error: 'Arquivo XLSX historico nao encontrado.' };
   }
   if (!xlsxLib) {
@@ -1430,7 +1555,10 @@ function importHistoricalWorkbook(filePathLike, options) {
 function buildHistoricalIntelligenceView(storeLike, referenceDateLike, localeRaw, options) {
   const locale = detectLocale(localeRaw);
   const referenceDate = normalizeDateKey(referenceDateLike) || localIso(new Date());
-  const store = (storeLike && typeof storeLike === 'object') ? storeLike : buildEmptyHistoricalStore({ locale });
+  const pdfRecords = getGlobalPdfRecords();
+  const store = pdfRecords.length > 0
+    ? normalizePdfRecordsForHistorical(pdfRecords, locale)
+    : ((storeLike && typeof storeLike === 'object') ? storeLike : buildEmptyHistoricalStore({ locale }));
   const rows = Array.isArray(store.rows) ? store.rows : [];
   const thresholds = normalizeThresholds((options && options.thresholds) || store.thresholds);
   const filters = normalizeHistoricalFilters((options && options.filters) || {});

@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CCOI • Gestão Operacional Integrada</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=20260427_4">
+  <link rel="stylesheet" href="style.css?v=NOC_TECH_HEALTH_SCORE">
 </head>
 <body>
 <div class="sidebar">
@@ -16,15 +16,15 @@
 
   <h2>Painel</h2>
   <div class="nav active" id="gmMainPainelNav" onclick="show('painel', this)">Painel do Dia</div>
-  <div class="gm-sidebar-modules" id="gmSidebarModules" aria-label="Modulos do painel operacional">
-    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="painel_dia" id="gmNavModulePainel">Painel do Dia</button>
-    <button type="button" class="nav gm-module-btn gm-sidebar-module is-active" data-gm-module="operacao" id="gmNavModuleOperacao">Operacao</button>
-    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="analise_tecnica" id="gmNavModuleAnalise">Analise Tecnica</button>
-    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="tecnicos" id="gmNavModuleTecnicos">Tecnicos</button>
+  <div class="gm-sidebar-modules" id="gmSidebarModules" aria-label="Módulos do painel operacional">
+    <button type="button" class="nav gm-module-btn gm-sidebar-module is-active" data-gm-module="painel_dia" id="gmNavModulePainel">Painel do Dia</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="operacao" id="gmNavModuleOperação">Operação</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="analise_técnica" id="gmNavModuleAnalise">Análise Técnica</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="tecnicos" id="gmNavModuleTécnicos">Técnicos</button>
     <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="clientes" id="gmNavModuleClientes">Clientes</button>
     <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="comparativos" id="gmNavModuleComparativos">Comparativos</button>
     <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="laudo" id="gmNavModuleLaudo">Laudo / Qualidade</button>
-    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="governanca" id="gmNavModuleGovernanca">Governanca</button>
+    <button type="button" class="nav gm-module-btn gm-sidebar-module" data-gm-module="governanca" id="gmNavModuleGovernança">Governança</button>
   </div>
 
   <h2>Operação</h2>
@@ -48,7 +48,7 @@
 
   <h2>Histórico</h2>
   <div class="nav" onclick="show('historico', this)">Registros por Data</div>
-  <div class="nav" onclick="if(window.openPanelSettingsModal){window.openPanelSettingsModal();}">Configuracoes</div>
+  <div class="nav" onclick="if(window.openPanelSettingsModal){window.openPanelSettingsModal();}">Configurações</div>
 </div>
 
 <div class="content">
@@ -70,16 +70,16 @@
         <option value="historico">Histórico</option>
       </select>
     </label>
-    <label class="gm-mobile-module-wrap">Modulo
+    <label class="gm-mobile-module-wrap">Módulo
       <select id="gmMobileModuleSelect">
         <option value="painel_dia" id="gmMobileModulePainel">Painel do Dia</option>
-        <option value="operacao" id="gmMobileModuleOperacao">Operacao</option>
-        <option value="analise_tecnica" id="gmMobileModuleAnalise">Analise Tecnica</option>
-        <option value="tecnicos" id="gmMobileModuleTecnicos">Tecnicos</option>
+        <option value="operacao" id="gmMobileModuleOperacao">Operação</option>
+        <option value="analise_técnica" id="gmMobileModuleAnalise">Análise Técnica</option>
+        <option value="tecnicos" id="gmMobileModuleTecnicos">Técnicos</option>
         <option value="clientes" id="gmMobileModuleClientes">Clientes</option>
         <option value="comparativos" id="gmMobileModuleComparativos">Comparativos</option>
         <option value="laudo" id="gmMobileModuleLaudo">Laudo / Qualidade</option>
-        <option value="governanca" id="gmMobileModuleGovernanca">Governanca</option>
+        <option value="governanca" id="gmMobileModuleGovernanca">Governança</option>
       </select>
     </label>
     <div class="mobile-tip">No celular, troque de tela por este seletor.</div>
@@ -94,13 +94,13 @@
     <div class="gm-panel-toolbar" id="gmPanelToolbar">
       <div class="gm-panel-summary">
         <strong id="gmPanelSummaryTitle">Painel do dia</strong>
-        <span id="gmPanelSummaryHint">Leitura rapida para decisao com recorte por filtros.</span>
+        <span id="gmPanelSummaryHint">Leitura rápida para decisão com recorte por filtros.</span>
       </div>
       <div class="gm-panel-actions">
-        <div class="gm-view-mode" id="gmViewMode">
+        <div class="gm-view-mode" id="gmViewMode" title="Resumo = visão gerencial. Detalhado = visão técnica operacional.">
           <span id="gmViewModeLbl">Modo de visualizacao</span>
-          <button type="button" class="gm-view-btn is-active" data-gm-view="executivo" id="gmViewExecutiveBtn">Executivo</button>
-          <button type="button" class="gm-view-btn" data-gm-view="tecnico" id="gmViewTechnicalBtn">Tecnico</button>
+          <button type="button" class="gm-view-btn is-active" id="btn-resumo" title="Visao gerencial resumida" onclick="document.querySelectorAll('.col-desfecho').forEach(celula => { celula.style.display = 'none'; });">Resumo</button>
+          <button type="button" class="gm-view-btn" id="btn-detalhado" title="Visao técnica detalhada" onclick="document.querySelectorAll('.col-desfecho').forEach(celula => { celula.style.display = 'table-cell'; });">Detalhado</button>
         </div>
         <button id="gmOpenFiltersBtn" type="button" class="btn-light gm-filters-open-btn">
           <i class="fa-solid fa-filter"></i>
@@ -241,55 +241,58 @@
     </div>
 
     <div class="gm-module-roots" id="gmModuleRoots">
-      <section id="gmModuleResumo" class="gm-module-root is-active" data-gm-module-root="painel_dia" aria-label="Modulo Resumo"></section>
-      <section id="gmModuleOperacao" class="gm-module-root" data-gm-module-root="operacao" aria-label="Modulo Operacao"></section>
-      <section id="gmModuleAnalise" class="gm-module-root" data-gm-module-root="analise_tecnica" aria-label="Modulo Analise Tecnica"></section>
-      <section id="gmModuleTecnicos" class="gm-module-root" data-gm-module-root="tecnicos" aria-label="Modulo Tecnicos"></section>
-      <section id="gmModuleClientes" class="gm-module-root" data-gm-module-root="clientes" aria-label="Modulo Clientes"></section>
-      <section id="gmModuleComparativos" class="gm-module-root" data-gm-module-root="comparativos" aria-label="Modulo Comparativos"></section>
-      <section id="gmModuleLaudo" class="gm-module-root" data-gm-module-root="laudo" aria-label="Modulo Laudo Qualidade"></section>
-      <section id="gmModuleGovernanca" class="gm-module-root" data-gm-module-root="governanca" aria-label="Modulo Governanca"></section>
+      <section id="gmModuleResumo" class="gm-module-root is-active" data-gm-module-root="painel_dia" aria-label="Módulo Resumo"></section>
+      <section id="gmModuleOperacao" class="gm-module-root" data-gm-module-root="operacao" aria-label="Módulo Operação"></section>
+      <section id="gmModuleAnalise" class="gm-module-root" data-gm-module-root="analise_técnica" aria-label="Módulo Análise Técnica"></section>
+      <section id="gmModuleTecnicos" class="gm-module-root" data-gm-module-root="tecnicos" aria-label="Módulo Técnicos"></section>
+      <section id="gmModuleClientes" class="gm-module-root" data-gm-module-root="clientes" aria-label="Módulo Clientes"></section>
+      <section id="gmModuleComparativos" class="gm-module-root" data-gm-module-root="comparativos" aria-label="Módulo Comparativos"></section>
+      <section id="gmModuleLaudo" class="gm-module-root" data-gm-module-root="laudo" aria-label="Módulo Laudo Qualidade"></section>
+      <section id="gmModuleGovernanca" class="gm-module-root" data-gm-module-root="governanca" aria-label="Módulo Governança"></section>
     </div>
 
-    <div class="system-upgrade-wrap" id="gmPanelExecutiveWrap" data-gm-modules="painel_dia" data-module-owner="resumo">
-      <div class="system-upgrade-card">
+    <div class="system-upgrade-wrap gm-cockpit-unified" id="gmPanelExecutiveWrap" data-gm-modules="painel_dia" data-module-owner="resumo">
+      <div class="system-upgrade-card gm-cockpit-hero">
         <div class="system-upgrade-title" id="gmCockpitTitle">Cockpit Operacional Tagus-Tec Campinas</div>
-        <h2 class="system-upgrade-headline">Controle estrategico em tempo real</h2>
-        <div class="system-upgrade-sub">Leitura automatica do dia com prioridade operacional, tecnica e administrativa para decisao de gestor.</div>
+        <h2 class="system-upgrade-headline">Risco operacional do dia</h2>
+        <div class="system-upgrade-sub">Leitura automatica do dia com prioridade operacional, técnica e administrativa para decisão do gerente operacional.</div>
         <div class="system-upgrade-strip">
-          <div class="system-upgrade-pill">
+          <div class="system-upgrade-pill main-kpi-card main-kpi-score">
             <div class="lbl">Score operacional</div>
             <div class="val" id="gmScore">0</div>
             <div class="sub">Indice consolidado 0-100</div>
           </div>
-          <div class="system-upgrade-pill">
-            <div class="lbl">Nivel atual</div>
-            <div class="val" id="gmLevel">Estavel</div>
-            <div class="sub">Leitura geral da unidade</div>
-          </div>
-          <div class="system-upgrade-pill">
+          <div class="system-upgrade-pill main-kpi-card main-kpi-sla">
             <div class="lbl">SLA / Execucao</div>
             <div class="val"><span id="gmSla">0%</span> / <span id="gmExec">--</span></div>
             <div class="sub">Ritmo operacional do dia</div>
           </div>
-          <div class="system-upgrade-pill">
-            <div class="lbl">Data analisada</div>
-            <div class="val" id="gmDate">--</div>
-            <div class="sub">Base ativa da leitura</div>
+          <div class="system-upgrade-pill main-kpi-card main-kpi-revenue">
+            <div class="lbl">Faturamento</div>
+            <div class="val" id="gmOsRiscoEstimado">R$ 0,00</div>
+            <div class="sub">Receita operacional estimada</div>
+          </div>
+          <div class="system-upgrade-pill main-kpi-card main-kpi-loss">
+            <div class="lbl">Perda</div>
+            <div class="val" id="gmOsLossMetric">R$ 0,00</div>
+            <div class="sub">Risco financeiro mapeado</div>
           </div>
         </div>
       </div>
-      <div class="system-upgrade-side">
-        <div class="system-white-card">
-          <h3 id="gmPriorityCardTitle">Prioridade imediata</h3>
-          <div class="system-list">
-            <div class="system-line"><strong id="gmLblTopAlert">Alerta principal</strong><span id="gmTopAlert">Sem alerta</span></div>
+      <div class="system-upgrade-side gm-cockpit-panel">
+        <div class="gm-cockpit-panel-inner">
+          <div class="gm-cockpit-panel-head">
+            <h3 id="gmPriorityCardTitle">Cockpit Operacional</h3>
+            <span id="gmCockpitScopeHint">Leitura do dia</span>
+          </div>
+          <div class="system-list gm-cockpit-list">
+            <div class="system-line gm-cockpit-risk-line"><strong id="gmLblTopAlert">Risco operacional do dia</strong><span id="gmTopAlert">Sem alerta</span></div>
             <div class="system-line"><strong id="gmLblAction24h">Ação em 24h</strong><span id="gmMainAction">Monitorar rotina</span></div>
-            <div class="system-line"><strong id="gmLblTicketsLate">Tickets e atrasos</strong><span><span id="gmTickets">0</span> / <span id="gmAtrasos">0</span></span></div>
+            <div class="system-line gm-cockpit-kpi-line"><strong id="gmLblTicketsLate">Tickets e atrasos</strong><span><span id="gmTickets">0</span> / <span id="gmAtrasos">0</span></span></div>
             <div class="system-line"><strong id="gmLblPendAdm">Pendências administrativas</strong><span id="gmPendAdm">0</span></div>
-            <div class="system-line"><strong id="gmLblMixAtendimento">Mix de atendimento</strong><div id="gmMixAtendimento" class="gm-cockpit-mini-bars">--</div></div>
-            <div class="system-line"><strong id="gmLblMixGarantia">Cobertura de garantia</strong><div id="gmMixCobertura" class="gm-cockpit-mini-bars">--</div></div>
-            <div class="system-line"><strong id="gmLblProdutoTop">Equipamento mais incidente</strong><div id="gmProdutoTop" class="gm-cockpit-mini-eq">--</div></div>
+            <div class="system-line gm-cockpit-analytics-line"><strong id="gmLblMixAtendimento">Mix de atendimento</strong><div id="mix-atendimento" class="gm-cockpit-mini-bars">--</div></div>
+            <div class="system-line gm-cockpit-analytics-line"><strong id="gmLblMixGarantia">Cobertura de garantia</strong><div id="gmMixCobertura" class="gm-cockpit-mini-bars">--</div></div>
+            <div class="system-line gm-cockpit-equipment-line"><strong id="gmLblProdutoTop">Equipamento mais incidente</strong><div id="gmProdutoTop" class="gm-cockpit-mini-eq">--</div></div>
           </div>
         </div>
       </div>
@@ -299,7 +302,7 @@
       <div class="system-white-card">
         <div class="system-kicker">Clientes criticos em foco</div>
         <div class="system-list" id="gmClientList">
-          <div class="system-line"><strong>Sem cliente critico registrado</strong><span>Atualize em Operacao</span></div>
+          <div class="system-line"><strong>Sem cliente critico registrado</strong><span>Atualize em Operação</span></div>
         </div>
       </div>
       <div class="system-white-card">
@@ -317,12 +320,28 @@
         <div class="system-line"><strong>Risco de nao faturar</strong><span id="gmOsFaturamento">0</span></div>
         <div class="system-line"><strong>Codigo pendente</strong><span id="gmOsCodigo">0</span></div>
         <div class="system-line"><strong>Laudo sem clareza</strong><span id="gmOsLaudo">0</span></div>
-        <div class="system-line"><strong>Risco estimado (R$)</strong><span id="gmOsRiscoEstimado">0,00</span></div>
-        <div class="system-line"><strong>Operacao interna / externa</strong><span id="gmOpsMix">0 / 0</span></div>
+        <div class="system-line"><strong>Risco estimado (R$)</strong><span id="gmOsRiscoEstimadoDetail">0,00</span></div>
+        <div class="system-line"><strong>Operação interna / externa</strong><span id="gmOpsMix">0 / 0</span></div>
       </div>
       <div class="system-list gm-audit-list" id="gmOsAuditList">
         <div class="system-line"><strong>Sem pendencias de O.S.</strong><span>Importe as ordens para analisar faturamento, codigo e laudo.</span></div>
       </div>
+      <div class="gm-ai-os-panel" id="gmAiOsPanel">
+        <div class="gm-ai-os-head">
+          <div>
+            <div class="system-kicker">IA operacional</div>
+            <strong>Análise assistida de O.S.</strong>
+          </div>
+          <button type="button" class="btn-light gm-ai-os-btn gm-ai-os-technical-action" id="gmAiAnalyzeOsBtn" hidden>Reprocessar analise</button>
+        </div>
+        <div class="gm-ai-os-result" id="gmAiOsResult" aria-live="polite">
+          Selecione uma data com base operacional e execute a análise assistida.
+        </div>
+      </div>
+    </div>
+    <div class="system-white-card gm-governance-library-card" id="gmGovernanceLibraryCard" data-module-owner="governanca">
+      <div class="system-kicker">Biblioteca e governanca</div>
+      <h3>Links e referencias operacionais</h3>
       <div class="system-line">
         <strong>Tabela de precos (Looker)</strong>
         <span><a id="gmLookerLink" href="#" target="_blank" rel="noopener">Abrir referencia</a></span>
@@ -336,14 +355,14 @@
         <span><a id="gmPowerBiLink" href="#" target="_blank" rel="noopener">Abrir BI</a></span>
       </div>
     </div>
-    <div class="system-white-card gm-taxonomy-card" id="gmTaxonomyCard" data-gm-modules="operacao analise_tecnica tecnicos clientes comparativos laudo governanca" data-module-shell="1">
+    <div class="system-white-card gm-taxonomy-card" id="gmTaxonomyCard" data-gm-modules="operacao analise_técnica tecnicos clientes comparativos laudo governanca" data-module-shell="1">
       <div class="gm-tax-head">
         <div class="gm-tax-title-wrap">
           <div class="system-kicker" id="gmTaxonomyKicker">Leitura analitica por taxonomia</div>
           <h3 id="gmTaxonomyTitle">Inteligencia operacional e laudo tecnico</h3>
         </div>
         <div class="gm-tax-tabs" role="tablist" aria-label="Abas de analise taxonomica">
-          <button id="gmTabBtnInterna" class="gm-tax-tab is-active" type="button" data-gm-tab="interna" role="tab" aria-selected="true" aria-controls="gmTabPanelInterna">Operacao Interna</button>
+          <button id="gmTabBtnInterna" class="gm-tax-tab is-active" type="button" data-gm-tab="interna" role="tab" aria-selected="true" aria-controls="gmTabPanelInterna">Operação Interna</button>
           <button id="gmTabBtnExterna" class="gm-tax-tab" type="button" data-gm-tab="externa" role="tab" aria-selected="false" aria-controls="gmTabPanelExterna">Analise Externa / Laudo</button>
           <button id="gmTabBtnTrimestral" class="gm-tax-tab" type="button" data-gm-tab="trimestral" role="tab" aria-selected="false" aria-controls="gmTabPanelTrimestral">Executivo Trimestral</button>
         </div>
@@ -353,7 +372,7 @@
         <span id="gmTaxonomyScope">Escopo: --</span>
       </div>
 
-      <section id="gmTabPanelInterna" class="gm-tax-panel is-active" role="tabpanel" aria-labelledby="gmTabBtnInterna" data-gm-modules="analise_tecnica operacao">
+      <section id="gmTabPanelInterna" class="gm-tax-panel is-active" role="tabpanel" aria-labelledby="gmTabBtnInterna" data-gm-modules="analise_técnica operacao">
         <article class="gm-tax-priority" id="gmTaxPriorityStrip" data-module-owner="operacao">
           <div class="gm-tax-priority-block">
             <span class="lbl" id="gmTaxPriorityLblSeverity">Severidade</span>
@@ -403,9 +422,44 @@
         </article>
 
         <div class="gm-tax-row gm-view-tecnico-only" data-module-row="1">
-          <article class="gm-tax-box" data-module-owner="analise">
-            <h4 id="gmTaxEqTitle">Ranking por equipamento</h4>
-            <div class="gm-tax-table">
+          <article class="gm-tax-box gm-equipment-intelligence-box" data-module-owner="analise">
+            <div class="gm-equipment-intel-title">
+              <div>
+                <h4 id="gmTaxEqTitle">Inteligência por Equipamento</h4>
+                <p>Análise consolidada por tipo de equipamento, causa provável, solução aplicada e risco operacional.</p>
+              </div>
+            </div>
+                      <div class="gm-equipment-intel-summary" id="gmEquipmentIntelSummary">
+                        <div class="gm-equipment-intel-empty">Aguardando base operacional</div>
+                      </div>
+                      <div class="gm-equipment-intel-controls" id="gmEquipmentIntelControls">
+                        <input id="gmEquipmentFilterText" type="search" placeholder="Filtrar equipamento">
+                        <select id="gmEquipmentFilterRisk" aria-label="Filtrar por risco">
+                          <option value="">Todos os riscos</option>
+                          <option value="critical">Crítico</option>
+                          <option value="high">Alto</option>
+                          <option value="medium">Médio</option>
+                          <option value="low">Baixo</option>
+                        </select>
+                        <select id="gmEquipmentFilterQuality" aria-label="Filtrar por qualidade">
+                          <option value="">Todas as qualidades</option>
+                          <option value="alta">Alta</option>
+                          <option value="media">Média</option>
+                          <option value="baixa">Baixa</option>
+                        </select>
+                        <select id="gmEquipmentFilterType" aria-label="Filtrar por tipo">
+                          <option value="">Todos os tipos</option>
+                          <option value="troca_peca">Troca de peça</option>
+                          <option value="atualizacao">Atualização</option>
+                          <option value="configuracao">Configuração</option>
+                          <option value="infraestrutura_cliente">Infra cliente</option>
+                          <option value="orientacao">Orientação</option>
+                          <option value="sem_solucao_definida">Sem solução definida</option>
+                          <option value="nao_identificado">Não identificado</option>
+                        </select>
+                      </div>
+                      <div class="gm-equipment-intel-count" id="gmEquipmentIntelCount">Exibindo 0 de 0 equipamentos</div>
+            <div class="gm-tax-table gm-equipment-legacy-ranking" aria-hidden="true">
               <div class="gm-tax-table-head">
                 <span id="gmTaxEqColItem">Equipamento</span>
                 <span id="gmTaxEqColVolume">O.S.</span>
@@ -415,6 +469,24 @@
               <div class="gm-tax-table-body" id="gmTaxEquipmentTableBody">
                 <div class="gm-tax-table-row"><span>Sem base</span><span>-</span><span>-</span><span>-</span></div>
               </div>
+            </div>
+            <div class="gm-equipment-intel-list" id="gmEquipmentIntelList">
+              <div class="gm-equipment-intel-empty">Aguardando base operacional</div>
+            </div>
+          </article>
+          <article class="gm-tax-box gm-classification-review-box" data-module-owner="analise">
+            <div class="gm-classification-review-head">
+              <div>
+                <h4>Revisão de Classificação</h4>
+                <p>Fila local para calibrar OS e equipamentos com baixa confiança ou classificação genérica.</p>
+              </div>
+              <span id="gmClassificationReviewPct">0% revisado</span>
+            </div>
+            <div class="gm-classification-review-summary" id="gmClassificationReviewSummary">
+              <div class="gm-equipment-intel-empty">Aguardando base operacional</div>
+            </div>
+            <div class="gm-classification-review-list" id="gmClassificationReviewList">
+              <div class="gm-equipment-intel-empty">Sem casos para revisão.</div>
             </div>
           </article>
           <article class="gm-tax-box" data-module-owner="tecnicos">
@@ -459,17 +531,17 @@
 
         <div class="gm-tax-row" data-gm-modules="governanca" data-module-row="1">
           <article class="gm-tax-box gm-tax-review-priority-box" id="gmTaxReviewPriorityBox" data-gm-modules="governanca" data-module-owner="governanca">
-            <h4 id="gmTaxReviewTitle">Prioridade de revisao humana</h4>
+            <h4 id="gmTaxReviewTitle">Prioridade de revisão humana</h4>
             <div class="gm-tax-review-priority-grid">
               <div class="gm-tax-quality-card"><span id="gmTaxReviewLblPriority">Prioridade</span><strong id="gmTaxReviewPriority">--</strong></div>
               <div class="gm-tax-quality-card"><span id="gmTaxReviewLblReviewer">Revisor recomendado</span><strong id="gmTaxReviewReviewer">--</strong></div>
               <div class="gm-tax-quality-card"><span id="gmTaxReviewLblStatus">Status</span><strong id="gmTaxReviewStatus">--</strong></div>
               <div class="gm-tax-quality-card"><span id="gmTaxReviewLblDueAt">Prazo</span><strong id="gmTaxReviewDueAt">--</strong></div>
             </div>
-            <p class="gm-tax-summary" id="gmTaxReviewReason">Sem motivo de revisao para esta data.</p>
+            <p class="gm-tax-summary" id="gmTaxReviewReason">Sem motivo de revisão para esta data.</p>
             <p class="gm-tax-summary gm-tax-review-impact" id="gmTaxReviewImpact">Impacto: --</p>
             <div class="gm-tax-list" id="gmTaxReviewChecklistList">
-              <div class="gm-tax-line"><strong>Checklist</strong><span>Sem itens de revisao obrigatoria.</span></div>
+              <div class="gm-tax-line"><strong>Checklist</strong><span>Sem itens de revisão obrigatoria.</span></div>
             </div>
           </article>
 
@@ -487,11 +559,11 @@
         </div>
 
         <article class="gm-tax-box gm-view-tecnico-only" id="gmTaxReviewQueueBox" data-gm-modules="governanca" data-module-owner="governanca">
-          <h4 id="gmTaxReviewQueueTitle">Fila curta de revisao</h4>
+          <h4 id="gmTaxReviewQueueTitle">Fila curta de revisão</h4>
           <div class="gm-tax-review-list" id="gmTaxReviewQueueList">
             <div class="gm-tax-review-item">
               <div class="gm-tax-review-item-head">
-                <strong>Sem itens de revisao</strong>
+                <strong>Sem itens de revisão</strong>
                 <span class="gm-tax-review-badge">Monitoramento</span>
               </div>
               <p>Quando houver risco analitico, os itens aparecem aqui.</p>
@@ -644,7 +716,7 @@
             <div class="sub" id="gmQuarterlyReworkRate">Retrabalho: 0%</div>
           </article>
           <article class="gm-tax-mini">
-            <div class="lbl" id="gmQuarterlyLblOpenQueue">Fila de revisao aberta</div>
+            <div class="lbl" id="gmQuarterlyLblOpenQueue">Fila de revisão aberta</div>
             <div class="val" id="gmQuarterlyOpenQueue">0</div>
             <div class="sub" id="gmQuarterlyOverdueQueue">Atrasados: 0</div>
           </article>
@@ -676,11 +748,11 @@
             </div>
           </article>
           <article class="gm-tax-box">
-            <h4 id="gmQuarterlyReviewTitle">Fila curta de revisao (trimestre)</h4>
+            <h4 id="gmQuarterlyReviewTitle">Fila curta de revisão (trimestre)</h4>
             <div class="gm-tax-review-list" id="gmQuarterlyReviewList">
               <div class="gm-tax-review-item is-closed">
                 <div class="gm-tax-review-item-head">
-                  <strong>Sem itens de revisao</strong>
+                  <strong>Sem itens de revisão</strong>
                   <span class="gm-tax-review-badge none">Monitoramento</span>
                 </div>
                 <p>Os itens trimestrais de governanca aparecem aqui.</p>
@@ -735,7 +807,7 @@
       <div class="kpi-card"><div class="value" id="kCriticos">0</div><div class="label">Casos críticos</div><div class="hint">Informado na operação</div></div>
       <div class="kpi-card"><div class="value" id="kReinc">0</div><div class="label">Reincidências</div><div class="hint">Operação + área técnica</div></div>
       <div class="kpi-card"><div class="value" id="kSla">0%</div><div class="label">SLA do dia</div><div class="hint">Entrada manual</div></div>
-      <div class="kpi-card"><div class="value" id="kExec">0%</div><div class="label">Execução</div><div class="hint">Checklist do gestor</div></div>
+      <div class="kpi-card"><div class="value" id="kExec">0%</div><div class="label">Execução</div><div class="hint">Checklist do gerente operacional</div></div>
       <div class="kpi-card"><div class="value" id="kBloqueios">0</div><div class="label">Bloqueios</div><div class="hint">Técnico + administrativo</div></div>
       <div class="kpi-card"><div class="value" id="kTicketsPendentes">0</div><div class="label">Tickets pendentes</div><div class="hint">Externos ainda abertos</div></div>
       <div class="kpi-card"><div class="value" id="kTecnicosCampo">0</div><div class="label">Técnicos em campo</div><div class="hint">Capacidade técnica do dia</div></div>
@@ -766,7 +838,7 @@
           <div class="month-mini info"><div class="label">Dias salvos</div><div class="value" id="mesDiasSalvos">0</div><div class="foot">Dias do mês com histórico salvo e considerado na média.</div></div>
           <div class="month-mini"><div class="label">Média de críticos</div><div class="value" id="mesMediaCriticos">0,0</div><div class="foot">Casos críticos médios por dia salvo.</div></div>
           <div class="month-mini good"><div class="label">Média SLA</div><div class="value" id="mesMediaSla">0%</div><div class="foot">Média de SLA dos dias salvos do mês.</div></div>
-          <div class="month-mini info"><div class="label">Média execução</div><div class="value" id="mesMediaExec">0%</div><div class="foot">Percentual médio de execução do gestor no mês.</div></div>
+          <div class="month-mini info"><div class="label">Média execução</div><div class="value" id="mesMediaExec">0%</div><div class="foot">Percentual médio de execução do gerente operacional no mês.</div></div>
         </div>
         <div class="month-strip">
           <div class="month-mini bad"><div class="label">Média tickets pendentes</div><div class="value" id="mesMediaTickets">0,0</div><div class="foot">Carga média de tickets externos em aberto.</div></div>
@@ -860,7 +932,7 @@
         <div class="compact-list">
           <div class="compact-item"><strong>Cliente mais sensível:</strong> <span id="painelClienteSensivel">--</span></div>
           <div class="compact-item"><strong>Escalonamento necessário:</strong> <span id="painelEscalonamento">--</span></div>
-          <div class="compact-item"><strong>Dependência do gestor:</strong> <span id="painelDependenciaGestor">--</span></div>
+          <div class="compact-item"><strong>Dependência do gerente operacional:</strong> <span id="painelDependenciaGestor">--</span></div>
         </div>
       </div>
     </div>
@@ -986,7 +1058,7 @@
       <label>Ação de contenção imediata<textarea id="op_contencao"></textarea></label>
       <label>Observação gerencial<textarea id="op_obs"></textarea></label>
 
-      <h4>Execução do gestor</h4>
+      <h4>Execução do gerente operacional</h4>
       <div class="row3 small-area">
         <div><label>Revisou casos críticos?<select id="op_exec1"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
         <div><label>Definiu prioridades?<select id="op_exec2"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
@@ -1138,7 +1210,7 @@
         <div><label>Precisa escalonamento?<select id="tec_escalonamento"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
       </div>
       <div class="row">
-        <div><label>Precisa apoio do gestor?<select id="tec_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Precisa apoio do gerente operacional?<select id="tec_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
         <div><label>Motivo do apoio / escalonamento<textarea id="tec_motivo"></textarea></label></div>
       </div>
     </div>
@@ -1516,7 +1588,7 @@
         <div><label>Status da área administrativa<select id="adm_status"><option value="">Selecionar...</option><option>Estável</option><option>Atenção</option><option>Pressionada</option><option>Crítica</option></select></label></div>
         <div><label>Impacto administrativo geral<select id="adm_impacto"><option value="">Selecionar...</option><option>Baixo</option><option>Médio</option><option>Alto</option><option>Crítico</option></select></label></div>
         <div><label>Risco para cliente?<select id="adm_risco_cliente"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
-        <div><label>Precisa apoio do gestor?<select id="adm_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Precisa apoio do gerente operacional?<select id="adm_apoio_gestor"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
       </div>
       <div class="row">
         <div><label>Existe dependência externa?<select id="adm_dep_terceiros"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
@@ -1977,7 +2049,7 @@
       </div>
       <div class="row">
         <div><label>O que segue bloqueado<textarea id="adm_travado"></textarea></label></div>
-        <div><label>O que depende do gestor<textarea id="adm_dep_gestor_txt"></textarea></label></div>
+        <div><label>O que depende do gerente operacional<textarea id="adm_dep_gestor_txt"></textarea></label></div>
       </div>
       <div class="row">
         <div><label>Próxima ação prioritária<textarea id="adm_proximo"></textarea></label></div>
@@ -2036,9 +2108,9 @@
       </div>
       <div class="row">
         <div><label>Necessita escalonamento?<select id="diag_escalonamento"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
-        <div><label>Diagnóstico validado pelo gestor?<select id="diag_validado"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
+        <div><label>Diagnóstico validado pelo gerente operacional?<select id="diag_validado"><option value="">Selecionar...</option><option>Sim</option><option>Não</option></select></label></div>
       </div>
-      <label>Comentário do gestor<textarea id="diag_comentario"></textarea></label>
+      <label>Comentário do gerente operacional<textarea id="diag_comentario"></textarea></label>
       <label>Decisão tomada<textarea id="diag_decisao"></textarea></label>
       <label>Direcionamento para o próximo período<textarea id="diag_direcionamento"></textarea></label>
     </div>
@@ -2105,7 +2177,7 @@
         </details>
         <h4 style="margin-top:14px">Trilha de auditoria da data</h4>
         <div class="history-list" id="historyAuditList" style="margin-top:10px"></div>
-        <div class="note" style="margin-top:12px">Sugestão de uso: cada área preenche sua leitura; ao fim do expediente o gestor revisa o diagnóstico consolidado e salva o dia.</div>
+        <div class="note" style="margin-top:12px">Sugestão de uso: cada área preenche sua leitura; ao fim do expediente o gerente operacional revisa o diagnóstico consolidado e salva o dia.</div>
       </div>
     </div>
   </div>
@@ -2173,7 +2245,7 @@
   <div class="gm-review-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gmReviewModalTitle">
     <div class="gm-review-modal-head">
       <div class="gm-review-modal-head-text">
-        <span id="gmReviewModalKicker">Revisao humana guiada</span>
+        <span id="gmReviewModalKicker">Revisão humana guiada</span>
         <h4 id="gmReviewModalTitle">Atualizar item</h4>
       </div>
       <button id="gmReviewModalCloseBtn" class="gm-review-modal-close" type="button" data-gm-review-close>Fechar</button>
@@ -2187,7 +2259,7 @@
     <div id="gmReviewModalAlert" class="gm-review-modal-alert" hidden></div>
     <div class="gm-review-modal-body">
       <label id="gmReviewModalOwnerWrap" hidden>
-        <span id="gmReviewModalOwnerLbl">Dono da revisao</span>
+        <span id="gmReviewModalOwnerLbl">Dono da revisão</span>
         <input id="gmReviewModalOwnerInput" type="text" autocomplete="off" maxlength="120">
       </label>
       <label id="gmReviewModalDueWrap" hidden>
@@ -2225,7 +2297,10 @@
 
   <script src="app-auth.js?v=20260427_3" defer></script>
   <script src="app-admin-users.js?v=20260416_4" defer></script>
-  <script src="app.js?v=20260427_3" defer></script>
-  <script src="app-godmode.js?v=20260427_3" defer></script>
+  <script src="app.js?v=NOC_TECH_HEALTH_STABLE_REIMPLANT" defer></script>
+  <script src="app-godmode.js?v=20260507_ux1" defer></script>
 </body>
 </html>
+
+
+
