@@ -1,0 +1,2 @@
+Data Operacao,Numero OS,Cliente,Tipo Atendimento,Classificacao de Atendimento,Contrato Ativo / Inativo,Classificacao,Sigla Atendimento,Descricao do Produto,Codigo Servico,Ordem Compra,Status OS,Prioridade,Acao Feita,Prazo,Ultimo Laudo
+2026-04-11,V99999,Condominio Exemplo,Manutencao Corretiva,Corretiva,Ativo,Contrato,CORRETIVA,Controle de acesso,COD-1234,OC-7788,Em andamento,Critico,Acionado tecnico senior,2026-04-12,Tecnico realizou diagnostico inicial e iniciou plano de contingencia.

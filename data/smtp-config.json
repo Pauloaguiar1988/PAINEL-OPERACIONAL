@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "host": "smtp.gmail.com",
+  "port": 587,
+  "secure": false,
+  "user": "paulo.aguiar@tagus-tec.com.br",
+  "pass": "khuj egga zxrk pvya",
+  "from": "paulo.aguiar@tagus-tec.com.br",
+  "updatedAt": "2026-04-27T21:46:43.453Z"
+}

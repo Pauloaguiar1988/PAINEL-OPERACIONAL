@@ -1,0 +1,45 @@
+IMPORTACAO AUTOMATICA - CAMPINAS
+
+Cole nesta pasta o arquivo Excel/CSV de operacao diaria.
+
+Pasta monitorada:
+data\import\campinas
+
+Formatos aceitos:
+- .xlsx
+- .xls
+- .csv
+- .pdf
+
+Colunas recomendadas no arquivo:
+- Data Operacao
+- Numero OS
+- Casos Criticos
+- Reincidencias
+- SLA
+- Execucao
+- Tipo Atendimento
+- Classificacao de Atendimento
+- Contrato Ativo / Inativo
+- Classificacao
+- Cliente mais critico
+- Descricao do Produto
+- Acao Feita
+- Prazo
+- Status Operacao
+
+Regra de leitura:
+- Se existir linha da data atual, ela sera priorizada.
+- Se nao existir, o sistema usa a ultima linha valida.
+- O painel calcula automaticamente:
+  mix de atendimento (instalacao/corretiva/preventiva), cobertura (garantia/contrato/avulso) e produto mais incidente.
+- Auditoria por O.S.:
+  risco de nao faturar, codigo pendente e laudo sem clareza com proximo passo individual.
+
+Observacao:
+- Sempre mantenha o servidor aberto em http://localhost:5000.
+- Ao salvar um novo arquivo nesta pasta, o painel deve sincronizar automaticamente.
+- Subpastas tambem sao monitoradas (ex.: data\import\campinas\pdfs).
+- Modelo de referencia:
+  data\import\modelos\MODELO_IMPORTACAO_CAMPINAS.csv
+  data\import\modelos\MODELO_OS_LINHAS_CAMPINAS.csv

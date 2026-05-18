@@ -1,0 +1,27 @@
+{
+  "id": "7dc97477b68c5778",
+  "processedAt": "2026-04-10T21:05:18.531Z",
+  "status": "success",
+  "reason": "watch",
+  "fileName": "V69250.pdf",
+  "filePath": "C:\\Painel_Operacional_Corrigido\\data\\import\\campinas\\pdfs\\V69250.pdf",
+  "fileExt": ".pdf",
+  "fileSize": 150193,
+  "recordDate": "2026-04-10",
+  "changedKeysCount": 6,
+  "message": "Arquivo validado e analisado com 1 O.S. com alerta(s).",
+  "audit": {
+    "rows": 1,
+    "osTotal": 1,
+    "alertRecords": 1,
+    "alertTotal": 1,
+    "faturamento": 1,
+    "codigo": 0,
+    "laudo": 0,
+    "contrato": 0,
+    "riscoEstimado": 498,
+    "topNextSteps": [
+      "Validar faturamento com financeiro, preencher codigo e ordem de compra antes do fechamento."
+    ]
+  }
+}

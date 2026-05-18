@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "users": [
+    {
+      "username": "admin_campinas",
+      "displayName": "Administrador Campinas",
+      "email": "paulo.aguiar@tagus-tec.com.br",
+      "role": "admin",
+      "menuPermissions": [
+        "painel",
+        "operacao",
+        "agenda",
+        "tecnico",
+        "administrativo",
+        "diagnostico",
+        "resultado",
+        "executivo",
+        "negocio",
+        "melhorias",
+        "historico"
+      ],
+      "active": true,
+      "mustChangePassword": false,
+      "passwordSalt": "c765756d97d4a0ff9a548ff7d57ecfcf",
+      "passwordHash": "b3c8559ab8259c145198374c97f10220ef704fb03b7d43483fd18a6667fa69e1cdca5d43665c258f5ade569919d0f2583423bae98ee15c0cb8f184e23cf9a93d",
+      "createdAt": "2026-04-13T14:39:08.529Z",
+      "updatedAt": "2026-05-07T11:46:56.703Z",
+      "lastLoginAt": "2026-05-07T11:46:56.703Z",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas"
+    },
+    {
+      "username": "lider_tecnico",
+      "displayName": "Lider Tecnico",
+      "email": "",
+      "role": "lider_tecnico",
+      "menuPermissions": [
+        "painel",
+        "agenda",
+        "tecnico"
+      ],
+      "active": true,
+      "mustChangePassword": false,
+      "passwordSalt": "e9d841b9da2f4a08bb1a783f215b044f",
+      "passwordHash": "1e2ec2f98ba37604838bab635fdfc667e87ba4fcbea9ad1867e2f69f36730387f5c2d8bf43fd9ab4def64bf63cdc26686b33b4be752b17a9791423ee3f6cfe64",
+      "createdAt": "2026-04-13T14:39:08.588Z",
+      "updatedAt": "2026-04-22T19:00:05.341Z",
+      "lastLoginAt": "2026-04-22T19:00:05.341Z",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas"
+    },
+    {
+      "username": "lider_administrativo",
+      "displayName": "Lider Administrativo Campinas",
+      "email": "",
+      "role": "lider_administrativo",
+      "menuPermissions": [
+        "painel",
+        "agenda",
+        "administrativo"
+      ],
+      "active": true,
+      "mustChangePassword": false,
+      "passwordSalt": "8d4a8f6cb8ae00a0d22e43381d6927ba",
+      "passwordHash": "33e0533c25ee7af63f4014a4824a15df695b5468102f586d2f447acd5b64fd2cb1cb8ed28ac8101a62856b52f4c278d7aa19344bf9a9e0d948e445b65fb8b1fd",
+      "createdAt": "2026-04-13T14:40:46.959Z",
+      "updatedAt": "2026-04-13T14:41:56.396Z",
+      "lastLoginAt": "2026-04-13T14:41:56.396Z",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas"
+    },
+    {
+      "username": "lider_adminstrativo",
+      "displayName": "Anderson",
+      "email": "anderson.marcolino@tagus-tec.com.br",
+      "role": "lider_administrativo",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "menuPermissions": [
+        "painel",
+        "agenda",
+        "administrativo"
+      ],
+      "active": true,
+      "mustChangePassword": true,
+      "passwordSalt": "677f26e21b37cda472d20508ec9dd1ff",
+      "passwordHash": "5ab7b1e2b68482c565ccd2cc1c0ff835a4467d8895c4a42999b2b47ab436e597a8de4d9e6069a53a6a294894c6e28dcaef7bd4daddbb7f3f4def953d702259ad",
+      "createdAt": "2026-04-16T19:11:02.744Z",
+      "updatedAt": "2026-04-16T19:11:02.744Z",
+      "lastLoginAt": null
+    }
+  ]
+}

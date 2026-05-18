@@ -1,0 +1,4 @@
+Data Operacao,Numero OS,Cliente,Prioridade,Status OS,Prazo,SLA OS,Execucao,Reincidente,Tipo Atendimento,Classificacao de Atendimento,Contrato Ativo/Inativo,Classificacao,Descricao do Produto,Sigla Atendimento,Acao Feita
+2026-04-10,OS-1001,Cliente A,Critico,Em andamento,2026-04-10,93,95,Sim,GARANTIA FABRICA - REP,001 - Corretiva,Inativo,GARANTIA DE FABRICA,RELOGIO SMART PRINT WIFI BIO ID 500USR,GF-I,Contato imediato com cliente
+2026-04-10,OS-1002,Cliente B,Alta,Aberto,2026-04-11,94,95,Nao,CHAMADO REP,001 - Corretiva,Ativo,ATENDIMENTO CONTRATO,TORNIQUETE SMART ACESSO,FASCO,Aguardando validacao cliente
+2026-04-10,OS-1003,Cliente C,Media,Resolvido,2026-04-10,96,100,Nao,MANUTENCAO PREVENTIVA,002 - Preventiva,Ativo,ATENDIMENTO CONTRATO,CANCELA DMP DRIVE ESQ,PREV,Encerrado

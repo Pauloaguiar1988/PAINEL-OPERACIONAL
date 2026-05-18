@@ -1,0 +1,14 @@
+{
+  "lookerUrl": "https://lookerstudio.google.com/u/0/reporting/ae9776d6-6257-43f0-a2a8-3661eb392f33/page/JySjD",
+  "portalClienteUrl": "https://portal-do-cliente-c7ec1b8e.base44.app/teves",
+  "powerBiUrl": "https://app.powerbi.com/groups/me/reports/c6f1f21b-6ce3-4489-87d6-2e80f06938e2/ReportSectiondafaea5d868ed5733b2e?experience=power-bi",
+  "catalogWorkbookPath": "C:\\Painel_Operacional_Corrigido\\data\\pricing\\TABELA_DE_PRECO_CLIENTE_FINAL.xlsx",
+  "catalogAutoSync": true,
+  "updatedAt": "2026-04-20T11:44:45.189Z",
+  "campinas": {
+    "deslocamento": 281,
+    "primeiraHora": 217,
+    "adicional30min": 123
+  },
+  "powerBiAccessEmail": "paulo.aguiar@tagus-tec.com.br"
+}

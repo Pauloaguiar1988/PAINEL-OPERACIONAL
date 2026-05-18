@@ -1,0 +1,586 @@
+{
+  "generatedAt": "2026-04-27T15:41:09.578Z",
+  "loadedAssets": {
+    "css": [
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
+      "style.css?v=20260427_4"
+    ],
+    "scripts": [
+      "app-auth.js?v=20260427_3",
+      "app-admin-users.js?v=20260416_4",
+      "app.js?v=20260427_3",
+      "app-godmode.js?v=20260427_3"
+    ],
+    "serviceWorkerRegistrations": 0
+  },
+  "insightsDate": "2026-04-24",
+  "insightsExists": true,
+  "insightsResponseCount": 8,
+  "latestInsightsDateSeen": "2026-04-27",
+  "filtersDaily": {
+    "totalOsRaw": 0,
+    "totalOsFiltered": 0
+  },
+  "moduleDataAudit": {
+    "clientes": {
+      "backendHasData": true,
+      "frontendReceived": true,
+      "renderExecuted": true,
+      "elementExists": true,
+      "visible": true
+    },
+    "tecnicos": {
+      "backendHasData": true,
+      "frontendReceived": true,
+      "renderExecuted": true,
+      "elementExists": true,
+      "visible": true
+    },
+    "comparativos": {
+      "backendHasData": true,
+      "frontendReceived": true,
+      "renderExecuted": true,
+      "elementExists": true,
+      "visible": true
+    },
+    "laudo": {
+      "backendHasData": true,
+      "frontendReceived": true,
+      "renderExecuted": true,
+      "elementExists": true,
+      "visible": true
+    },
+    "governanca": {
+      "backendHasData": true,
+      "frontendReceived": true,
+      "renderExecuted": true,
+      "elementExists": true,
+      "visible": true
+    }
+  },
+  "moduleDomAudit": {
+    "painel_dia": {
+      "activeSidebarModule": "painel_dia",
+      "activeRootVisible": true,
+      "activeRootHeight": 650,
+      "visibleRoots": [
+        {
+          "id": "gmModuleResumo",
+          "key": "painel_dia"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 2,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Controle estrategico em tempo real",
+        "Prioridade imediata",
+        "Alerta principal",
+        "Acao 24h",
+        "Tickets / Atrasos",
+        "Pendencias adm",
+        "Mix atendimento (I/C/P)",
+        "Cobertura (G/C/A)",
+        "Produto mais incidente",
+        "Clientes criticos em foco",
+        "Sem cliente critico registrado",
+        "Plano de acao recomendado",
+        "1. Acao",
+        "2. Acao",
+        "3. Acao"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "operacao": {
+      "activeSidebarModule": "operacao",
+      "activeRootVisible": true,
+      "activeRootHeight": 1223,
+      "visibleRoots": [
+        {
+          "id": "gmModuleOperacao",
+          "key": "operacao"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 3,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Auditoria de O.S. e proximos passos",
+        "O.S. analisadas",
+        "Registros com alerta",
+        "Risco de nao faturar",
+        "Codigo pendente",
+        "Laudo sem clareza",
+        "Risco estimado (R$)",
+        "Operacao interna / externa",
+        "V69245 - INDUSTRIAS PGG - TECNOLOGIA EM ARAMES E CABOS ESPECIAIS LTDA",
+        "V69244 - INDUSPARQUET INDUSTRIA E COMERCIO DE MADEIRAS LTDA",
+        "V69250 - IOCHPE MAXION S.A.",
+        "V69248 - IOCHPE MAXION S.A.",
+        "V69247 - IOCHPE MAXION S.A.",
+        "V69246 - IOCHPE MAXION S.A.",
+        "Tabela de precos (Looker)",
+        "Portal do cliente (Base44)",
+        "BI Operacional (Power BI)"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "analise_tecnica": {
+      "activeSidebarModule": "analise_tecnica",
+      "activeRootVisible": true,
+      "activeRootHeight": 950,
+      "visibleRoots": [
+        {
+          "id": "gmModuleAnalise",
+          "key": "analise_tecnica"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 4,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Distribuicao por tipo de atendimento",
+        "Ranking por equipamento",
+        "Pareto por equipamento",
+        "Alertas taticos da classificacao",
+        "Acao necessaria: Indefinido",
+        "Acao necessaria: Requer nova visita"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "tecnicos": {
+      "activeSidebarModule": "tecnicos",
+      "activeRootVisible": true,
+      "activeRootHeight": 780,
+      "visibleRoots": [
+        {
+          "id": "gmModuleTecnicos",
+          "key": "tecnicos"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 2,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Ranking por tecnico",
+        "Tecnicos / desempenho"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "clientes": {
+      "activeSidebarModule": "clientes",
+      "activeRootVisible": true,
+      "activeRootHeight": 435,
+      "visibleRoots": [
+        {
+          "id": "gmModuleClientes",
+          "key": "clientes"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 1,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Clientes / oportunidades",
+        "Zeentech Consultoria Em Tec E Eng Do Brasil Ltda (00900441000140)",
+        "Bcp Cores Injecao E Pintura Em Pecas Termoplasticas Ltda (31034850000134)",
+        "Fruticola Aurora Ltda (06371607000164)",
+        "Oto Hotel Resort Convention & Spa Ltda (23662329000113)",
+        "Supermercado Agricola Lopes Ltda (47019062000109)"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "comparativos": {
+      "activeSidebarModule": "comparativos",
+      "activeRootVisible": true,
+      "activeRootHeight": 982,
+      "visibleRoots": [
+        {
+          "id": "gmModuleComparativos",
+          "key": "comparativos"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 2,
+        "laudo": 0,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Comparativos historicos",
+        "Mes vs ano anterior",
+        "Trimestre vs ano anterior",
+        "YTD vs ano anterior",
+        "Leitura executiva trimestral",
+        "Overview do trimestre",
+        "Sem base trimestral",
+        "Qualidade e cobertura",
+        "Mix principal",
+        "Sem mix consolidado",
+        "Fila curta de revisao (trimestre)",
+        "Top equipamentos",
+        "Narrativa executiva trimestral",
+        "Sem achados"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "laudo": {
+      "activeSidebarModule": "laudo",
+      "activeRootVisible": true,
+      "activeRootHeight": 1193,
+      "visibleRoots": [
+        {
+          "id": "gmModuleLaudo",
+          "key": "laudo"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 5,
+        "governanca": 0
+      },
+      "visibleTexts": [
+        "Leitura executiva",
+        "Achados principais",
+        "1.",
+        "2.",
+        "3.",
+        "Recomendacoes",
+        "1.",
+        "Conformidade do laudo tecnico",
+        "Regra de ouro",
+        "Recomendacao",
+        "Evidencia: V44939",
+        "Qualidade da classificacao",
+        "Tipo de garantia",
+        "Status de garantia",
+        "Desfecho dominante",
+        "Causa dominante",
+        "Atendimento dominante"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": false
+        }
+      }
+    },
+    "governanca": {
+      "activeSidebarModule": "governanca",
+      "activeRootVisible": true,
+      "activeRootHeight": 1121,
+      "visibleRoots": [
+        {
+          "id": "gmModuleGovernanca",
+          "key": "governanca"
+        }
+      ],
+      "leakedVisibleBlocks": [],
+      "wrappersOutside": [],
+      "ownerVisibleCount": {
+        "resumo": 0,
+        "operacao": 0,
+        "analise": 0,
+        "tecnicos": 0,
+        "clientes": 0,
+        "comparativos": 0,
+        "laudo": 0,
+        "governanca": 3
+      },
+      "visibleTexts": [
+        "Prioridade de revisao humana guiada",
+        "1.",
+        "2.",
+        "Resumo da fila guiada",
+        "Fila curta de revisao"
+      ],
+      "critical": {
+        "gmHistClientsBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistTechniciansBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistComparativesBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmHistLaudoBox": {
+          "exists": true,
+          "visible": false
+        },
+        "gmTaxReviewPriorityBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmTaxReviewSummaryBox": {
+          "exists": true,
+          "visible": true
+        },
+        "gmTaxReviewQueueBox": {
+          "exists": true,
+          "visible": true
+        }
+      }
+    }
+  },
+  "consoleErrors": []
+}

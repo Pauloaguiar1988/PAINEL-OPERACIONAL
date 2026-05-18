@@ -1,0 +1,18 @@
+IMPORTACAO AUTOMATICA - INTEGRACOES (POWER BI + PORTAL)
+
+Objetivo:
+- Receber exportacoes CSV/XLSX dos sistemas externos e atualizar o painel automaticamente.
+
+Pastas monitoradas:
+- data\import\integracoes\powerbi
+- data\import\integracoes\portal
+
+Como usar:
+1. Exporte o relatorio do sistema externo em CSV ou XLSX.
+2. Salve o arquivo na pasta correta (powerbi ou portal).
+3. O painel processa automaticamente em ate 15 segundos.
+
+Observacoes:
+- O sistema processa somente arquivos novos (evita retrabalho).
+- Pode ter subpastas dentro de powerbi/portal que o leitor continua funcionando.
+- Colunas com nomes parecidos tambem sao aceitas (ex.: "SLA", "SLA do dia", "sla_pct").

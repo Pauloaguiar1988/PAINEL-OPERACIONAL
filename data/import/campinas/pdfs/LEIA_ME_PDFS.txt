@@ -1,0 +1,12 @@
+INBOX DE PDFs - O.S. CAMPINAS
+
+Coloque aqui os arquivos PDF de ordens de servico.
+
+Pasta:
+data\import\campinas\pdfs
+
+Fluxo automatico:
+- Cada novo PDF inserido e validado automaticamente.
+- O sistema gera analise de faturamento, codigo, laudo e contrato/garantia.
+- Um relatorio JSON por insercao e salvo em:
+  data\import\analises

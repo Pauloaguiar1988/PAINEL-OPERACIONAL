@@ -1,0 +1,29 @@
+-------------------------------------------
+LAUDO DE AUDITORIA: ROBERT BOSCH
+-------------------------------------------
+Total de Atendimentos: 12
+Faturados: 1 | Garantias/Retornos: 11
+Visitas de Reincidencia: 11
+FTF Cliente: 8.3%
+Faturamento Gerado: R$ 3.589,00
+Custo de Deslocamento Perdido: R$ 3.091,00
+Impacto na Margem: 86.1%
+-------------------------------------------
+DETALHE OS POR OS
+-------------------------------------------
+OS: V69162 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014550 Problema Descricao | Recomendacao: Checklist de Rede
+OS: V69163 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69164 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Acionamento de Laborat?rio
+OS: V69165 | Tecnico: ISRAEL | Classificacao: Faturável | Valor: R$ 498,00 | Reincidente: SIM | Risco: high | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Acionamento de Laborat?rio
+OS: V69166 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69167 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69168 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Acionamento de Laborat?rio
+OS: V69222 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69223 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69224 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: NAO | Risco: high | Serial: 8402371 | Recomendacao: Checklist de Rede
+OS: V69225 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014540 00003002620014574 00003 | Recomendacao: Checklist de Rede
+OS: V69226 | Tecnico: ISRAEL | Classificacao: Garantia | Valor: R$ 281,00 | Reincidente: SIM | Risco: critical | Serial: 00003002620014550 Problema Descricao | Recomendacao: Checklist de Rede
+-------------------------------------------
+CONCLUSAO: O risco de 86.1% e real porque R$ 3.091,00 em visitas reincidentes consome parcela relevante do faturamento de R$ 3.589,00 no cliente.
+ACAO SUGERIDA: tratar ROBERT BOSCH como zona de atrito operacional, revisar infraestrutura/ambiente e negociar regra de visita improdutiva ou plano corretivo dedicado.
+-------------------------------------------

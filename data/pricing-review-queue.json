@@ -1,0 +1,743 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-05-06T18:40:33.055Z",
+  "items": [
+    {
+      "queueId": "PRQ-20260423-FA6801184D",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-23",
+      "code": "MD5715P",
+      "codeDisplay": "MD5715P",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69334"
+      ],
+      "operationalCodes": [
+        "INREP"
+      ],
+      "clients": [
+        "SITIO SEM PRESSA TURISMO E LAZER LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69334",
+          "cliente": "SITIO SEM PRESSA TURISMO E LAZER LTDA",
+          "codigoOperacional": "INREP",
+          "codigoPeca": "MD5715P",
+          "observacao": "Relogio facial MD5715P incluso no MDCOMUNE, porem nao foi possivel enviar os colaboradores porque o cliente ainda nao havia entrado no sistema e nao cadastrou ninguem. Mas orienta…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-23T19:29:38.073Z",
+      "lastSeenAt": "2026-04-23T19:29:42.400Z",
+      "createdAt": "2026-04-23T19:29:38.073Z",
+      "createdBy": "import_campinas_bot",
+      "updatedAt": "2026-04-23T19:29:42.400Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260423-C6A08B7991",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-23",
+      "code": "",
+      "codeDisplay": "SEM_CODIGO",
+      "reason": "codigo_peca_ausente",
+      "reasonLabel": "Sem codigo de peca na observacao/laudo",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 9,
+      "osCount": 9,
+      "osList": [
+        "V69316",
+        "V69323",
+        "V69350",
+        "V69359",
+        "V69360",
+        "V69374",
+        "V69378",
+        "V69419",
+        "ZALW66"
+      ],
+      "operationalCodes": [
+        "CONCL",
+        "FASCO",
+        "VIST"
+      ],
+      "clients": [
+        "UNIMED DE SANTA BARBARA DOESTE AMERICANA COOP TRAB MED",
+        "ANCORADOURO REPRESENTACOES E TURISMO LTDA",
+        "SUPERMERCADOS CAVICCHIOLLI LTDA",
+        "DRYLOCK TECHNOLOGIES BRASIL LTDA",
+        "G6 PAULISTA BAR E RESTAURANTE LTDA",
+        "ACWARE COMERCIO DE EQUIPAMENTOS PARA AUTOMACAO COMERCIAL EIR",
+        "GLASS COLOR DO BRASIL INDUSTRIA E COMERCIO LTDA",
+        "PRYSMIAN CABOS E SISTEMAS DO BRASIL S/A"
+      ],
+      "examples": [
+        {
+          "os": "V69316",
+          "cliente": "UNIMED DE SANTA BARBARA DOESTE AMERICANA COOP TRAB MED",
+          "codigoOperacional": "CONCL",
+          "codigoPeca": "",
+          "observacao": "botoes e ligacao das fontes temporizadas dos equipamentos so podera ser ligadas apos comunicacao dos equipamentos faciais com o software e carga de colaboradores dos mesmos . Orde…"
+        },
+        {
+          "os": "V69323",
+          "cliente": "ANCORADOURO REPRESENTACOES E TURISMO LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "RELATORIO TECNICO DE ATENDIMENTO Foi realizada visita tecnica na empresa Ancora Douro, em Campinas, para manutencao de catraca que apresentava falha no modulo biometrico, o qual n…"
+        },
+        {
+          "os": "V69350",
+          "cliente": "SUPERMERCADOS CAVICCHIOLLI LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "Constatado REP em manutencao !! Obs: Equipamento sem lacre transparente !! Feito o processo de troca de lacre e ativacao do equipamento !! Obs: Desligado o equipamento por 5 mim e…"
+        },
+        {
+          "os": "V69359",
+          "cliente": "DRYLOCK TECHNOLOGIES BRASIL LTDA",
+          "codigoOperacional": "VIST",
+          "codigoPeca": "",
+          "observacao": "Catraca de Entrada Situacao atual: • Orientado passagem de 6 cabos de rede (3 por catraca) • Previsto: • 1 ponto eletrico por catraca • 2 tomadas femeas para leitores faciais (amb…"
+        },
+        {
+          "os": "V69360",
+          "cliente": "DRYLOCK TECHNOLOGIES BRASIL LTDA",
+          "codigoOperacional": "VIST",
+          "codigoPeca": "",
+          "observacao": "Catraca de Entrada Situacao atual: • Orientado passagem de 6 cabos de rede (3 por catraca) • Previsto: • 1 ponto eletrico por catraca • 2 tomadas femeas para leitores faciais (amb…"
+        },
+        {
+          "os": "V69374",
+          "cliente": "G6 PAULISTA BAR E RESTAURANTE LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "M A N U T E N C A O Defeito relatado: Relogio nao liga, cabo de energia quebrou. Analise: Chicote de energia quebrou o conector, possivel problema, retirar o relogio para efetuar …"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-23T19:29:38.073Z",
+      "lastSeenAt": "2026-04-23T19:29:42.400Z",
+      "createdAt": "2026-04-23T19:29:38.073Z",
+      "createdBy": "import_campinas_bot",
+      "updatedAt": "2026-04-23T19:29:42.400Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260417-D5AC59B9D3",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-17",
+      "code": "",
+      "codeDisplay": "SEM_CODIGO",
+      "reason": "codigo_peca_ausente",
+      "reasonLabel": "Sem codigo de peca na observacao/laudo",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V64989"
+      ],
+      "operationalCodes": [
+        "FASCO"
+      ],
+      "clients": [
+        "CONSTRUTORA TENDA S/A Endereco: Av. Wilson Moreira de Santana,"
+      ],
+      "examples": [
+        {
+          "os": "V64989",
+          "cliente": "CONSTRUTORA TENDA S/A Endereco: Av. Wilson Moreira de Santana,",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "MANUTENCAO PROBLEMA RELATADO: Relogios nao imprimem. PROBLEMA ENCONTRADO: Impressoras quebradas, e sensores de atolamento desatualizados. Solucao: Realizado a troca da impressora,…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-17T20:08:10.107Z",
+      "lastSeenAt": "2026-04-23T19:29:42.042Z",
+      "createdAt": "2026-04-17T20:08:10.107Z",
+      "createdBy": "import_campinas_bot",
+      "updatedAt": "2026-04-23T19:29:42.042Z",
+      "updatedBy": "import_campinas_bot",
+      "autoResolvedAt": "2026-04-17T20:08:39.605Z",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260414-9013C65DEA",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "MD5715P",
+      "codeDisplay": "MD5715P",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69254"
+      ],
+      "operationalCodes": [
+        "INREP"
+      ],
+      "clients": [
+        "INS SAO JOSE DE EDUC E INSTRUCAO"
+      ],
+      "examples": [
+        {
+          "os": "V69254",
+          "cliente": "INS SAO JOSE DE EDUC E INSTRUCAO",
+          "codigoOperacional": "INREP",
+          "codigoPeca": "MD5715P",
+          "observacao": "Relogio facial MD5715P instalado ok incluido no MDCOMUNE e enviado funcionarios e credenciais para orientar o cliente no cadastro das faces. Lembrando que este atendimento foi rea…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-23T19:29:40.454Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-23T19:29:40.454Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true,
+      "updatedByName": "Administrador Campinas"
+    },
+    {
+      "queueId": "PRQ-20260414-B5A1C46EAC",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "A03895",
+      "codeDisplay": "A03895",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69282"
+      ],
+      "operationalCodes": [
+        "ORC-AP"
+      ],
+      "clients": [
+        "BENASSI COMERCIO DE HORTIFRUTIGRANJEIROS LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69282",
+          "cliente": "BENASSI COMERCIO DE HORTIFRUTIGRANJEIROS LTDA",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "A03895",
+          "observacao": "M A N U T E N C A O Defeito relatado: Orcamento aprovado. Analise: Cliente nao possui chaves do relogio. Solucao: ORCAMENTO APROVADO A03895. Realizado troca das chaves, ajustes na…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-23T19:29:40.454Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-23T19:29:40.454Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260414-634809B756",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "",
+      "codeDisplay": "SEM_CODIGO",
+      "reason": "codigo_peca_ausente",
+      "reasonLabel": "Sem codigo de peca na observacao/laudo",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 23,
+      "osCount": 23,
+      "osList": [
+        "V69134",
+        "V69145",
+        "V69152",
+        "V69153",
+        "V69168",
+        "V69176",
+        "V69183",
+        "V69185",
+        "V69197",
+        "V69201",
+        "V69211",
+        "V69216",
+        "V69227",
+        "V69238",
+        "V69247",
+        "V69248",
+        "V69249",
+        "V69250",
+        "V69276",
+        "ZALVRC",
+        "ZALVRT",
+        "ZALVUA",
+        "ZALVY6"
+      ],
+      "operationalCodes": [
+        "FASCO",
+        "ORC-AP",
+        "INREP",
+        "CANCL",
+        "FAT-OS"
+      ],
+      "clients": [
+        "BANCO AGIBANK S.A",
+        "NEW QUALITY RENT.A CAR.LOC. E TRANSP.RODOVIARIOS LTDA EPP",
+        "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+        "ROBERT BOSCH LIMITADA",
+        "BISPHARMA EMBALAGENS LTDA",
+        "SUPERMERCADOS CAVICCHIOLLI LTDA",
+        "ANCORADOURO REPRESENTACOES E TURISMO LTDA",
+        "ASSOSSIACAO CRISTA DE MOCOS DE SOROCABA",
+        "DHOLLANDIA BRASIL - PLATAFORMAS ELEVATORIAS LTDA.",
+        "HORIBA INSTRUMENTS BRASIL LTDA",
+        "ANTONIO IANNI",
+        "SAN GROUP BIOTECH BRASIL LTDA",
+        "IOCHPE MAXION S.A.",
+        "COMPANHIA NACIONAL DE ALCOOL",
+        "PRYSMIAN CABOS E SISTEMAS DO BRASIL S/A",
+        "PET CENTER COMERCIO E PARTICIPACOES S.A.",
+        "REDE D OR SAO LUIZ S A"
+      ],
+      "examples": [
+        {
+          "os": "V69134",
+          "cliente": "BANCO AGIBANK S.A",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "M A N U T E N C A O Defeito relatado: Catraca PNE nao registra a entrada dos funcionarios. Analise: Catraca PNE sem comunicacao, com 4248 registros a coletar. Placa identifica a r…"
+        },
+        {
+          "os": "V69145",
+          "cliente": "NEW QUALITY RENT.A CAR.LOC. E TRANSP.RODOVIARIOS LTDA EPP",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "Foi realizada visita tecnica na empresa New Quality, em Cosmopolis, para manutencao de relogio de ponto facial com falha na placa e no cabeamento. Durante a analise, foram realiza…"
+        },
+        {
+          "os": "V69152",
+          "cliente": "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "N/S - 3002630016744 - Tinturaria !! Foi aberto com outro numero de serie !! Conforme solicitado na OS anterior, foi substituido a placa do teclado e a manta do teclado + lacre !! …"
+        },
+        {
+          "os": "V69153",
+          "cliente": "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "",
+          "observacao": "N/S - 3002630016742 - Rachel !! Foi aberto com outro numero de serie !! Conforme solicitado na OS anterior, foi substituido a placa do teclado e a manta do teclado + lacre !! Feit…"
+        },
+        {
+          "os": "V69168",
+          "cliente": "ROBERT BOSCH LIMITADA",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "",
+          "observacao": "MANUTENCAO RELOGIO ORCAMENTO APROVADO FOI FEITA A TROCA DA IMPRESSORA PP3 DO RELGIO COM NUNERO DE SERIE 00003002620014555 APOS A TROCA DA PLACA O RELOGIO NAO COMUNICA COM O NOTBOO…"
+        },
+        {
+          "os": "V69176",
+          "cliente": "BISPHARMA EMBALAGENS LTDA",
+          "codigoOperacional": "INREP",
+          "codigoPeca": "",
+          "observacao": "Feito ativacao do equipamento, conforme dados fornecido pelo cliente !! Parametrizacao do cracha e leitor digital \" Sagem \" !! Teclado liberado para marcacoes !! IP 192.168.1.195 …"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-23T19:29:40.454Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-23T19:29:40.454Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260410-9F2A201A04",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-10",
+      "code": "",
+      "codeDisplay": "SEM_CODIGO",
+      "reason": "codigo_peca_ausente",
+      "reasonLabel": "Sem codigo de peca na observacao/laudo",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 4,
+      "osCount": 4,
+      "osList": [
+        "V69250",
+        "V69248",
+        "V69247",
+        "V69246"
+      ],
+      "operationalCodes": [
+        "ORC-AP"
+      ],
+      "clients": [
+        "IOCHPE MAXION S.A."
+      ],
+      "examples": [
+        {
+          "os": "V69250",
+          "cliente": "IOCHPE MAXION S.A.",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "",
+          "observacao": "Obs: Foi trocada a impressora, apos a troca foi feita a ativacao do equipamento, apos ativacao foi realizado os devidos testes onde obteve resultado satisfatorio Observacao: o equ…"
+        },
+        {
+          "os": "V69248",
+          "cliente": "IOCHPE MAXION S.A.",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "",
+          "observacao": "Obs: Foi trocada a impressora, apos a troca foi feita a ativacao do equipamento, apos ativacao foi realizado os devidos testes onde obteve resultado satisfatorio Observacao: o equ…"
+        },
+        {
+          "os": "V69247",
+          "cliente": "IOCHPE MAXION S.A.",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "",
+          "observacao": "Obs: Foi trocada a impressora, apos a troca foi feita a ativacao do equipamento, apos ativacao foi realizado os devidos testes onde obteve resultado satisfatorio Observacao: o equ…"
+        },
+        {
+          "os": "V69246",
+          "cliente": "IOCHPE MAXION S.A.",
+          "codigoOperacional": "ORC-AP",
+          "codigoPeca": "",
+          "observacao": "Obs: Foi trocada a impressora, apos a troca foi feita a ativacao do equipamento, apos ativacao foi realizado os devidos testes onde obteve resultado satisfatorio Observacao: o equ…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-17T20:07:05.680Z",
+      "lastSeenAt": "2026-04-23T19:29:38.546Z",
+      "createdAt": "2026-04-17T20:07:05.680Z",
+      "createdBy": "import_campinas_bot",
+      "updatedAt": "2026-04-23T19:29:38.546Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true
+    },
+    {
+      "queueId": "PRQ-20260418-1484479421",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-18",
+      "code": "B516544",
+      "codeDisplay": "B516544",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "pendente",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "OS-CODEX-1001"
+      ],
+      "operationalCodes": [
+        "B516544"
+      ],
+      "clients": [
+        "Cliente A"
+      ],
+      "examples": [
+        {
+          "os": "OS-CODEX-1001",
+          "cliente": "Cliente A",
+          "codigoOperacional": "B516544",
+          "codigoPeca": "B516544",
+          "observacao": "ajuste urgente"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+      "firstSeenAt": "2026-04-20T22:40:01.868Z",
+      "lastSeenAt": "2026-04-20T22:49:00.554Z",
+      "createdAt": "2026-04-20T22:40:01.868Z",
+      "createdBy": "import_campinas_bot",
+      "updatedAt": "2026-04-20T22:49:00.554Z",
+      "updatedBy": "import_campinas_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T22:45:19.766Z"
+    },
+    {
+      "queueId": "PRQ-20260414-F74F19C3A3",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "C2525411ANFAT",
+      "codeDisplay": "C2525411ANFAT",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "resolvido_auto",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69275"
+      ],
+      "operationalCodes": [
+        "FASCO"
+      ],
+      "clients": [
+        "GR SERVICOS E ALIMENTACAO LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69275",
+          "cliente": "GR SERVICOS E ALIMENTACAO LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "C2525411ANFAT",
+          "observacao": "Constatado problema na placa principal e no modem !! Necessario substituicao !! Favor passar orcamento da placa principal e do modem !! Cod - C2525411anfat Cod - D00400013 Cod - C…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:40:41.609Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-20T11:40:41.621Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-20T11:44:21.124Z",
+      "updatedBy": "pricing_reconcile_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T11:44:21.124Z"
+    },
+    {
+      "queueId": "PRQ-20260414-E00FE4AE9A",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "C2219290B",
+      "codeDisplay": "C2219290B",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "resolvido_auto",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69258"
+      ],
+      "operationalCodes": [
+        "CONCL"
+      ],
+      "clients": [
+        "ANCORADOURO REPRESENTACOES E TURISMO LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69258",
+          "cliente": "ANCORADOURO REPRESENTACOES E TURISMO LTDA",
+          "codigoOperacional": "CONCL",
+          "codigoPeca": "C2219290B",
+          "observacao": "Constatado fonte de alimentacao interna, queimada !! Obs: Fonte do modelo antigo ( aberta ), necessario substituir pela fonte do modelo novo ( Fechada) !! Cod. C2219290B Cod. S252…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:40:41.609Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-20T11:40:41.621Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-20T11:44:21.124Z",
+      "updatedBy": "pricing_reconcile_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T11:44:21.124Z"
+    },
+    {
+      "queueId": "PRQ-20260414-6A28833E6A",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "B1427479",
+      "codeDisplay": "B1427479",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "resolvido_auto",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69173"
+      ],
+      "operationalCodes": [
+        "FASCO"
+      ],
+      "clients": [
+        "CLINICA SAO LUCAS"
+      ],
+      "examples": [
+        {
+          "os": "V69173",
+          "cliente": "CLINICA SAO LUCAS",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "B1427479",
+          "observacao": "Relogio - 1° And. Constatado tampa basculante e funil quebrado !! Feito a substituicao das pecas !! Testes de impressao, comunicacao e corte do papel ok !! Obs: Nao foi possivel c…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:40:41.609Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-20T11:40:41.621Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-20T11:44:21.124Z",
+      "updatedBy": "pricing_reconcile_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T11:44:21.124Z"
+    },
+    {
+      "queueId": "PRQ-20260414-7055C3B5AD",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "D02727176",
+      "codeDisplay": "D02727176",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "resolvido_auto",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 3,
+      "osCount": 3,
+      "osList": [
+        "V69107",
+        "V69108",
+        "V69109"
+      ],
+      "operationalCodes": [
+        "FAT-OS",
+        "FASCO"
+      ],
+      "clients": [
+        "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69107",
+          "cliente": "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+          "codigoOperacional": "FAT-OS",
+          "codigoPeca": "D02727176",
+          "observacao": "# PROBLEMA RELATADO Impressora papel atolado, Dificuldade para teclar #PROBLEMA ENCONTRADO Nao foi encontrado problema no sistema de impressao, realizado teste, batendo ponto e na…"
+        },
+        {
+          "os": "V69108",
+          "cliente": "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+          "codigoOperacional": "FAT-OS",
+          "codigoPeca": "D02727176",
+          "observacao": "# PROBLEMA RELATADO Impressora papel atolado, Dificuldade para teclar #PROBLEMA ENCONTRADO Nao foi encontrado problema no sistema de impressao, realizado teste, batendo ponto e na…"
+        },
+        {
+          "os": "V69109",
+          "cliente": "BRANYL COMERCIO E INDUSTRIA TEXTIL LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "D02727176",
+          "observacao": "# PROBLEMA RELATADO Impressora papel atolado, Dificuldade para teclar #PROBLEMA ENCONTRADO Nao foi encontrado problema no sistema de impressao, realizado teste, batendo ponto e na…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:40:41.609Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-20T11:40:41.621Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-20T11:44:21.124Z",
+      "updatedBy": "pricing_reconcile_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T11:44:21.124Z"
+    },
+    {
+      "queueId": "PRQ-20260414-F67181D012",
+      "tenantKey": "tagus_tec",
+      "unitKey": "campinas",
+      "companyName": "Tagus-Tec",
+      "unitName": "Campinas",
+      "date": "2026-04-14",
+      "code": "C2626501",
+      "codeDisplay": "C2626501",
+      "reason": "codigo_nao_encontrado_catalogo",
+      "reasonLabel": "Codigo de peca fora do catalogo oficial",
+      "status": "resolvido_auto",
+      "notes": "",
+      "mappedCatalogCode": "",
+      "occurrences": 1,
+      "osCount": 1,
+      "osList": [
+        "V69197"
+      ],
+      "operationalCodes": [
+        "FASCO"
+      ],
+      "clients": [
+        "ANCORADOURO REPRESENTACOES E TURISMO LTDA"
+      ],
+      "examples": [
+        {
+          "os": "V69197",
+          "cliente": "ANCORADOURO REPRESENTACOES E TURISMO LTDA",
+          "codigoOperacional": "FASCO",
+          "codigoPeca": "C2626501",
+          "observacao": "MANUTENCAO – CATRACA LOCAL: Entrada principal PROBLEMA RELATADO: Leitor biometrico nao liga. PROBLEMA ENCONTRADO: Leitor biometrico inoperante (nao liga). SOLUCAO: Realizadas tent…"
+        }
+      ],
+      "catalogUpdatedAt": "2026-04-20T11:40:41.609Z",
+      "firstSeenAt": "2026-04-17T19:58:38.612Z",
+      "lastSeenAt": "2026-04-20T11:40:41.621Z",
+      "createdAt": "2026-04-17T19:58:38.612Z",
+      "createdBy": "admin_campinas",
+      "updatedAt": "2026-04-20T11:44:21.124Z",
+      "updatedBy": "pricing_reconcile_bot",
+      "updated": true,
+      "autoResolvedAt": "2026-04-20T11:44:21.124Z"
+    }
+  ]
+}

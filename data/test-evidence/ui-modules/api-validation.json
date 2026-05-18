@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-04-27T15:42:15.986Z",
+  "date": "2026-04-24",
+  "results": [
+    {
+      "name": "health",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "systemStatus",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "insights",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": true
+    },
+    {
+      "name": "historicalStatus",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "historicalIntegrity",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "historicalComparatives",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "reviewWorkflow",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "exportMonthlyJson",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": null,
+      "exists": null
+    },
+    {
+      "name": "exportQuarterlyJson",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": null,
+      "exists": null
+    },
+    {
+      "name": "monthlyJobStatus",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    },
+    {
+      "name": "quarterlyJobStatus",
+      "statusCode": 200,
+      "ok": true,
+      "apiOk": true,
+      "exists": null
+    }
+  ]
+}

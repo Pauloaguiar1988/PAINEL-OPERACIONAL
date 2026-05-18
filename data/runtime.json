@@ -1,0 +1,369 @@
+{
+  "ok": true,
+  "mode": "node-sql",
+  "storageMode": "sql",
+  "requestedStorageMode": "auto",
+  "version": "8.1.0",
+  "environment": "development",
+  "sqlEnabled": true,
+  "sqlError": null,
+  "officialRoot": "C:\\Painel_Operacional_Corrigido",
+  "officialRootRequestedEnforce": true,
+  "rootBypassAllowed": false,
+  "officialRootEnforced": true,
+  "officialRootMatch": true,
+  "allowLegacySqlCredentialFile": false,
+  "allowInsecureBootstrapDefaults": false,
+  "authEnabled": true,
+  "host": "0.0.0.0",
+  "port": 5000,
+  "pid": 2764,
+  "startedAt": "2026-05-07T11:30:00.556Z",
+  "rootDir": "C:\\Painel_Operacional_Corrigido",
+  "dataDir": "C:\\Painel_Operacional_Corrigido\\data",
+  "dataFile": "C:\\Painel_Operacional_Corrigido\\data\\records.json",
+  "usersFile": "C:\\Painel_Operacional_Corrigido\\data\\users.json",
+  "backupFile": "C:\\Painel_Operacional_Corrigido\\data\\backups\\latest-records-backup.json",
+  "logDir": "C:\\Painel_Operacional_Corrigido\\data\\logs",
+  "serverLogFile": "C:\\Painel_Operacional_Corrigido\\data\\logs\\server.log",
+  "accessLogFile": "C:\\Painel_Operacional_Corrigido\\data\\logs\\access.log",
+  "localUrl": "http://localhost:5000",
+  "lanUrls": [
+    "http://192.100.190.76:5000"
+  ],
+  "recordCount": 22,
+  "backupSnapshots": 56,
+  "backupLastSnapshotAt": "2026-05-07T11:30:03.828Z",
+  "importWatchDir": "C:\\Painel_Operacional_Corrigido\\data\\import\\campinas",
+  "importWatchActive": true,
+  "importPollIntervalMs": 60000,
+  "importLastStatus": "idle",
+  "importLastProcessedAt": "2026-05-07T11:29:44.416Z",
+  "importLastMessage": "Pasta monitorada sem novos arquivos para importar e sem inconsistencias de base detectadas.",
+  "importLastRecordDate": "2026-04-23",
+  "historicalAnalytics": {
+    "available": true,
+    "workbookName": "ANÁLISE DAS CLASSIFICAÇÕES (3).xlsx",
+    "workbookSignature": "986711:1777041192808",
+    "importedRows": 17799,
+    "normalizedRows": 35565,
+    "generatedAt": "2026-04-27T18:58:28.599Z"
+  },
+  "unifiedReportFile": "C:\\Painel_Operacional_Corrigido\\data\\export\\relatorio_unificado_todas_abas.csv",
+  "unifiedReportUpdatedAt": "2026-05-07T11:30:03.547Z",
+  "unifiedReportRows": 22,
+  "executiveMonthlyJob": {
+    "enabled": true,
+    "intervalMs": 1800000,
+    "mode": "close_window",
+    "windowDay": 1,
+    "windowHour": 6,
+    "windowMinute": 10,
+    "running": false,
+    "lastRunAt": "2026-05-07T11:30:03.656Z",
+    "lastSuccessAt": "2026-05-07T11:18:44.400Z",
+    "lastErrorAt": "",
+    "lastOutcome": "skipped",
+    "lastMessage": "nenhum mes elegivel para processamento neste ciclo",
+    "counters": {
+      "runs": 350,
+      "processedMonths": 236,
+      "cacheHit": 202,
+      "cacheMiss": 34,
+      "errors": 0
+    },
+    "scopedHistory": [
+      {
+        "scopeMonthKey": "tagus_tec::campinas::2026-04",
+        "month": "2026-04",
+        "date": "2026-04-30",
+        "signature": "6cb0ced66535ca578f1c50c9661924ccfb71ac00ec7a86702abc17f4fe9a6072",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:43.365Z",
+        "lastSuccessAt": "2026-05-07T11:18:43.365Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-04\\relatorio_executivo_2026-04_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 4246,
+            "updatedAt": "2026-05-06T18:21:19.822Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-04\\relatorio_executivo_2026-04_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 41771,
+            "updatedAt": "2026-05-06T18:21:19.847Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-04\\relatorio_executivo_2026-04_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 53722,
+            "updatedAt": "2026-05-07T11:18:43.359Z"
+          }
+        }
+      },
+      {
+        "scopeMonthKey": "tagus_tec::campinas::2026-03",
+        "month": "2026-03",
+        "date": "2026-03-31",
+        "signature": "bb50dc5d25b2803930693f670453aaef76c59e9e79906d84cb1301d8f310fd17",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:43.579Z",
+        "lastSuccessAt": "2026-05-07T11:18:43.579Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-03\\relatorio_executivo_2026-03_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 2158,
+            "updatedAt": "2026-04-22T16:43:13.594Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-03\\relatorio_executivo_2026-03_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 29028,
+            "updatedAt": "2026-04-22T16:43:13.616Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-03\\relatorio_executivo_2026-03_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 4682,
+            "updatedAt": "2026-05-07T11:18:43.570Z"
+          }
+        }
+      },
+      {
+        "scopeMonthKey": "tagus_tec::campinas::2026-02",
+        "month": "2026-02",
+        "date": "2026-02-28",
+        "signature": "3c5fb122bdd4b618efada2effbcc91376099300198f68ccb88b4b472513b258d",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:44.395Z",
+        "lastSuccessAt": "2026-05-07T11:18:44.395Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-02\\relatorio_executivo_2026-02_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 3362,
+            "updatedAt": "2026-05-05T19:52:51.852Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-02\\relatorio_executivo_2026-02_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 34650,
+            "updatedAt": "2026-05-05T19:52:51.859Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-02\\relatorio_executivo_2026-02_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 21236,
+            "updatedAt": "2026-05-07T11:18:44.388Z"
+          }
+        }
+      },
+      {
+        "scopeMonthKey": "tagus_tec::campinas::2026-01",
+        "month": "2026-01",
+        "date": "2026-01-31",
+        "signature": "00cd7f15ff6935156f7a4aa5421054139bb3780ac7886872fd59d78f822ef6f2",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-04-30T22:08:16.457Z",
+        "lastSuccessAt": "2026-04-30T22:08:16.457Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-01\\relatorio_executivo_2026-01_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 4055,
+            "updatedAt": "2026-04-29T18:27:45.944Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-01\\relatorio_executivo_2026-01_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 37264,
+            "updatedAt": "2026-04-29T18:27:45.951Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_mensal\\tagus_tec_campinas\\2026-01\\relatorio_executivo_2026-01_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 25625,
+            "updatedAt": "2026-04-30T22:08:16.456Z"
+          }
+        }
+      }
+    ]
+  },
+  "executiveQuarterlyJob": {
+    "enabled": true,
+    "intervalMs": 10800000,
+    "mode": "close_window",
+    "windowDay": 2,
+    "windowHour": 7,
+    "windowMinute": 0,
+    "running": false,
+    "lastRunAt": "2026-05-07T11:30:03.681Z",
+    "lastSuccessAt": "2026-05-07T11:18:46.141Z",
+    "lastErrorAt": "",
+    "lastOutcome": "skipped",
+    "lastMessage": "nenhum trimestre elegivel para processamento neste ciclo",
+    "counters": {
+      "runs": 104,
+      "processedQuarters": 77,
+      "cacheHit": 62,
+      "cacheMiss": 15,
+      "errors": 0
+    },
+    "scopedHistory": [
+      {
+        "scopeQuarterKey": "tagus_tec::campinas::2026-Q1",
+        "quarter": "2026-Q1",
+        "signature": "a2f44019be6d16d8832d13e0fdbbcb4377baad492599f82cce406a47b23ea8cf",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-04-30T20:38:17.531Z",
+        "lastSuccessAt": "2026-04-30T20:38:17.531Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2026-Q1\\relatorio_executivo_trimestral_2026-Q1_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 4888,
+            "updatedAt": "2026-04-29T21:27:45.631Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2026-Q1\\relatorio_executivo_trimestral_2026-Q1_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 46563,
+            "updatedAt": "2026-04-29T21:27:45.649Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2026-Q1\\relatorio_executivo_trimestral_2026-Q1_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 57317,
+            "updatedAt": "2026-04-30T20:38:17.528Z"
+          }
+        }
+      },
+      {
+        "scopeQuarterKey": "tagus_tec::campinas::2025-Q4",
+        "quarter": "2025-Q4",
+        "signature": "9ff18917184c613e07286d8300843d4f7ab9b263a8eec5fea293727770845904",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:43.880Z",
+        "lastSuccessAt": "2026-05-07T11:18:43.880Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q4\\relatorio_executivo_trimestral_2025-Q4_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 3710,
+            "updatedAt": "2026-05-05T19:14:26.358Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q4\\relatorio_executivo_trimestral_2025-Q4_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 37603,
+            "updatedAt": "2026-05-05T19:14:26.385Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q4\\relatorio_executivo_trimestral_2025-Q4_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 25189,
+            "updatedAt": "2026-05-07T11:18:43.873Z"
+          }
+        }
+      },
+      {
+        "scopeQuarterKey": "tagus_tec::campinas::2025-Q3",
+        "quarter": "2025-Q3",
+        "signature": "e0a1149582a2413d902ed289f6fffdb781fcf4627f4941d3c7dbb2867f72e672",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:45.276Z",
+        "lastSuccessAt": "2026-05-07T11:18:45.276Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q3\\relatorio_executivo_trimestral_2025-Q3_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 2326,
+            "updatedAt": "2026-04-22T17:46:06.187Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q3\\relatorio_executivo_trimestral_2025-Q3_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 31499,
+            "updatedAt": "2026-04-22T17:46:06.198Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q3\\relatorio_executivo_trimestral_2025-Q3_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 8826,
+            "updatedAt": "2026-05-07T11:18:45.267Z"
+          }
+        }
+      },
+      {
+        "scopeQuarterKey": "tagus_tec::campinas::2025-Q2",
+        "quarter": "2025-Q2",
+        "signature": "e08f52cea3e02421caf8b1e23f563c96fe2908df8602f4406e44b2c3d8922670",
+        "cached": true,
+        "status": "success",
+        "success": true,
+        "error": "",
+        "lastAttemptAt": "2026-05-07T11:18:46.138Z",
+        "lastSuccessAt": "2026-05-07T11:18:46.138Z",
+        "files": {
+          "pdf": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q2\\relatorio_executivo_trimestral_2025-Q2_tagus_tec_campinas.pdf",
+            "exists": true,
+            "sizeBytes": 2321,
+            "updatedAt": "2026-04-22T17:46:06.428Z"
+          },
+          "excel": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q2\\relatorio_executivo_trimestral_2025-Q2_tagus_tec_campinas.xlsx",
+            "exists": true,
+            "sizeBytes": 31494,
+            "updatedAt": "2026-04-22T17:46:06.438Z"
+          },
+          "json": {
+            "path": "C:\\Painel_Operacional_Corrigido\\data\\export\\executivo_trimestral\\tagus_tec_campinas\\2025-Q2\\relatorio_executivo_trimestral_2025-Q2_tagus_tec_campinas.json",
+            "exists": true,
+            "sizeBytes": 8811,
+            "updatedAt": "2026-05-07T11:18:46.126Z"
+          }
+        }
+      }
+    ]
+  },
+  "lookerPricingUrl": "https://lookerstudio.google.com/u/0/reporting/ae9776d6-6257-43f0-a2a8-3661eb392f33/page/JySjD",
+  "portalClienteUrl": "https://portal-do-cliente-c7ec1b8e.base44.app/teves",
+  "powerBiUrl": "https://app.powerbi.com/groups/me/reports/c6f1f21b-6ce3-4489-87d6-2e80f06938e2/ReportSectiondafaea5d868ed5733b2e?experience=power-bi",
+  "pricingCatalogItems": 3202,
+  "pricingCatalogUpdatedAt": "2026-04-20T11:45:33.118Z",
+  "organization": {
+    "companyName": "Tagus-Tec",
+    "tenantKey": "tagus_tec",
+    "unitName": "Campinas",
+    "unitKey": "campinas",
+    "timezone": "America/Sao_Paulo",
+    "localeDefault": "pt-BR",
+    "updatedAt": "2026-04-16T18:31:00.915Z"
+  },
+  "tenantKey": "tagus_tec",
+  "unitKey": "campinas"
+}

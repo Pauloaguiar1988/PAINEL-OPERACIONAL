@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "",
+  "categories": {
+    "tecnico": [
+      {
+        "id": "pricing_looker",
+        "title": "Tabela de servicos (Looker)",
+        "url": "https://lookerstudio.google.com/u/0/reporting/ae9776d6-6257-43f0-a2a8-3661eb392f33/page/JySjD",
+        "description": "Consulta de codigo, valor e regra de servico."
+      },
+      {
+        "id": "portal_cliente",
+        "title": "Portal do cliente",
+        "url": "https://portal-do-cliente-c7ec1b8e.base44.app/teves",
+        "description": "Consulta operacional de atendimento e cliente."
+      }
+    ],
+    "operacional": [
+      {
+        "id": "painel_local",
+        "title": "Painel local Campinas",
+        "url": "http://localhost:5000",
+        "description": "Acesso rapido ao cockpit da unidade."
+      },
+      {
+        "id": "power_bi",
+        "title": "BI operacional",
+        "url": "https://app.powerbi.com/groups/me/reports/c6f1f21b-6ce3-4489-87d6-2e80f06938e2/ReportSectiondafaea5d868ed5733b2e?experience=power-bi",
+        "description": "Visao consolidada para gestor e diretoria."
+      }
+    ],
+    "administrativo": [
+      {
+        "id": "smtp_config",
+        "title": "Configuracao de e-mail",
+        "url": "#configuracoes",
+        "description": "Validar envio e fluxo de recuperacao de senha."
+      }
+    ]
+  }
+}

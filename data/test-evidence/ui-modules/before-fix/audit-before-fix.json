@@ -1,0 +1,615 @@
+{
+  "generatedAt": "2026-04-27T11:59:09.802Z",
+  "loadedAssets": {
+    "css": [
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
+      "style.css?v=20260424_3"
+    ],
+    "scripts": [
+      "app-auth.js?v=20260416_4",
+      "app-admin-users.js?v=20260416_4",
+      "app.js?v=20260420_2",
+      "app-godmode.js?v=20260424_3"
+    ]
+  },
+  "lastInsights": null,
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Falha ao hidratar cache compartilhado do backend. Error: Falha GET /api/records [401]\n    at apiGet (http://127.0.0.1:5000/app.js?v=20260420_2:3373:13)\n    at async hydrateBackendStoreCache (http://127.0.0.1:5000/app.js?v=20260420_2:3247:18)\n    at async initializeBackendMode (http://127.0.0.1:5000/app.js?v=20260420_2:4314:7)\n    at async http://127.0.0.1:5000/app.js?v=20260420_2:4374:23",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Error: Falha GET /api/records/2026-04-27 [401]\n    at apiGet (http://127.0.0.1:5000/app.js?v=20260420_2:3373:13)\n    at async loadTodayRecordResolved (http://127.0.0.1:5000/app.js?v=20260420_2:4231:19)"
+  ],
+  "moduleAudit": [
+    {
+      "moduleKey": "painel_dia",
+      "activeSidebar": "painel_dia",
+      "ownerVisible": {
+        "resumo": [
+          {
+            "id": "gmPanelExecutiveWrap",
+            "cls": "system-upgrade-wrap",
+            "h": 375
+          },
+          {
+            "id": "gmPanelRadarWrap",
+            "cls": "system-radar",
+            "h": 96
+          }
+        ],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [],
+      "visibleTexts": [
+        "Controle estrategico em tempo real",
+        "Prioridade imediata",
+        "Alerta principal",
+        "Acao 24h",
+        "Tickets / Atrasos",
+        "Pendencias adm",
+        "Mix atendimento (I/C/P)",
+        "Cobertura (G/C/A)",
+        "Produto mais incidente",
+        "Clientes criticos em foco",
+        "Sem cliente critico registrado",
+        "Plano de acao recomendado",
+        "Sem acao sugerida",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "operacao",
+      "activeSidebar": "operacao",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [
+          {
+            "id": "gmTaxPriorityStrip",
+            "cls": "gm-tax-priority",
+            "h": 85
+          },
+          {
+            "id": null,
+            "cls": "gm-tax-summary-grid",
+            "h": 104
+          }
+        ],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 345,
+          "visibleOwnerChildren": 2
+        },
+        {
+          "id": "gmTabPanelInterna",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 201,
+          "visibleOwnerChildren": 2
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "analise_tecnica",
+      "activeSidebar": "analise_tecnica",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 144,
+          "visibleOwnerChildren": 0
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "tecnicos",
+      "activeSidebar": "tecnicos",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [
+          {
+            "id": "gmHistTechniciansBox",
+            "cls": "gm-tax-box",
+            "h": 224
+          }
+        ],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 368,
+          "visibleOwnerChildren": 1
+        },
+        {
+          "id": "gmTabPanelExterna",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 224,
+          "visibleOwnerChildren": 1
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 224,
+          "visibleOwnerChildren": 1
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Técnicos / desempenho",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "clientes",
+      "activeSidebar": "clientes",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [
+          {
+            "id": "gmHistClientsBox",
+            "cls": "gm-tax-box",
+            "h": 178
+          }
+        ],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 322,
+          "visibleOwnerChildren": 1
+        },
+        {
+          "id": "gmTabPanelExterna",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 178,
+          "visibleOwnerChildren": 1
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 178,
+          "visibleOwnerChildren": 1
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Clientes / oportunidades",
+        "Sem oportunidades",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "comparativos",
+      "activeSidebar": "comparativos",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [
+          {
+            "id": "gmTabPanelTrimestral",
+            "cls": "gm-tax-panel is-active",
+            "h": 784
+          }
+        ],
+        "laudo": [],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 928,
+          "visibleOwnerChildren": 1
+        },
+        {
+          "id": "gmTabPanelTrimestral",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 784,
+          "visibleOwnerChildren": 0
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 143,
+          "visibleOwnerChildren": 0
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 129,
+          "visibleOwnerChildren": 0
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 140,
+          "visibleOwnerChildren": 0
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Leitura executiva trimestral",
+        "Overview do trimestre",
+        "Sem base trimestral",
+        "Qualidade e cobertura",
+        "Mix principal",
+        "Sem mix consolidado",
+        "Fila curta de revisao (trimestre)",
+        "Top equipamentos",
+        "Narrativa executiva trimestral",
+        "Sem achados",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "laudo",
+      "activeSidebar": "laudo",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [
+          {
+            "id": "gmTaxNarrativeHero",
+            "cls": "gm-tax-box gm-tax-hero",
+            "h": 74
+          },
+          {
+            "id": null,
+            "cls": "gm-tax-box",
+            "h": 110
+          },
+          {
+            "id": null,
+            "cls": "gm-tax-box",
+            "h": 110
+          },
+          {
+            "id": "gmHistLaudoBox",
+            "cls": "gm-tax-box",
+            "h": 194
+          },
+          {
+            "id": "gmTaxQualityBox",
+            "cls": "gm-tax-box gm-tax-quality-box",
+            "h": 224
+          }
+        ],
+        "governanca": []
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 782,
+          "visibleOwnerChildren": 5
+        },
+        {
+          "id": "gmTabPanelExterna",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 638,
+          "visibleOwnerChildren": 5
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 110,
+          "visibleOwnerChildren": 2
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 194,
+          "visibleOwnerChildren": 1
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Leitura executiva",
+        "Achados principais",
+        "Sem achados",
+        "Recomendacoes",
+        "Sem recomendacoes",
+        "Conformidade do laudo técnico",
+        "Sem leitura de conformidade",
+        "Qualidade da classificacao",
+        "Eixos",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    },
+    {
+      "moduleKey": "governanca",
+      "activeSidebar": "governanca",
+      "ownerVisible": {
+        "resumo": [],
+        "operacao": [],
+        "analise": [],
+        "tecnicos": [],
+        "clientes": [],
+        "comparativos": [],
+        "laudo": [],
+        "governanca": [
+          {
+            "id": "gmTaxReviewPriorityBox",
+            "cls": "gm-tax-box gm-tax-review-priority-box",
+            "h": 293
+          },
+          {
+            "id": "gmTaxReviewSummaryBox",
+            "cls": "gm-tax-box",
+            "h": 293
+          }
+        ]
+      },
+      "wrappers": [
+        {
+          "id": "gmTaxonomyCard",
+          "cls": "system-white-card gm-taxonomy-card",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 437,
+          "visibleOwnerChildren": 2
+        },
+        {
+          "id": "gmTabPanelExterna",
+          "cls": "gm-tax-panel is-active",
+          "tag": "section",
+          "visible": true,
+          "display": "grid",
+          "height": 293,
+          "visibleOwnerChildren": 2
+        },
+        {
+          "id": null,
+          "cls": "gm-tax-row",
+          "tag": "div",
+          "visible": true,
+          "display": "grid",
+          "height": 293,
+          "visibleOwnerChildren": 2
+        }
+      ],
+      "visibleTexts": [
+        "Leitura analitica por taxonomia",
+        "Inteligencia operacional e laudo tecnico",
+        "Prioridade de revisao humana",
+        "Checklist",
+        "Resumo da fila guiada",
+        "Radar tático imediato",
+        "Top comandos do gestor",
+        "Operação saudável",
+        "Comparativo das áreas",
+        "Quadro de alertas inteligentes",
+        "Monitor operacional em destaque",
+        "Média e tendência do mês",
+        "Comparativo diário",
+        "Comparativo com média do mês",
+        "Tickets e acionamentos",
+        "Capacidade técnica",
+        "Retaguarda operacional",
+        "Leitura rápida da operação",
+        "Score consolidado",
+        "Monitor operacional do dia",
+        "Dados principais que precisam aparecer"
+      ]
+    }
+  ]
+}
